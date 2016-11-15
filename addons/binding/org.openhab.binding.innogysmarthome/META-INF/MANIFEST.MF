@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: InnogySmartHome Binding
+Bundle-SymbolicName: org.openhab.binding.innogysmarthome;singleton:=true
+Bundle-Vendor: openHAB
+Bundle-Version: 2.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: .,
+ lib/google-http-client-1.21.0.jar,
+ lib/google-oauth-client-1.22.0.jar,
+ lib/innogy-smarthome-client-0.0.1-SNAPSHOT-jar-with-dependencies.jar,
+ lib/innogy-smarthome-client-0.0.1-SNAPSHOT-sources.jar,
+ lib/innogy-smarthome-client-0.0.1-SNAPSHOT.jar,
+ lib/joda-time-2.9.4.jar,
+ lib/websocket-api-9.2.18.v20160721.jar,
+ lib/websocket-client-9.2.18.v20160721.jar,
+ lib/websocket-common-9.2.18.v20160721.jar
+Import-Package: 
+ org.eclipse.smarthome.config.core,
+ org.eclipse.smarthome.core.library.types,
+ org.eclipse.smarthome.core.thing,
+ org.eclipse.smarthome.core.thing.binding,
+ org.eclipse.smarthome.core.thing.binding.builder,
+ org.eclipse.smarthome.core.thing.type,
+ org.eclipse.smarthome.core.types,
+ org.openhab.binding.innogysmarthome,
+ org.openhab.binding.innogysmarthome.handler,
+ org.osgi.framework;version="1.8.0",
+ org.slf4j
+Service-Component: OSGI-INF/*.xml
+Export-Package: org.openhab.binding.innogysmarthome,
+ org.openhab.binding.innogysmarthome.handler
+Require-Bundle: com.google.guava,
+ org.eclipse.smarthome.config.discovery,
+ javax.jmdns,
+ org.eclipse.smarthome.io.transport.mdns

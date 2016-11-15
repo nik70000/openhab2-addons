@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="innogysmarthome"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+        xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+
+    <bridge-type id="bridge">
+        <label>innogy SmartHome Controller</label>
+        <description>The innogy SmartHome Controller (SHC) is the bridge for the innogy SmartHome System.</description>
+        <!-- properties>
+            <property name="vendor">Innogy</property>
+        </properties-->
+        
+        <config-description>
+            <parameter-group name="connection">
+                <label>Connection</label>
+                <description>Parameters for connecting to innogy SmartHome Controller (SHC)</description>
+            </parameter-group>
+            <parameter-group name="advanced">
+                <label>Advanced configuration</label>
+                <description>Advanced parameters, for special tweaking only.</description>
+                <advanced>true</advanced>
+            </parameter-group>
+            
+            <parameter name="host" type="text" required="true" groupName="connection">
+                <context>network-address</context>
+                <label>Host</label>
+                <description>Hostname or IP address of the controller</description>
+            </parameter>
+            <parameter name="authcode" type="text" groupName="connection">
+                <!-->context>password</context-->
+                <label>Authorization code</label>
+                <description><![CDATA[ The auth-code is a one-time code needed to retrieve the
+                necessary access-codes from innogy SmartHome Service. <b>Please go to 
+                <a href="https://api.services-smarthome.de/AUTH/authorize?response_type=code&client_id=24635748&redirect_uri=https%3A%2F%2Fwww.ollie.in%2Frwe-smarthome-token%2F&scope&lang=de-DE">innogy SmartHome Portal</a> to generate an auth-code and 
+                paste it here.</b> After initial authorization, this code is not needed anymore.]]></description>
+            </parameter>
+            <parameter name="refreshtoken" type="text" groupName="advanced" readOnly="true">
+                <!-->context>password</context-->
+                <label>Refresh token</label>
+                <description>The refresh token is used to create a valid access token. It is automatically
+                pulled from innogy SmartHome backend with the initial auth-code. Normally you should never touch this!</description>
+                <advanced>true</advanced>
+            </parameter>
+            <parameter name="accesstoken" type="text" groupName="advanced" readOnly="true">
+                <!-->context>password</context-->
+                <label>Access token</label>
+                <description>The access token is used to access the innogy SmartHome backend. Is is automatically
+                pulled from innogy SmartHome backend with the initial auth-code. Normally you should never touch this!</description>
+                <advanced>true</advanced>
+            </parameter>
+            <!-- parameter name="username" type="text" required="true" groupName="connection">
+                <label>Username</label>
+                <description>Username for accessing the controller</description>
+            </parameter>
+            <parameter name="password" type="text" required="true" groupName="connection">
+                <label>Password</label>
+                <description>Password for the controller</description>
+                <context>password</context>
+            </parameter -->
+            <!-- parameter name="serial_number" type="text">
+                <label>Serial number</label>
+                <description>The serial number of the controller</description>
+                <required>false</required>
+            </parameter -->
+        </config-description>
+    </bridge-type>
+
+
+</thing:thing-descriptions>
