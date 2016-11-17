@@ -411,7 +411,8 @@ public class InnogyBridgeHandler extends BaseThingHandler implements CredentialR
             Gson gson = new Gson();
             Event[] eventArray = gson.fromJson(msg, Event[].class);
             for (Event event : eventArray) {
-                logger.debug("Event found: Type:{} Capability:{}", event.getType(), event.getLink().getValue());
+                logger.debug("Event found: Type:{} Capability:{}", event.getType(),
+                        event.getLink() != null ? event.getLink().getValue() : "(no link)");
                 switch (event.getType()) {
                     case Event.TYPE_STATE_CHANGED:
                         if (event.isLinkedtoCapability()) {
