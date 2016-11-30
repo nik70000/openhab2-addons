@@ -369,6 +369,26 @@ public class InnogyBridgeHandler extends BaseThingHandler implements CredentialR
         return deviceStructMan.getDeviceById(deviceId);
     }
 
+    /**
+     *
+     * @param deviceId
+     */
+    public Device refreshDevice(String deviceId) {
+        if (deviceStructMan == null) {
+            return null;
+        }
+
+        Device device = null;
+        try {
+            deviceStructMan.refreshDevice(deviceId);
+            device = deviceStructMan.getDeviceById(deviceId);
+        } catch (Exception e) {
+            handleClientException(e);
+        }
+        return device;
+
+    }
+
     // CredentialRefreshListener implementation
 
     /*

@@ -26,6 +26,7 @@ import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.types.Command;
+import org.eclipse.smarthome.core.types.RefreshType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +60,14 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
     public void handleCommand(ChannelUID channelUID, Command command) {
         logger.debug("handleCommand called for channel '{}' of type '{}' with command '{}'", channelUID,
                 getThing().getThingTypeUID().getId(), command);
+
+        if (command instanceof RefreshType) {
+            Device device = getInnogyBridgeHandler().refreshDevice(deviceId);
+            if (device != null) {
+                onDeviceStateChanged(device);
+            }
+            return;
+        }
 
         // TODO: add devices
         // SWITCH
@@ -193,6 +202,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                     case Capability.TYPE_TEMPERATURESENSOR:
                         Double temperatureSensorState = c.getCapabilityState().getTemperatureSensorState();
                         if (temperatureSensorState != null) {
+                            logger.debug("-> Temperature sensor state: {}", temperatureSensorState);
                             DecimalType temp = new DecimalType(temperatureSensorState);
                             updateState(CHANNEL_TEMPERATURE, temp);
                         } else {
