@@ -257,7 +257,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         Double luminanceState = c.getCapabilityState().getLuminanceSensorState();
                         if (luminanceState != null) {
                             DecimalType luminance = new DecimalType(luminanceState);
-                            updateState(CHANNEL_MOTION_COUNT, luminance);
+                            updateState(CHANNEL_LUMINANCE, luminance);
                         }
                         break;
 
