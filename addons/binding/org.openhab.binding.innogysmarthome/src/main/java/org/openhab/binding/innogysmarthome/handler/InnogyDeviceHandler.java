@@ -246,7 +246,11 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         Double motionState = c.getCapabilityState().getMotionDetectionSensorState();
                         if (motionState != null) {
                             DecimalType motionCount = new DecimalType(motionState);
+                            logger.debug("Motion state {} -> count {}", motionState, motionCount);
                             updateState(CHANNEL_MOTION_COUNT, motionCount);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
                         break;
                     case Capability.TYPE_LUMINANCESENSOR:
@@ -270,6 +274,8 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
     @Override
     public synchronized void onDeviceStateChanged(Device device, Event event) {
         if (deviceId.equals(device.getId())) {
+            logger.debug("DeviceId {} relevant for this handler.", device.getId(), deviceId);
+
             if (event.isLinkedtoCapability()) {
                 String linkId = event.getLinkId();
                 for (Property p : event.getPropertyList()) {
@@ -370,7 +376,6 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                             onDeviceStateChanged(device);
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
-                            // TODO: MoldWarning
                         }
 
                         // LuminanceSensor
@@ -381,7 +386,6 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                             onDeviceStateChanged(device);
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
-                            // TODO: MoldWarning
                         }
 
                     } else {
