@@ -236,6 +236,12 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                             updateState(CHANNEL_SMOKE, smokeState ? OnOffType.ON : OnOffType.OFF);
                         }
                         break;
+                    case Capability.TYPE_ALARMACTUATOR:
+                        Boolean alarmState = c.getCapabilityState().getAlarmActuatorState();
+                        if (alarmState != null) {
+                            updateState(CHANNEL_ALARM, alarmState ? OnOffType.ON : OnOffType.OFF);
+                        }
+                        break;
                     case Capability.TYPE_MOTIONDETECTIONSENSOR:
                         Double motionState = c.getCapabilityState().getMotionDetectionSensorState();
                         if (motionState != null) {
