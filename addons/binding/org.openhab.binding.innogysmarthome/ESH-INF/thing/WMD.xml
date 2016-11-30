@@ -13,7 +13,7 @@
         <description>A battery powered motion detector, that also measures luminance.</description>
 
         <channels>
-            <channel id="motion" typeId="MotionDetectionSensor" />
+            <channel id="motion_count" typeId="MotionDetectionSensor" />
             <channel id="luminance" typeId="LuminanceSensor" />
         </channels>
 
