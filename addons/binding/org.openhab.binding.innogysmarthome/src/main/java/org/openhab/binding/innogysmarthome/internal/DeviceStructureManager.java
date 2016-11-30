@@ -46,29 +46,19 @@ public class DeviceStructureManager {
      */
     public synchronized void start() throws IOException, ApiException {
         logger.debug("Starting device structure manager.");
-        // List<Location> locations = client.getLocations();
-        // for (Location l : locations) {
-        // addLocationToStructure(l);
-        // }
 
-        // List<Capability> capabilityList = client.getCapabilities();
-        // Map<String, Capability> capabilityMap = new HashMap<>();
-        // for (Capability c : capabilityList) {
-        // capabilityMap.put(c.getId(), c);
-        // }
+        refreshDevices();
+        logger.info("Devices loaded. Device structure manager ready.");
+    }
 
-        // List<Device> devices = client.getDevices();
-        // for (Device d : devices) {
-        // d.setLocation(getLocationById(d.getLocationId()));
-        //
-        // HashMap<String, Capability> deviceCapabilityMap = new HashMap<>();
-        // for (CapabilityLink cl : d.getCapabilityLinkList()) {
-        // deviceCapabilityMap.put(cl.getId(), capabilityMap.get(cl.getId()));
-        // }
-        // d.setCapabilityMap(deviceCapabilityMap);
-        // addDeviceToStructure(d);
-        // }
-
+    /**
+     * Loads all device data from the bridge and stores the {@link Device}s and their states in the
+     * {@link DeviceStructureManager}.
+     *
+     * @throws IOException
+     * @throws ApiException
+     */
+    public void refreshDevices() throws IOException, ApiException {
         List<Device> devices = client.getFullDevices();
         for (Device d : devices) {
             addDeviceToStructure(d);
@@ -91,8 +81,34 @@ public class DeviceStructureManager {
             logger.debug("====================================");
 
         }
+    }
 
-        logger.info("Devices loaded. Device structure manager ready.");
+    /**
+     * Refreshs the {@link Device} with the given id and stores it in the {@link DeviceStructureManager}.
+     * 
+     * @param deviceId
+     * @throws IOException
+     * @throws ApiException
+     */
+    public void refreshDevice(String deviceId) throws IOException, ApiException {
+        Device d = client.getFullDeviceById(deviceId);
+        addDeviceToStructure(d);
+        if (d.isController()) {
+            bridgeDeviceId = d.getId();
+        }
+        try {
+            logger.debug("Device {} ({}) loaded.", d.getName(), d.getId());
+            for (Capability c : d.getCapabilityMap().values()) {
+                logger.debug("> CAP: {} ({})", c.getName(), c.getId());
+                for (Property p : c.getCapabilityState().getPropertyMap().values()) {
+                    logger.debug(">> CAP-State: {} -> {}", p.getName(), p.getValue());
+                }
+            }
+        } catch (NullPointerException e) {
+            logger.warn("NPEX.");
+        } catch (Exception e) {
+            logger.error("EX: ", e);
+        }
     }
 
     /**
