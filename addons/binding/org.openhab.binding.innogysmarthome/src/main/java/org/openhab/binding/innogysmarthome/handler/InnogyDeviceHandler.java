@@ -185,6 +185,11 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
 
             for (Capability c : device.getCapabilityMap().values()) {
                 logger.debug("->capability:{} ({}/{})", c.getId(), c.getType(), c.getName());
+
+                if (c.getCapabilityState() == null) {
+                    logger.debug("Capability not available for device {} ({})", device.getName(), device.getType());
+                    continue;
+                }
                 // TODO: ADD DEVICES
                 switch (c.getType()) {
                     case Capability.TYPE_VARIABLEACTUATOR:
@@ -267,7 +272,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
 
             }
         } else {
-            logger.debug("DeviceId {} not relevant for this handler (responsible for id {})", device.getId(), deviceId);
+            logger.trace("DeviceId {} not relevant for this handler (responsible for id {})", device.getId(), deviceId);
         }
     }
 
@@ -395,7 +400,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
 
             }
         } else {
-            logger.debug("DeviceId {} not relevant for this handler (responsible for id {})", device.getId(), deviceId);
+            logger.trace("DeviceId {} not relevant for this handler (responsible for id {})", device.getId(), deviceId);
         }
     }
 
