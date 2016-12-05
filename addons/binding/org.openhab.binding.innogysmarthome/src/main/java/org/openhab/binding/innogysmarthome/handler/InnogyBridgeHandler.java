@@ -30,7 +30,7 @@ import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
-import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
+import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.innogysmarthome.InnogyBindingConstants;
 import org.openhab.binding.innogysmarthome.internal.DeviceStructureManager;
@@ -62,7 +62,7 @@ import in.ollie.innogysmarthome.exception.SessionExistsException;
  *
  * @author Oliver Kuhl - Initial contribution
  */
-public class InnogyBridgeHandler extends BaseThingHandler implements CredentialRefreshListener, EventListener {
+public class InnogyBridgeHandler extends BaseBridgeHandler implements CredentialRefreshListener, EventListener {
 
     public final static Set<ThingTypeUID> SUPPORTED_THING_TYPES = Collections.singleton(THING_TYPE_BRIDGE);
     private Logger logger = LoggerFactory.getLogger(InnogyBridgeHandler.class);
@@ -322,6 +322,7 @@ public class InnogyBridgeHandler extends BaseThingHandler implements CredentialR
         deviceStructMan = null;
 
         super.dispose();
+        logger.info("innogy SmartHome bridge handler shut down.");
     }
 
     public boolean registerDeviceStatusListener(DeviceStatusListener deviceStatusListener) {
