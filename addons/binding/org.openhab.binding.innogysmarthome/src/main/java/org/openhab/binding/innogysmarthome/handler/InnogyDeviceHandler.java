@@ -183,6 +183,23 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         if (deviceId.equals(device.getId())) {
             logger.debug("onDeviceStateChanged called with device {}/{}", device.getName(), device.getId());
 
+            if (device.hasState()) {
+                Boolean reachable = device.getDeviceState().getIsReachable();
+                Boolean included = device.getDeviceState().deviceIsIncluded();
+                if (reachable != null && !reachable) {
+                    updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, "Device not reachable.");
+                    return;
+                } else if (reachable != null && reachable) {
+                    if (included) {
+                        updateStatus(ThingStatus.ONLINE);
+                    } else {
+                        updateStatus(ThingStatus.ONLINE, ThingStatusDetail.CONFIGURATION_PENDING,
+                                "State is " + device.getDeviceState().getDeviceInclusionState());
+                    }
+                }
+
+            }
+
             for (Capability c : device.getCapabilityMap().values()) {
                 logger.debug("->capability:{} ({}/{})", c.getId(), c.getType(), c.getName());
 
@@ -366,9 +383,13 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         // AlarmActuator
                     } else if (capability.isTypeAlarmActuator()) {
                         if (p.getName().equals(CapabilityState.STATE_NAME_ALARM_ACTUATOR)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
-                            capabilityState.setAlarmActuatorState((boolean) p.getValue());
-                            onDeviceStateChanged(device);
+                            if (capability.hasState()) {
+                                CapabilityState capabilityState = capability.getCapabilityState();
+                                capabilityState.setAlarmActuatorState((boolean) p.getValue());
+                                onDeviceStateChanged(device);
+                            } else {
+                                logger.debug("Capability {} has no state (yet?)", capability.getName());
+                            }
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
                         }
@@ -396,6 +417,21 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                     } else {
                         logger.debug("Unsupported capability type {}.", capability.getType());
                     }
+                }
+
+            } else if (event.isLinkedtoDevice()) {
+                if (device.hasState()) {
+                    Map<String, Property> stateMap = device.getDeviceState().getStateMap();
+                    for (Property p : event.getPropertyList()) {
+                        logger.debug("State changed {} to {}.", p.getName(), p.getValue());
+
+                        stateMap.get(p.getName()).setValue(p.getValue());
+                        stateMap.get(p.getName()).setLastchanged((p.getLastchanged()));
+                    }
+                    onDeviceStateChanged(device);
+                } else {
+                    logger.debug("Device {}/{} has no state.", device.getName(), device.getId());
+                    return;
                 }
 
             }

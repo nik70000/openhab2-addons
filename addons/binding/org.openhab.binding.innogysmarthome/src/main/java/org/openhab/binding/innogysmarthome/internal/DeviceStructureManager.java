@@ -85,7 +85,7 @@ public class DeviceStructureManager {
 
     /**
      * Refreshs the {@link Device} with the given id and stores it in the {@link DeviceStructureManager}.
-     * 
+     *
      * @param deviceId
      * @throws IOException
      * @throws ApiException
@@ -153,6 +153,16 @@ public class DeviceStructureManager {
      */
     public Device getDeviceByCapabilityLink(String capabilityLink) {
         return capabilityToDeviceMap.get(capabilityLink);
+    }
+
+    /**
+     * Returns the {@link Device} with the given deviceLink.
+     *
+     * @param deviceLink
+     * @return {@link Device} or null
+     */
+    public Device getDeviceByDeviceLink(String deviceLink) {
+        return getDeviceById(deviceLink.replace("/device/", ""));
     }
 
     /**

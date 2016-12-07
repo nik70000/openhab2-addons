@@ -436,6 +436,8 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                         event.getLink() != null ? event.getLink().getValue() : "(no link)");
                 switch (event.getType()) {
                     case Event.TYPE_STATE_CHANGED:
+
+                        // CAPABILITY
                         if (event.isLinkedtoCapability()) {
                             // TODO: funktioniert getDeviceByCapabilityLink auch mit Device-Link?!?
                             Device device = deviceStructMan.getDeviceByCapabilityLink(event.getLink().getValue());
@@ -445,6 +447,18 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                                 }
                             } else {
                                 logger.debug("Device is null for Capability {}", event.getLink().getValue());
+                            }
+
+                            // DEVICE
+                        } else if (event.isLinkedtoDevice()) {
+                            Device device = deviceStructMan.getDeviceByDeviceLink(event.getLinkId());
+                            if (device != null) {
+                                logger.debug("DEVICE STATE CHANGED!!!");
+                                for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                                    deviceStatusListener.onDeviceStateChanged(device, event);
+                                }
+                            } else {
+                                logger.debug("DEVICE STATE CHANGED - BUT NULL!!!!");
                             }
                         } else {
                             logger.debug("link type {} not supported (yet?)", event.getLinkType());
