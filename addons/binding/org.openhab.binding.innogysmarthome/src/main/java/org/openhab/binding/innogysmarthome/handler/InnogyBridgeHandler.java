@@ -88,7 +88,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         public void run() {
             String id = getThing().getUID().getId();
             client = new InnogyClient(id, config);
-            // client.setCredentialRefreshListener(Innogy2BridgeHandler.this);
+            client.setCredentialRefreshListener(InnogyBridgeHandler.this);
             try {
                 logger.info("Initializing innogy SmartHome client...");
                 client.initialize();
@@ -162,7 +162,8 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         public void run() {
             logger.info("Starting web socket.");
             String webSocketUrl = WEBSOCKET_API_URL_EVENTS.replace("{token}", (String) getConfig().get(ACCESS_TOKEN));
-            logger.debug("WebSocket URL: {}", webSocketUrl.substring(0, 80) + "...");
+            logger.debug("WebSocket URL: {}",
+                    webSocketUrl.substring(0, 70) + "..." + webSocketUrl.substring(webSocketUrl.length() - 10));
 
             SslContextFactory sslContextFactory = new SslContextFactory();
             sslContextFactory.setTrustAll(true); // The magic
@@ -401,9 +402,11 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
      */
     @Override
     public void onTokenResponse(Credential credential, TokenResponse tokenResponse) throws IOException {
-        config.setAccessToken(credential.getAccessToken());
-        getThing().getConfiguration().put(ACCESS_TOKEN, credential.getAccessToken());
-        logger.debug("innogy access token saved (onTokenResponse): {}", credential.getAccessToken());
+        String accessToken = credential.getAccessToken();
+        config.setAccessToken(accessToken);
+        getThing().getConfiguration().put(ACCESS_TOKEN, accessToken);
+        logger.debug("innogy access token saved (onTokenResponse): {}",
+                accessToken.substring(0, 10) + "..." + accessToken.substring(accessToken.length() - 10));
     }
 
     /*
@@ -414,9 +417,11 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
      */
     @Override
     public void onTokenErrorResponse(Credential credential, TokenErrorResponse tokenErrorResponse) throws IOException {
-        config.setAccessToken(credential.getAccessToken());
-        getThing().getConfiguration().put(ACCESS_TOKEN, credential.getAccessToken());
-        logger.debug("innogy access token saved (onTokenErrorResponse): {}", credential.getAccessToken());
+        String accessToken = credential.getAccessToken();
+        config.setAccessToken(accessToken);
+        getThing().getConfiguration().put(ACCESS_TOKEN, accessToken);
+        logger.debug("innogy access token saved (onTokenErrorResponse): {}",
+                accessToken.substring(0, 10) + "..." + accessToken.substring(accessToken.length() - 10));
     }
 
     /*
