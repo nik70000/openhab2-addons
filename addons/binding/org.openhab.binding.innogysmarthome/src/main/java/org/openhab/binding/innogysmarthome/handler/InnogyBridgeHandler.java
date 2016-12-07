@@ -10,6 +10,7 @@ package org.openhab.binding.innogysmarthome.handler;
 import static org.openhab.binding.innogysmarthome.InnogyBindingConstants.*;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Collections;
@@ -614,6 +615,14 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
             dispose();
             scheduleReinitialize(3 * 60);
+            return false;
+
+            // java.net.SocketTimeoutException
+        } else if (e instanceof SocketTimeoutException) {
+            logger.error("Socket timeout: {}", e.getMessage());
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
+            dispose();
+            scheduleReinitialize(60);
             return false;
 
             // unknown
