@@ -51,7 +51,8 @@ public class InnogyWebSocket {
 
     @OnWebSocketError
     public void onError(Throwable cause) {
-        logger.warn("Error with innogy WebSocket: {}", cause);
+        logger.warn("Error with innogy WebSocket: {}", cause.getMessage());
+        logger.debug("Error with innogy WebSocket:", cause);
         isConnected = false;
         // bridgeHandler.onEventRunnerStopped(60);
     }
