@@ -483,6 +483,21 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                         scheduleReinitialize(0);
                         break;
 
+                    case Event.TYPE_CONTROLLER_CONNECTIVITY_CHANGED:
+                        Boolean connected = event.getIsConnected();
+                        if (connected != null) {
+                            logger.info("SmartHome Controller connectivity changed to {}.",
+                                    connected ? "online" : "offline");
+                            if (connected) {
+                                updateStatus(ThingStatus.ONLINE);
+                            } else {
+                                updateStatus(ThingStatus.OFFLINE);
+                            }
+                        } else {
+                            logger.warn("isConnected property missing in event! (returned null)");
+                        }
+                        break;
+
                     default:
                         logger.debug("Unknown eventtype {}.", event.getType());
                         break;
