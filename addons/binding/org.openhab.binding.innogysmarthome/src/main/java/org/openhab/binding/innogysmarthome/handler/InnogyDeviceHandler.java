@@ -62,7 +62,8 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                 getThing().getThingTypeUID().getId(), command);
 
         if (command instanceof RefreshType) {
-            Device device = getInnogyBridgeHandler().refreshDevice(deviceId);
+            // Device device = getInnogyBridgeHandler().refreshDevice(deviceId);
+            Device device = getInnogyBridgeHandler().getDeviceById(deviceId);
             if (device != null) {
                 onDeviceStateChanged(device);
             }
