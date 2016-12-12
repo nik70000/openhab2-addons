@@ -31,7 +31,7 @@ public class InnogyWebSocket {
     @OnWebSocketConnect
     public void onConnect(Session session) {
         logger.info("Connected to innogy WebSocket.");
-        logger.debug("innogy Websocket session: {}", session);
+        logger.trace("innogy Websocket session: {}", session);
         this.session = session;
         isConnected = true;
     }
@@ -52,7 +52,6 @@ public class InnogyWebSocket {
     @OnWebSocketError
     public void onError(Throwable cause) {
         logger.warn("Error with innogy WebSocket: {}", cause.getMessage());
-        logger.debug("Error with innogy WebSocket:", cause);
         isConnected = false;
         // bridgeHandler.onEventRunnerStopped(60);
     }
