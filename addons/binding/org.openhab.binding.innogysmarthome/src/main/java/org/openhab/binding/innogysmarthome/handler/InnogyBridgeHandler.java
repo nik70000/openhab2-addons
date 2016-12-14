@@ -12,20 +12,15 @@ import static org.openhab.binding.innogysmarthome.InnogyBindingConstants.*;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
-import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.ThingStatus;
@@ -69,6 +64,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     private Logger logger = LoggerFactory.getLogger(InnogyBridgeHandler.class);
     private Configuration config = null;
     private InnogyClient client = null;
+    private InnogyWebSocket webSocket;
     private DeviceStructureManager deviceStructMan = null;
 
     private Set<DeviceStatusListener> deviceStatusListeners = new CopyOnWriteArraySet<>();
@@ -78,11 +74,9 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     private class Initializer implements Runnable {
 
         InnogyBridgeHandler bridgeHandler = null;
-        // Configuration config;
 
-        public Initializer(InnogyBridgeHandler bridgeHandler, Configuration config) {
+        public Initializer(InnogyBridgeHandler bridgeHandler) {
             this.bridgeHandler = bridgeHandler;
-            // this.config = config;
         }
 
         @Override
@@ -124,7 +118,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             updateStatus(ThingStatus.ONLINE);
             setBridgeProperties();
 
-            // scheduler.schedule(new WebSocketRunner(bridgeHandler), 0, TimeUnit.SECONDS);
             onEventRunnerStopped();
         }
 
@@ -161,32 +154,18 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
         @Override
         public void run() {
-            logger.info("Starting web socket.");
+            logger.info("Starting innogy web socket.");
             String webSocketUrl = WEBSOCKET_API_URL_EVENTS.replace("{token}", (String) getConfig().get(ACCESS_TOKEN));
             logger.debug("WebSocket URL: {}",
                     webSocketUrl.substring(0, 70) + "..." + webSocketUrl.substring(webSocketUrl.length() - 10));
 
-            SslContextFactory sslContextFactory = new SslContextFactory();
-            sslContextFactory.setTrustAll(true); // The magic
-
-            // Resource keyStoreResource = Resource.newResource(this.getClass().getResource("/truststore.jks"));
-            // sslContextFactory.setKeyStoreResource(keyStoreResource);
-            // sslContextFactory.setKeyStorePassword("password");
-            // sslContextFactory.setKeyManagerPassword("password");
-
-            WebSocketClient webSocketClient = new WebSocketClient(sslContextFactory);
-
             try {
-                sslContextFactory.start();
-                webSocketClient.start();
-                // TODO : kann jetty autom. reconnect?
-                InnogyWebSocket socket = new InnogyWebSocket(bridgeHandler);
-                Future<Session> fut = webSocketClient.connect(socket, URI.create(webSocketUrl));
-                Session session = fut.get();
-                session.setIdleTimeout(WEBSOCKET_TIMEOUT);
-
-                // send alive ping
-                session.getRemote().sendPing(ByteBuffer.wrap("Alive?".getBytes()));
+                if (webSocket != null && webSocket.isRunning()) {
+                    webSocket.stop();
+                    webSocket = null;
+                }
+                webSocket = new InnogyWebSocket(bridgeHandler, URI.create(webSocketUrl));
+                webSocket.start();
             } catch (Exception e) {
                 if (!handleClientException(e)) {
                     logger.error("Error starting Websocket.");
@@ -194,7 +173,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                 }
             }
         }
-
     }
 
     /**
@@ -233,8 +211,8 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
         if (config != null) {
             logger.debug(config.toString());
-            // scheduler.execute(new Initializer(this, config));
-            Initializer i = new Initializer(this, config);
+            // scheduler.execute(new Initializer(this));
+            Initializer i = new Initializer(this);
             i.run();
 
         }
@@ -314,7 +292,10 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             reinitJob = null;
         }
 
-        // TODO: dispose Websocket!!!!!
+        if (webSocket != null && webSocket.isRunning()) {
+            webSocket.stop();
+            webSocket = null;
+        }
 
         if (client != null) {
             client.dispose();
@@ -408,6 +389,9 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         getThing().getConfiguration().put(ACCESS_TOKEN, accessToken);
         logger.debug("innogy access token saved (onTokenResponse): {}",
                 accessToken.substring(0, 10) + "..." + accessToken.substring(accessToken.length() - 10));
+
+        // restart WebSocket
+        onEventRunnerStopped();
     }
 
     /*
@@ -423,6 +407,9 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         getThing().getConfiguration().put(ACCESS_TOKEN, accessToken);
         logger.debug("innogy access token saved (onTokenErrorResponse): {}",
                 accessToken.substring(0, 10) + "..." + accessToken.substring(accessToken.length() - 10));
+
+        // restart WebSocket
+        onEventRunnerStopped();
     }
 
     /*
@@ -517,6 +504,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     @Override
     public void onEventRunnerStopped(long delay) {
         // scheduler.schedule(new WebSocketRunner(this), delay, TimeUnit.SECONDS);
+        logger.debug("onEventRunnerStopped called");
         WebSocketRunner wsr = new WebSocketRunner(this);
         wsr.run();
     }
