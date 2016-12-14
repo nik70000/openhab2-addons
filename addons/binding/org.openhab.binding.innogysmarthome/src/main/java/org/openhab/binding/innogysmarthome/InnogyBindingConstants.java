@@ -47,7 +47,7 @@ public class InnogyBindingConstants {
     public final static String API_URL_ACTION = "https://api.services-smarthome.de/API/1.0/action";
     public final static String WEBSOCKET_API_URL_EVENTS = "wss://api.services-smarthome.de/API/" + API_VERSION
             + "/events?token={token}";
-    public final static long WEBSOCKET_TIMEOUT = 0;
+    public final static long WEBSOCKET_MAX_IDLE_TIMEOUT = 0;
 
     // properties
     public final static String PROPERTY_ID = "id";
