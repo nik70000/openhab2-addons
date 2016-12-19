@@ -33,6 +33,7 @@ public class InnogyBindingConstants {
     public final static String REFRESH_TOKEN = "refreshtoken";
 
     public final static long REINITIALIZE_DELAY_SECONDS = 30;
+    public final static long REINITIALIZE_DELAY_LONG_SECONDS = 120;
 
     // API URLs
     public final static String API_VERSION = "1.0";

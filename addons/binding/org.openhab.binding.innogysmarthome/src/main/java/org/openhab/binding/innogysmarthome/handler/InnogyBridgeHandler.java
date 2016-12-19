@@ -612,7 +612,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             logger.error("IO error: {}", e.getMessage());
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
             dispose();
-            scheduleReinitialize(3 * 60);
+            scheduleReinitialize(REINITIALIZE_DELAY_LONG_SECONDS);
             return false;
 
             // unexpected API error
@@ -620,7 +620,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             logger.error("Unexcepted API error: {}", e.getMessage());
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
             dispose();
-            scheduleReinitialize(3 * 60);
+            scheduleReinitialize(REINITIALIZE_DELAY_LONG_SECONDS);
             return false;
 
             // java.net.SocketTimeoutException
@@ -628,7 +628,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             logger.error("Socket timeout: {}", e.getMessage());
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
             dispose();
-            scheduleReinitialize(60);
+            scheduleReinitialize();
             return false;
 
             // unknown
