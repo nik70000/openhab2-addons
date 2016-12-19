@@ -444,8 +444,12 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
     @Override
     public synchronized void onDeviceRemoved(Device device) {
         logger.debug("onDeviceRemoved called with device {}/{}", device.getName(), device.getId());
-        this.device = null;
         if (device.getId().equals(deviceId)) {
+            deviceId = null;
+            this.device = null;
+            getInnogyBridgeHandler().unregisterDeviceStatusListener(this);
+            bridgeHandler = null;
+            // forceRefresh = true // TODO: bisher nicht implementiert, aber ggf. nötig?
             updateStatus(ThingStatus.OFFLINE);
         } else {
             logger.debug("onDeviceRemoved called WITH WRONG ID?!?!");
