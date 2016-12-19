@@ -476,9 +476,12 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                             logger.info("SmartHome Controller connectivity changed to {}.",
                                     connected ? "online" : "offline");
                             if (connected) {
+                                deviceStructMan = new DeviceStructureManager(client);
+                                deviceStructMan.start();
                                 updateStatus(ThingStatus.ONLINE);
                             } else {
                                 updateStatus(ThingStatus.OFFLINE);
+                                deviceStructMan = null;
                             }
                         } else {
                             logger.warn("isConnected property missing in event! (returned null)");
