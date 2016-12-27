@@ -353,6 +353,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
             logger.debug("DeviceId {} relevant for this handler.", device.getId(), deviceId);
 
             if (event.isLinkedtoCapability()) {
+                boolean deviceChanged = false;
                 String linkId = event.getLinkId();
                 for (Property p : event.getPropertyList()) {
                     logger.debug("State changed {} to {}.", p.getName(), p.getValue());
@@ -362,61 +363,61 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                             capability.getType(), capability.getName(), capability.getId(),
                             capability.getDeviceLink().get(0).getValue(), device.getId());
 
+                    CapabilityState capabilityState;
+                    if (capability.hasState()) {
+                        capabilityState = capability.getCapabilityState();
+                    } else {
+                        logger.debug("Capability {} has no state (yet?) - ignoring.", capability.getName());
+                        continue;
+                    }
+
                     // TODO: ADD DEVICES
                     // VariableActuator
                     if (capability.isTypeVariableActuator()) {
-                        CapabilityState capabilityState = capability.getCapabilityState();
                         capabilityState.setVariableActuatorState((boolean) p.getValue());
-                        onDeviceStateChanged(device);
+                        deviceChanged = true;
 
                         // SwitchActuator
                     } else if (capability.isTypeSwitchActuator()) {
-                        CapabilityState capabilityState = capability.getCapabilityState();
                         capabilityState.setSwitchActuatorState((boolean) p.getValue());
-                        onDeviceStateChanged(device);
+                        deviceChanged = true;
 
                         // TemperatureSensor
                     } else if (capability.isTypeTemperatureSensor()) {
                         if (p.getName().equals(CapabilityState.STATE_NAME_TEMPERATURE_SENSOR_TEMPERATURE)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
                             capabilityState.setTemperatureSensorTemperatureState((double) p.getValue());
-                            onDeviceStateChanged(device);
+                            deviceChanged = true;
                         } else if (p.getName().equals(CapabilityState.STATE_NAME_TEMPERATURE_SENSOR_FROST_WARNING)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
                             capabilityState.setTemperatureSensorFrostWarningState((boolean) p.getValue());
-                            onDeviceStateChanged(device);
+                            deviceChanged = true;
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
-                            // TODO: FrostWarning
                         }
 
                         // ThermostatActuator
                     } else if (capability.isTypeThermostatActuator()) {
                         // point temperature
                         if (p.getName().equals(CapabilityState.STATE_NAME_THERMOSTAT_ACTUATOR_POINT_TEMPERATURE)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
                             capabilityState.setThermostatActuatorPointTemperatureState((double) p.getValue());
+                            deviceChanged = true;
                             logger.debug("ThermostatActuator PointTemperature State: {}",
                                     capabilityState.getThermostatActuatorPointTemperatureState());
                             logger.debug("ThermostatActuator PointTemperature State from device: {}",
                                     device.getCapabilityMap().get(linkId).getCapabilityState()
                                             .getThermostatActuatorPointTemperatureState());
-                            onDeviceStateChanged(device);
 
                             // operation mode
                         } else if (p.getName().equals(CapabilityState.STATE_NAME_THERMOSTAT_ACTUATOR_OPERATION_MODE)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
                             capabilityState.setThermostatActuatorOperationModeState((String) p.getValue());
+                            deviceChanged = true;
                             logger.debug("ThermostatActuator OperationMode State: {}",
                                     capabilityState.getThermostatActuatorOperationModeState());
-                            onDeviceStateChanged(device);
 
                             // window reduction active
                         } else if (p.getName()
                                 .equals(CapabilityState.STATE_NAME_THERMOSTAT_ACTUATOR_WINDOW_REDUCTION_ACTIVE)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
                             capabilityState.setThermostatActuatorWindowReductionActiveState((boolean) p.getValue());
-                            onDeviceStateChanged(device);
+                            deviceChanged = true;
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
                         }
@@ -425,14 +426,13 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                     } else if (capability.isTypeHumiditySensor()) {
                         // humidity
                         if (p.getName().equals(CapabilityState.STATE_NAME_HUMIDITY_SENSOR_HUMIDITY)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
                             capabilityState.setHumiditySensorHumidityState((double) p.getValue());
-                            onDeviceStateChanged(device);
+                            deviceChanged = true;
+
                             // mold warning
                         } else if (p.getName().equals(CapabilityState.STATE_NAME_HUMIDITY_SENSOR_MOLD_WARNING)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
                             capabilityState.setHumiditySensorMoldWarningState((boolean) p.getValue());
-                            onDeviceStateChanged(device);
+                            deviceChanged = true;
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
                         }
@@ -440,9 +440,8 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         // WindowDoorSensor
                     } else if (capability.isTypeWindowDoorSensor()) {
                         if (p.getName().equals(CapabilityState.STATE_NAME_WINDOW_DOOR_SENSOR)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
                             capabilityState.setWindowDoorSensorState((boolean) p.getValue());
-                            onDeviceStateChanged(device);
+                            deviceChanged = true;
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
                         }
@@ -450,9 +449,8 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         // SmokeDetectorSensor
                     } else if (capability.isTypeSmokeDetectorSensor()) {
                         if (p.getName().equals(CapabilityState.STATE_NAME_SMOKE_DETECTOR_SENSOR)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
                             capabilityState.setSmokeDetectorSensorState((boolean) p.getValue());
-                            onDeviceStateChanged(device);
+                            deviceChanged = true;
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
                         }
@@ -460,13 +458,8 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         // AlarmActuator
                     } else if (capability.isTypeAlarmActuator()) {
                         if (p.getName().equals(CapabilityState.STATE_NAME_ALARM_ACTUATOR)) {
-                            if (capability.hasState()) {
-                                CapabilityState capabilityState = capability.getCapabilityState();
-                                capabilityState.setAlarmActuatorState((boolean) p.getValue());
-                                onDeviceStateChanged(device);
-                            } else {
-                                logger.debug("Capability {} has no state (yet?)", capability.getName());
-                            }
+                            capabilityState.setAlarmActuatorState((boolean) p.getValue());
+                            deviceChanged = true;
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
                         }
@@ -474,9 +467,8 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         // MotionDetectionSensor
                     } else if (capability.isTypeMotionDetectionSensor()) {
                         if (p.getName().equals(CapabilityState.STATE_NAME_MOTION_DETECTION_SENSOR)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
                             capabilityState.setMotionDetectionSensorState((double) p.getValue());
-                            onDeviceStateChanged(device);
+                            deviceChanged = true;
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
                         }
@@ -484,16 +476,21 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         // LuminanceSensor
                     } else if (capability.isTypeLuminanceSensor()) {
                         if (p.getName().equals(CapabilityState.STATE_NAME_LUMINANCE_SENSOR)) {
-                            CapabilityState capabilityState = capability.getCapabilityState();
                             capabilityState.setLuminanceSensorState((double) p.getValue());
-                            onDeviceStateChanged(device);
+                            deviceChanged = true;
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
                         }
 
                     } else {
                         logger.debug("Unsupported capability type {}.", capability.getType());
+                        continue;
                     }
+
+                }
+
+                if (deviceChanged) {
+                    onDeviceStateChanged(device);
                 }
 
             } else if (event.isLinkedtoDevice()) {
