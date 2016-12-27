@@ -103,5 +103,9 @@ public class InnogyBindingConstants {
     public final static String CHANNEL_ALARM = "alarm";
     public final static String CHANNEL_MOTION_COUNT = "motion_count";
     public final static String CHANNEL_LUMINANCE = "luminance";
+    public final static String CHANNEL_OPERATION_MODE = "operation_mode";
+    public final static String CHANNEL_FROST_WARNING = "frost_warning";
+    public final static String CHANNEL_MOLD_WARNING = "mold_warning";
+    public final static String CHANNEL_WINDOW_REDUCTION_ACTIVE = "window_reduction_active";
 
 }

@@ -16,6 +16,7 @@ import java.util.Set;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.OnOffType;
 import org.eclipse.smarthome.core.library.types.OpenClosedType;
+import org.eclipse.smarthome.core.library.types.StringType;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
@@ -82,6 +83,21 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
             if (command instanceof DecimalType) {
                 DecimalType pointTemperature = (DecimalType) command;
                 getInnogyBridgeHandler().commandUpdatePointTemperature(deviceId, pointTemperature.doubleValue());
+            }
+
+            // OPERATION_MODE
+        } else if (channelUID.getId().equals(CHANNEL_OPERATION_MODE)) {
+            if (command instanceof StringType) {
+                StringType autoModeCommand = (StringType) command;
+
+                if (autoModeCommand.toString().equals("Auto")) {
+                    getInnogyBridgeHandler().commandSetOperationMode(deviceId, true);
+                } else if (autoModeCommand.toString().equals("Manu")) {
+                    getInnogyBridgeHandler().commandSetOperationMode(deviceId, false);
+                } else {
+                    logger.warn("Could not set operationmode. Invalid value '{}'! Only '{}' or '{}' allowed.",
+                            autoModeCommand.toString(), "Auto", "Manu");
+                }
             }
 
             // ALARM
@@ -223,7 +239,8 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         }
                         break;
                     case Capability.TYPE_TEMPERATURESENSOR:
-                        Double temperatureSensorState = c.getCapabilityState().getTemperatureSensorState();
+                        // temperature
+                        Double temperatureSensorState = c.getCapabilityState().getTemperatureSensorTemperatureState();
                         if (temperatureSensorState != null) {
                             logger.debug("-> Temperature sensor state: {}", temperatureSensorState);
                             DecimalType temp = new DecimalType(temperatureSensorState);
@@ -232,19 +249,55 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                             logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
                                     c.getCapabilityState().getId(), c.getId());
                         }
+
+                        // frost warning
+                        Boolean temperatureSensorFrostWarningState = c.getCapabilityState()
+                                .getTemperatureSensorFrostWarningState();
+                        if (temperatureSensorFrostWarningState != null) {
+                            updateState(CHANNEL_FROST_WARNING,
+                                    temperatureSensorFrostWarningState ? OnOffType.ON : OnOffType.OFF);
+                        }
+
                         break;
                     case Capability.TYPE_THERMOSTATACTUATOR:
-                        Double thermostatActuatorState = c.getCapabilityState().getThermostatActuatorState();
-                        if (thermostatActuatorState != null) {
-                            DecimalType pointTemp = new DecimalType(thermostatActuatorState);
+                        // point temperature
+                        Double thermostatActuatorPointTemperatureState = c.getCapabilityState()
+                                .getThermostatActuatorPointTemperatureState();
+                        if (thermostatActuatorPointTemperatureState != null) {
+                            DecimalType pointTemp = new DecimalType(thermostatActuatorPointTemperatureState);
                             updateState(CHANNEL_SET_TEMPERATURE, pointTemp);
+                        }
+
+                        // operation mode
+                        String thermostatActuatorOperationModeState = c.getCapabilityState()
+                                .getThermostatActuatorOperationModeState();
+                        if (thermostatActuatorOperationModeState != null) {
+                            StringType operationMode = new StringType(thermostatActuatorOperationModeState);
+                            updateState(CHANNEL_OPERATION_MODE, operationMode);
+                        }
+
+                        // window reduction active
+                        Boolean thermostatActuatorWindowReductionActiveState = c.getCapabilityState()
+                                .getThermostatActuatorWindowReductionActiveState();
+                        if (thermostatActuatorWindowReductionActiveState != null) {
+                            updateState(CHANNEL_WINDOW_REDUCTION_ACTIVE,
+                                    thermostatActuatorWindowReductionActiveState ? OnOffType.ON : OnOffType.OFF);
                         }
                         break;
                     case Capability.TYPE_HUMIDITYSENSOR:
-                        Double humidityState = c.getCapabilityState().getHumiditySensorState();
+                        // humidity
+                        Double humidityState = c.getCapabilityState().getHumiditySensorHumidityState();
                         if (humidityState != null) {
                             DecimalType humidity = new DecimalType(humidityState);
                             updateState(CHANNEL_HUMIDITY, humidity);
+                        }
+
+                        // mold warning
+                        Boolean humiditySensorMoldWarningState = c.getCapabilityState()
+                                .getTemperatureSensorFrostWarningState();
+                        if (humiditySensorMoldWarningState != null) {
+                            updateState(CHANNEL_MOLD_WARNING,
+                                    humiditySensorMoldWarningState ? OnOffType.ON : OnOffType.OFF);
                         }
                         break;
                     case Capability.TYPE_WINDOWDOORSENSOR:
@@ -324,9 +377,13 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
 
                         // TemperatureSensor
                     } else if (capability.isTypeTemperatureSensor()) {
-                        if (p.getName().equals(CapabilityState.STATE_NAME_TEMPERATURE_SENSOR)) {
+                        if (p.getName().equals(CapabilityState.STATE_NAME_TEMPERATURE_SENSOR_TEMPERATURE)) {
                             CapabilityState capabilityState = capability.getCapabilityState();
-                            capabilityState.setTemperatureSensorState((double) p.getValue());
+                            capabilityState.setTemperatureSensorTemperatureState((double) p.getValue());
+                            onDeviceStateChanged(device);
+                        } else if (p.getName().equals(CapabilityState.STATE_NAME_TEMPERATURE_SENSOR_FROST_WARNING)) {
+                            CapabilityState capabilityState = capability.getCapabilityState();
+                            capabilityState.setTemperatureSensorFrostWarningState((boolean) p.getValue());
                             onDeviceStateChanged(device);
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
@@ -335,30 +392,49 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
 
                         // ThermostatActuator
                     } else if (capability.isTypeThermostatActuator()) {
-                        // if(p.getName().equals())
-                        // Es gibt unterschiedliche Properties. Eher nach Property, als nach Capability unterscheiden?
-                        // Oder eben beides...
-                        if (p.getName().equals(CapabilityState.STATE_NAME_THERMOSTAT_ACTUATOR)) {
+                        // point temperature
+                        if (p.getName().equals(CapabilityState.STATE_NAME_THERMOSTAT_ACTUATOR_POINT_TEMPERATURE)) {
                             CapabilityState capabilityState = capability.getCapabilityState();
-                            capabilityState.setThermostatActuatorState((double) p.getValue());
-                            logger.debug("Thermostat ActuatorState: {}", capabilityState.getThermostatActuatorState());
-                            logger.debug("Thermostat ActuatorState from device: {}", device.getCapabilityMap()
-                                    .get(linkId).getCapabilityState().getThermostatActuatorState());
+                            capabilityState.setThermostatActuatorPointTemperatureState((double) p.getValue());
+                            logger.debug("ThermostatActuator PointTemperature State: {}",
+                                    capabilityState.getThermostatActuatorPointTemperatureState());
+                            logger.debug("ThermostatActuator PointTemperature State from device: {}",
+                                    device.getCapabilityMap().get(linkId).getCapabilityState()
+                                            .getThermostatActuatorPointTemperatureState());
+                            onDeviceStateChanged(device);
+
+                            // operation mode
+                        } else if (p.getName().equals(CapabilityState.STATE_NAME_THERMOSTAT_ACTUATOR_OPERATION_MODE)) {
+                            CapabilityState capabilityState = capability.getCapabilityState();
+                            capabilityState.setThermostatActuatorOperationModeState((String) p.getValue());
+                            logger.debug("ThermostatActuator OperationMode State: {}",
+                                    capabilityState.getThermostatActuatorOperationModeState());
+                            onDeviceStateChanged(device);
+
+                            // window reduction active
+                        } else if (p.getName()
+                                .equals(CapabilityState.STATE_NAME_THERMOSTAT_ACTUATOR_WINDOW_REDUCTION_ACTIVE)) {
+                            CapabilityState capabilityState = capability.getCapabilityState();
+                            capabilityState.setThermostatActuatorWindowReductionActiveState((boolean) p.getValue());
                             onDeviceStateChanged(device);
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
-                            // TODO: WindowReduction, OperationMode
                         }
 
                         // HumiditySensor
                     } else if (capability.isTypeHumiditySensor()) {
-                        if (p.getName().equals(CapabilityState.STATE_NAME_HUMIDITY_SENSOR)) {
+                        // humidity
+                        if (p.getName().equals(CapabilityState.STATE_NAME_HUMIDITY_SENSOR_HUMIDITY)) {
                             CapabilityState capabilityState = capability.getCapabilityState();
-                            capabilityState.setHumiditySensorState((double) p.getValue());
+                            capabilityState.setHumiditySensorHumidityState((double) p.getValue());
+                            onDeviceStateChanged(device);
+                            // mold warning
+                        } else if (p.getName().equals(CapabilityState.STATE_NAME_HUMIDITY_SENSOR_MOLD_WARNING)) {
+                            CapabilityState capabilityState = capability.getCapabilityState();
+                            capabilityState.setHumiditySensorMoldWarningState((boolean) p.getValue());
                             onDeviceStateChanged(device);
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());
-                            // TODO: MoldWarning
                         }
 
                         // WindowDoorSensor
