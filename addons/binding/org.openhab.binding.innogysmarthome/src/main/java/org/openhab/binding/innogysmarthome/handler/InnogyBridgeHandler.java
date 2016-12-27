@@ -432,7 +432,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
                         // CAPABILITY
                         if (event.isLinkedtoCapability()) {
-                            // TODO: funktioniert getDeviceByCapabilityLink auch mit Device-Link?!?
                             Device device = deviceStructMan.getDeviceByCapabilityLink(event.getLink().getValue());
                             if (device != null) {
                                 for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
@@ -444,7 +443,8 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
                             // DEVICE
                         } else if (event.isLinkedtoDevice()) {
-                            Device device = deviceStructMan.getDeviceByDeviceLink(event.getLinkId());
+                            deviceStructMan.refreshDevice(event.getLinkId());
+                            Device device = deviceStructMan.getDeviceById(event.getLinkId());
                             if (device != null) {
                                 logger.debug("DEVICE STATE CHANGED!!!");
                                 for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
