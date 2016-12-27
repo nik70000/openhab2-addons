@@ -342,7 +342,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             try {
                 devices = deviceStructMan.getDeviceList();
             } catch (Exception e) {
-                logger.error("Bridge cannot search for new devices.", e);
+                logger.error("Error loading devices from device structure manager.", e);
             }
         }
 
@@ -558,6 +558,15 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                 String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_ALARMACTUATOR);
                 client.setAlarmActuatorState(capabilityId, alarmState);
             }
+        } catch (Exception e) {
+            handleClientException(e);
+        }
+    }
+
+    public void commandSetOperationMode(String deviceId, boolean autoMode) {
+        try {
+            String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_THERMOSTATACTUATOR);
+            client.setOperationMode(capabilityId, autoMode);
         } catch (Exception e) {
             handleClientException(e);
         }
