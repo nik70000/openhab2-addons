@@ -346,6 +346,18 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                                 updateState(CHANNEL_KEY1_COUNT, pushCount);
                             } else if (buttonIndexState.equals(1.0)) {
                                 updateState(CHANNEL_KEY2_COUNT, pushCount);
+                            } else if (buttonIndexState.equals(2.0)) {
+                                updateState(CHANNEL_KEY3_COUNT, pushCount);
+                            } else if (buttonIndexState.equals(3.0)) {
+                                updateState(CHANNEL_KEY4_COUNT, pushCount);
+                            } else if (buttonIndexState.equals(4.0)) {
+                                updateState(CHANNEL_KEY5_COUNT, pushCount);
+                            } else if (buttonIndexState.equals(5.0)) {
+                                updateState(CHANNEL_KEY6_COUNT, pushCount);
+                            } else if (buttonIndexState.equals(6.0)) {
+                                updateState(CHANNEL_KEY7_COUNT, pushCount);
+                            } else if (buttonIndexState.equals(7.0)) {
+                                updateState(CHANNEL_KEY8_COUNT, pushCount);
                             } else {
                                 logger.debug("Button index {} not supported.", buttonIndexState);
                             }
