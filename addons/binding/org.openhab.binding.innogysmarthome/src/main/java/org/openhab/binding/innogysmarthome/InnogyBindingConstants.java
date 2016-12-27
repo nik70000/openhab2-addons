@@ -76,6 +76,7 @@ public class InnogyBindingConstants {
     public final static String DEVICE_WSD = "WSD"; // wall mounted smoke detector
     public final static String DEVICE_WSD2 = "WSD2"; // wall mounted smoke detector
     public final static String DEVICE_WMD = "WMD"; // wall mounted motion detector indoor
+    public final static String DEVICE_WMDO = "WMDO"; // wall mounted motion detector outdoor
     public final static String DEVICE_WSC2 = "WSC2"; // wall mounted smart controller (2 buttons)
     public final static String DEVICE_BRC8 = "BRC8"; // basic remote controller (8 buttons)
     public final static String DEVICE_ISC2 = "ISC2"; // in wall smart controller (2 buttons)
@@ -93,14 +94,15 @@ public class InnogyBindingConstants {
     public final static ThingTypeUID THING_TYPE_WSD = new ThingTypeUID(BINDING_ID, DEVICE_WSD);
     public final static ThingTypeUID THING_TYPE_WSD2 = new ThingTypeUID(BINDING_ID, DEVICE_WSD2);
     public final static ThingTypeUID THING_TYPE_WMD = new ThingTypeUID(BINDING_ID, DEVICE_WMD);
+    public final static ThingTypeUID THING_TYPE_WMDO = new ThingTypeUID(BINDING_ID, DEVICE_WMDO);
     public final static ThingTypeUID THING_TYPE_WSC2 = new ThingTypeUID(BINDING_ID, DEVICE_WSC2);
     public final static ThingTypeUID THING_TYPE_BRC8 = new ThingTypeUID(BINDING_ID, DEVICE_BRC8);
     public final static ThingTypeUID THING_TYPE_ISC2 = new ThingTypeUID(BINDING_ID, DEVICE_ISC2);
 
     public final static Set<ThingTypeUID> SUPPORTED_DEVICE_THING_TYPES = ImmutableSet.of(THING_TYPE_PSS,
             THING_TYPE_PSSO, THING_TYPE_VARIABLE_ACTUATOR, THING_TYPE_RST, THING_TYPE_WRT, THING_TYPE_WDS,
-            THING_TYPE_ISS2, THING_TYPE_WSD, THING_TYPE_WSD2, THING_TYPE_WMD, THING_TYPE_WSC2, THING_TYPE_BRC8,
-            THING_TYPE_ISC2);
+            THING_TYPE_ISS2, THING_TYPE_WSD, THING_TYPE_WSD2, THING_TYPE_WMD, THING_TYPE_WMDO, THING_TYPE_WSC2,
+            THING_TYPE_BRC8, THING_TYPE_ISC2);
 
     // List of all Channel ids
     public final static String CHANNEL_SWITCH = "switch";
