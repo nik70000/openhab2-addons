@@ -74,6 +74,7 @@ public class InnogyBindingConstants {
     public final static String DEVICE_WDS = "WDS"; // window door sensor
     public final static String DEVICE_ISS2 = "ISS2"; // inwall smart switch
     public final static String DEVICE_WSD = "WSD"; // wall mounted smoke detector
+    public final static String DEVICE_WSD2 = "WSD2"; // wall mounted smoke detector
     public final static String DEVICE_WMD = "WMD"; // wall mounted motion detector indoor
 
     // List of all Thing Type UIDs
@@ -87,11 +88,12 @@ public class InnogyBindingConstants {
     public final static ThingTypeUID THING_TYPE_WDS = new ThingTypeUID(BINDING_ID, DEVICE_WDS);
     public final static ThingTypeUID THING_TYPE_ISS2 = new ThingTypeUID(BINDING_ID, DEVICE_ISS2);
     public final static ThingTypeUID THING_TYPE_WSD = new ThingTypeUID(BINDING_ID, DEVICE_WSD);
+    public final static ThingTypeUID THING_TYPE_WSD2 = new ThingTypeUID(BINDING_ID, DEVICE_WSD2);
     public final static ThingTypeUID THING_TYPE_WMD = new ThingTypeUID(BINDING_ID, DEVICE_WMD);
 
     public final static Set<ThingTypeUID> SUPPORTED_DEVICE_THING_TYPES = ImmutableSet.of(THING_TYPE_PSS,
             THING_TYPE_PSSO, THING_TYPE_VARIABLE_ACTUATOR, THING_TYPE_RST, THING_TYPE_WRT, THING_TYPE_WDS,
-            THING_TYPE_ISS2, THING_TYPE_WSD, THING_TYPE_WMD);
+            THING_TYPE_ISS2, THING_TYPE_WSD, THING_TYPE_WSD2, THING_TYPE_WMD);
 
     // List of all Channel ids
     public final static String CHANNEL_SWITCH = "switch";
