@@ -77,6 +77,7 @@ public class InnogyBindingConstants {
     public final static String DEVICE_WSD2 = "WSD2"; // wall mounted smoke detector
     public final static String DEVICE_WMD = "WMD"; // wall mounted motion detector indoor
     public final static String DEVICE_WSC2 = "WSC2"; // wall mounted smart controller (2 buttons)
+    public final static String DEVICE_BRC8 = "BRC8"; // basic remote controller (8 buttons)
 
     // List of all Thing Type UIDs
     public final static ThingTypeUID THING_TYPE_BRIDGE = new ThingTypeUID(BINDING_ID, "bridge");
@@ -92,10 +93,11 @@ public class InnogyBindingConstants {
     public final static ThingTypeUID THING_TYPE_WSD2 = new ThingTypeUID(BINDING_ID, DEVICE_WSD2);
     public final static ThingTypeUID THING_TYPE_WMD = new ThingTypeUID(BINDING_ID, DEVICE_WMD);
     public final static ThingTypeUID THING_TYPE_WSC2 = new ThingTypeUID(BINDING_ID, DEVICE_WSC2);
+    public final static ThingTypeUID THING_TYPE_BRC8 = new ThingTypeUID(BINDING_ID, DEVICE_BRC8);
 
     public final static Set<ThingTypeUID> SUPPORTED_DEVICE_THING_TYPES = ImmutableSet.of(THING_TYPE_PSS,
             THING_TYPE_PSSO, THING_TYPE_VARIABLE_ACTUATOR, THING_TYPE_RST, THING_TYPE_WRT, THING_TYPE_WDS,
-            THING_TYPE_ISS2, THING_TYPE_WSD, THING_TYPE_WSD2, THING_TYPE_WMD, THING_TYPE_WSC2);
+            THING_TYPE_ISS2, THING_TYPE_WSD, THING_TYPE_WSD2, THING_TYPE_WMD, THING_TYPE_WSC2, THING_TYPE_BRC8);
 
     // List of all Channel ids
     public final static String CHANNEL_SWITCH = "switch";
@@ -113,5 +115,11 @@ public class InnogyBindingConstants {
     public final static String CHANNEL_WINDOW_REDUCTION_ACTIVE = "window_reduction_active";
     public final static String CHANNEL_KEY1_COUNT = "key1_count";
     public final static String CHANNEL_KEY2_COUNT = "key2_count";
+    public final static String CHANNEL_KEY3_COUNT = "key3_count";
+    public final static String CHANNEL_KEY4_COUNT = "key4_count";
+    public final static String CHANNEL_KEY5_COUNT = "key5_count";
+    public final static String CHANNEL_KEY6_COUNT = "key6_count";
+    public final static String CHANNEL_KEY7_COUNT = "key7_count";
+    public final static String CHANNEL_KEY8_COUNT = "key8_count";
 
 }
