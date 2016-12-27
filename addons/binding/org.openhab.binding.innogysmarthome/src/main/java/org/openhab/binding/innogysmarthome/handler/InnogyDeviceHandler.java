@@ -78,6 +78,13 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                 getInnogyBridgeHandler().commandSwitchDevice(deviceId, OnOffType.ON.equals(command));
             }
 
+            // DIMMER
+        } else if (channelUID.getId().equals(CHANNEL_DIMMER)) {
+            if (command instanceof DecimalType) {
+                DecimalType dimLevel = (DecimalType) command;
+                getInnogyBridgeHandler().commandSetDimmLevel(deviceId, dimLevel.doubleValue());
+            }
+
             // SET_TEMPERATURE
         } else if (channelUID.getId().equals(CHANNEL_SET_TEMPERATURE)) {
             if (command instanceof DecimalType) {
@@ -236,6 +243,13 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         Boolean switchActuatorState = c.getCapabilityState().getSwitchActuatorState();
                         if (switchActuatorState != null) {
                             updateState(CHANNEL_SWITCH, switchActuatorState ? OnOffType.ON : OnOffType.OFF);
+                        }
+                        break;
+                    case Capability.TYPE_DIMMERACTUATOR:
+                        Double dimmerActuatorState = c.getCapabilityState().getDimmerActuatorState();
+                        if (dimmerActuatorState != null) {
+                            DecimalType dimLevel = new DecimalType(dimmerActuatorState);
+                            updateState(CHANNEL_DIMMER, dimLevel);
                         }
                         break;
                     case Capability.TYPE_TEMPERATURESENSOR:
@@ -409,6 +423,10 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         // SwitchActuator
                     } else if (capability.isTypeSwitchActuator()) {
                         capabilityState.setSwitchActuatorState((boolean) p.getValue());
+                        deviceChanged = true;
+
+                    } else if (capability.isTypeDimmerActuator()) {
+                        capabilityState.setDimmerActuatorState((double) p.getValue());
                         deviceChanged = true;
 
                         // TemperatureSensor
