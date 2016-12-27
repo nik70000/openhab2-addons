@@ -23,6 +23,8 @@ import org.openhab.binding.innogysmarthome.discovery.InnogyDeviceDiscoveryServic
 import org.openhab.binding.innogysmarthome.handler.InnogyBridgeHandler;
 import org.openhab.binding.innogysmarthome.handler.InnogyDeviceHandler;
 import org.osgi.framework.ServiceRegistration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
 
@@ -37,6 +39,7 @@ public class InnogyHandlerFactory extends BaseThingHandlerFactory {
     private final static Set<ThingTypeUID> SUPPORTED_THING_TYPES = Sets.union(InnogyBridgeHandler.SUPPORTED_THING_TYPES,
             InnogyDeviceHandler.SUPPORTED_THING_TYPES);
 
+    private Logger logger = LoggerFactory.getLogger(InnogyHandlerFactory.class);
     private Map<ThingUID, ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
 
     @Override
@@ -55,6 +58,7 @@ public class InnogyHandlerFactory extends BaseThingHandlerFactory {
             InnogyDeviceHandler handler = new InnogyDeviceHandler(thing);
             return handler;
         } else {
+            logger.debug("Unsupported thing {}.", thing.getThingTypeUID());
             return null;
         }
     }
