@@ -47,11 +47,11 @@ public class InnogyBridgeDiscoveryParticipant implements MDNSDiscoveryParticipan
 
     @Override
     public ThingUID getThingUID(ServiceInfo service) {
-        logger.debug("MDNS: {} v4:{} v6:{}", service.getName(), service.getInet4Addresses(),
-                service.getInet6Addresses());
         if (service != null) {
             String serviceName = service.getName();
             if (serviceName.startsWith("SMARTHOME")) {
+                logger.debug("Found innogy bridge via mDNS:{} v4:{} v6:{}", service.getName(),
+                        service.getInet4Addresses(), service.getInet6Addresses());
                 return new ThingUID(THING_TYPE_BRIDGE, serviceName);
             }
         }
