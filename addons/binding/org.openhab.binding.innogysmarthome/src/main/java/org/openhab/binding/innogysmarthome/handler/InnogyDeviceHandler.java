@@ -336,7 +336,24 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                             updateState(CHANNEL_LUMINANCE, luminance);
                         }
                         break;
-
+                    case Capability.TYPE_PUSHBUTTONSENSOR:
+                        Double pushCountState = c.getCapabilityState().getPushButtonSensorCounterState();
+                        Double buttonIndexState = c.getCapabilityState().getPushButtonSensorButtonIndexState();
+                        logger.debug("Pushbutton index {} count {}", buttonIndexState, pushCountState);
+                        if (pushCountState != null) {
+                            DecimalType pushCount = new DecimalType(pushCountState);
+                            if (buttonIndexState.equals(0.0)) {
+                                updateState(CHANNEL_KEY1_COUNT, pushCount);
+                            } else if (buttonIndexState.equals(1.0)) {
+                                updateState(CHANNEL_KEY2_COUNT, pushCount);
+                            } else {
+                                logger.debug("Button index {} not supported.", buttonIndexState);
+                            }
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
+                        }
+                        break;
                     default:
                         logger.debug("Unsupported capability type {}.", c.getType());
                 }
@@ -477,6 +494,18 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                     } else if (capability.isTypeLuminanceSensor()) {
                         if (p.getName().equals(CapabilityState.STATE_NAME_LUMINANCE_SENSOR)) {
                             capabilityState.setLuminanceSensorState((double) p.getValue());
+                            deviceChanged = true;
+                        } else {
+                            logger.debug("Capability-property {} not yet supported.", p.getName());
+                        }
+
+                        // PushButtonSensor
+                    } else if (capability.isTypePushButtonSensor()) {
+                        if (p.getName().equals(CapabilityState.STATE_NAME_PUSH_BUTTON_SENSOR_BUTTON_INDEX)) {
+                            capabilityState.setPushButtonSensorButtonIndexState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(CapabilityState.STATE_NAME_PUSH_BUTTON_SENSOR_COUNTER)) {
+                            capabilityState.setPushButtonSensorCounterState((double) p.getValue());
                             deviceChanged = true;
                         } else {
                             logger.debug("Capability-property {} not yet supported.", p.getName());

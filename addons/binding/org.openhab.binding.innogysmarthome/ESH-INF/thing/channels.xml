@@ -170,4 +170,16 @@
         <state pattern="%d%%" readOnly="true"></state>
     </channel-type>
     
+    <!-- PushButtonSensor Channel -->
+    <channel-type id="PushButtonSensor">
+        <item-type>Number</item-type>
+        <label>Button pushed count</label>
+        <description>The count of button pushes.</description>
+        <category>Count</category>
+        <tags>
+            <tag>button</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
 </thing:thing-descriptions>
