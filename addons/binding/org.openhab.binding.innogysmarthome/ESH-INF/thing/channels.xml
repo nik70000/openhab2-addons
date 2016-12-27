@@ -5,7 +5,7 @@
 
 
 
-    <!-- PowerSwitch Channel -->
+    <!-- Switch Channel -->
 	<channel-type id="SwitchActuator">
 		<item-type>Switch</item-type>
 		<label>Switch</label>
@@ -14,6 +14,17 @@
 		<tags>
 			<tag>switch</tag>
 		</tags>
+	</channel-type>
+	
+	<!-- Dimmer Channel -->
+	<channel-type id="DimmerActuator">
+	   <item-type>Dimmer</item-type>
+	   <label>Dimmer</label>
+	   <description>Dimms the connected light.</description>
+	   <category>DimmableLight</category>
+	   <tags>
+	       <tag>dimmer</tag>
+	   </tags>
 	</channel-type>
 
     <!-- BooleanSwitch Channel -->
@@ -25,6 +36,7 @@
         <tags>
             <tag>switch</tag>
         </tags>
+        <state min="0" max="100" step="1" pattern="%d"></state>
     </channel-type>
     
     <!-- ThermostatActuator -->

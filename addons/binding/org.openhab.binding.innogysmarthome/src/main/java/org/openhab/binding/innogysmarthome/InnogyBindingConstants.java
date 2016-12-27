@@ -80,6 +80,7 @@ public class InnogyBindingConstants {
     public final static String DEVICE_WSC2 = "WSC2"; // wall mounted smart controller (2 buttons)
     public final static String DEVICE_BRC8 = "BRC8"; // basic remote controller (8 buttons)
     public final static String DEVICE_ISC2 = "ISC2"; // in wall smart controller (2 buttons)
+    public final static String DEVICE_ISD2 = "ISD2"; // in wall smart dimmer (2 buttons)
 
     // List of all Thing Type UIDs
     public final static ThingTypeUID THING_TYPE_BRIDGE = new ThingTypeUID(BINDING_ID, "bridge");
@@ -98,11 +99,13 @@ public class InnogyBindingConstants {
     public final static ThingTypeUID THING_TYPE_WSC2 = new ThingTypeUID(BINDING_ID, DEVICE_WSC2);
     public final static ThingTypeUID THING_TYPE_BRC8 = new ThingTypeUID(BINDING_ID, DEVICE_BRC8);
     public final static ThingTypeUID THING_TYPE_ISC2 = new ThingTypeUID(BINDING_ID, DEVICE_ISC2);
+    public final static ThingTypeUID THING_TYPE_ISD2 = new ThingTypeUID(BINDING_ID, DEVICE_ISD2);
 
     public final static Set<ThingTypeUID> SUPPORTED_DEVICE_THING_TYPES = ImmutableSet.of(THING_TYPE_PSS,
             THING_TYPE_PSSO, THING_TYPE_VARIABLE_ACTUATOR, THING_TYPE_RST, THING_TYPE_WRT, THING_TYPE_WDS,
             THING_TYPE_ISS2, THING_TYPE_WSD, THING_TYPE_WSD2, THING_TYPE_WMD, THING_TYPE_WMDO, THING_TYPE_WSC2,
-            THING_TYPE_BRC8, THING_TYPE_ISC2);
+            THING_TYPE_BRC8, THING_TYPE_ISC2// , THING_TYPE_ISD2
+    );
 
     // List of all Channel ids
     public final static String CHANNEL_SWITCH = "switch";
@@ -126,5 +129,6 @@ public class InnogyBindingConstants {
     public final static String CHANNEL_KEY6_COUNT = "key6_count";
     public final static String CHANNEL_KEY7_COUNT = "key7_count";
     public final static String CHANNEL_KEY8_COUNT = "key8_count";
+    public final static String CHANNEL_DIMMER = "dimmer";
 
 }
