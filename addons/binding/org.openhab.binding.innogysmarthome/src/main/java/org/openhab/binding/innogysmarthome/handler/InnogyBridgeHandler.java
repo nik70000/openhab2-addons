@@ -554,10 +554,8 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
     public void commandSwitchAlarm(String deviceId, boolean alarmState) {
         try {
-            if (deviceStructMan.getDeviceById(deviceId).getType().equals(DEVICE_WSD)) {
-                String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_ALARMACTUATOR);
-                client.setAlarmActuatorState(capabilityId, alarmState);
-            }
+            String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_ALARMACTUATOR);
+            client.setAlarmActuatorState(capabilityId, alarmState);
         } catch (Exception e) {
             handleClientException(e);
         }
