@@ -572,7 +572,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         }
     }
 
-    public void commandSetDimmLevel(String deviceId, double dimLevel) {
+    public void commandSetDimmLevel(String deviceId, int dimLevel) {
         try {
             String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_DIMMERACTUATOR);
             client.setDimmerActuatorState(capabilityId, dimLevel);
