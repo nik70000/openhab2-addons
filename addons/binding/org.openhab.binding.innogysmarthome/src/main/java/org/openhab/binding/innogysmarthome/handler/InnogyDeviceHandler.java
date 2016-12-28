@@ -257,6 +257,11 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         if (dimmerActuatorState != null) {
                             PercentType dimLevel = new PercentType(dimmerActuatorState.intValue());
                             logger.debug("Dimlevel state {} -> type {}", dimmerActuatorState, dimLevel);
+                            if (dimmerActuatorState > 0) {
+                                updateState(CHANNEL_DIMMER, OnOffType.ON);
+                            } else {
+                                updateState(CHANNEL_DIMMER, OnOffType.OFF);
+                            }
                             updateState(CHANNEL_DIMMER, dimLevel);
                         }
                         break;
