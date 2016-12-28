@@ -16,6 +16,7 @@ import java.util.Set;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.OnOffType;
 import org.eclipse.smarthome.core.library.types.OpenClosedType;
+import org.eclipse.smarthome.core.library.types.PercentType;
 import org.eclipse.smarthome.core.library.types.StringType;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -82,7 +83,13 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         } else if (channelUID.getId().equals(CHANNEL_DIMMER)) {
             if (command instanceof DecimalType) {
                 DecimalType dimLevel = (DecimalType) command;
-                getInnogyBridgeHandler().commandSetDimmLevel(deviceId, dimLevel.doubleValue());
+                getInnogyBridgeHandler().commandSetDimmLevel(deviceId, dimLevel.intValue());
+            } else if (command instanceof OnOffType) {
+                if (OnOffType.ON.equals(command)) {
+                    getInnogyBridgeHandler().commandSetDimmLevel(deviceId, 100);
+                } else {
+                    getInnogyBridgeHandler().commandSetDimmLevel(deviceId, 0);
+                }
             }
 
             // SET_TEMPERATURE
@@ -248,7 +255,8 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                     case Capability.TYPE_DIMMERACTUATOR:
                         Double dimmerActuatorState = c.getCapabilityState().getDimmerActuatorState();
                         if (dimmerActuatorState != null) {
-                            DecimalType dimLevel = new DecimalType(dimmerActuatorState);
+                            PercentType dimLevel = new PercentType(dimmerActuatorState.intValue());
+                            logger.debug("Dimlevel state {} -> type {}", dimmerActuatorState, dimLevel);
                             updateState(CHANNEL_DIMMER, dimLevel);
                         }
                         break;
