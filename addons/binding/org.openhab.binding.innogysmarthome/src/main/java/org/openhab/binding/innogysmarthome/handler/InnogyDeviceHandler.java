@@ -244,12 +244,18 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         Boolean variableActuatorState = c.getCapabilityState().getVariableActuatorState();
                         if (variableActuatorState != null) {
                             updateState(CHANNEL_SWITCH, variableActuatorState ? OnOffType.ON : OnOffType.OFF);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
                         break;
                     case Capability.TYPE_SWITCHACTUATOR:
                         Boolean switchActuatorState = c.getCapabilityState().getSwitchActuatorState();
                         if (switchActuatorState != null) {
                             updateState(CHANNEL_SWITCH, switchActuatorState ? OnOffType.ON : OnOffType.OFF);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
                         break;
                     case Capability.TYPE_DIMMERACTUATOR:
@@ -263,6 +269,9 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                                 updateState(CHANNEL_DIMMER, OnOffType.OFF);
                             }
                             updateState(CHANNEL_DIMMER, dimLevel);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
                         break;
                     case Capability.TYPE_TEMPERATURESENSOR:
@@ -283,6 +292,9 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         if (temperatureSensorFrostWarningState != null) {
                             updateState(CHANNEL_FROST_WARNING,
                                     temperatureSensorFrostWarningState ? OnOffType.ON : OnOffType.OFF);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
 
                         break;
@@ -293,6 +305,9 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         if (thermostatActuatorPointTemperatureState != null) {
                             DecimalType pointTemp = new DecimalType(thermostatActuatorPointTemperatureState);
                             updateState(CHANNEL_SET_TEMPERATURE, pointTemp);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
 
                         // operation mode
@@ -301,6 +316,9 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         if (thermostatActuatorOperationModeState != null) {
                             StringType operationMode = new StringType(thermostatActuatorOperationModeState);
                             updateState(CHANNEL_OPERATION_MODE, operationMode);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
 
                         // window reduction active
@@ -309,6 +327,9 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         if (thermostatActuatorWindowReductionActiveState != null) {
                             updateState(CHANNEL_WINDOW_REDUCTION_ACTIVE,
                                     thermostatActuatorWindowReductionActiveState ? OnOffType.ON : OnOffType.OFF);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
                         break;
                     case Capability.TYPE_HUMIDITYSENSOR:
@@ -317,6 +338,9 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         if (humidityState != null) {
                             DecimalType humidity = new DecimalType(humidityState);
                             updateState(CHANNEL_HUMIDITY, humidity);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
 
                         // mold warning
@@ -325,24 +349,36 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         if (humiditySensorMoldWarningState != null) {
                             updateState(CHANNEL_MOLD_WARNING,
                                     humiditySensorMoldWarningState ? OnOffType.ON : OnOffType.OFF);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
                         break;
                     case Capability.TYPE_WINDOWDOORSENSOR:
                         Boolean contactState = c.getCapabilityState().getWindowDoorSensorState();
                         if (contactState != null) {
                             updateState(CHANNEL_CONTACT, contactState ? OpenClosedType.OPEN : OpenClosedType.CLOSED);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
                         break;
                     case Capability.TYPE_SMOKEDETECTORSENSOR:
                         Boolean smokeState = c.getCapabilityState().getSmokeDetectorSensorState();
                         if (smokeState != null) {
                             updateState(CHANNEL_SMOKE, smokeState ? OnOffType.ON : OnOffType.OFF);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
                         break;
                     case Capability.TYPE_ALARMACTUATOR:
                         Boolean alarmState = c.getCapabilityState().getAlarmActuatorState();
                         if (alarmState != null) {
                             updateState(CHANNEL_ALARM, alarmState ? OnOffType.ON : OnOffType.OFF);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
                         break;
                     case Capability.TYPE_MOTIONDETECTIONSENSOR:
@@ -361,6 +397,9 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         if (luminanceState != null) {
                             DecimalType luminance = new DecimalType(luminanceState);
                             updateState(CHANNEL_LUMINANCE, luminance);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
                         }
                         break;
                     case Capability.TYPE_PUSHBUTTONSENSOR:
