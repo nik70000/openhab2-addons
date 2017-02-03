@@ -62,10 +62,15 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
     public void handleCommand(ChannelUID channelUID, Command command) {
         logger.debug("handleCommand called for channel '{}' of type '{}' with command '{}'", channelUID,
                 getThing().getThingTypeUID().getId(), command);
+        InnogyBridgeHandler innogyBridgeHandler = getInnogyBridgeHandler();
+        if (innogyBridgeHandler == null) {
+            logger.warn("BridgeHandler not found. Cannot handle command without bridge.");
+            return;
+        }
 
         if (command instanceof RefreshType) {
             // Device device = getInnogyBridgeHandler().refreshDevice(deviceId);
-            Device device = getInnogyBridgeHandler().getDeviceById(deviceId);
+            Device device = innogyBridgeHandler.getDeviceById(deviceId);
             if (device != null) {
                 onDeviceStateChanged(device);
             }
@@ -76,19 +81,19 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         // SWITCH
         if (channelUID.getId().equals(CHANNEL_SWITCH)) {
             if (command instanceof OnOffType) {
-                getInnogyBridgeHandler().commandSwitchDevice(deviceId, OnOffType.ON.equals(command));
+                innogyBridgeHandler.commandSwitchDevice(deviceId, OnOffType.ON.equals(command));
             }
 
             // DIMMER
         } else if (channelUID.getId().equals(CHANNEL_DIMMER)) {
             if (command instanceof DecimalType) {
                 DecimalType dimLevel = (DecimalType) command;
-                getInnogyBridgeHandler().commandSetDimmLevel(deviceId, dimLevel.intValue());
+                innogyBridgeHandler.commandSetDimmLevel(deviceId, dimLevel.intValue());
             } else if (command instanceof OnOffType) {
                 if (OnOffType.ON.equals(command)) {
-                    getInnogyBridgeHandler().commandSetDimmLevel(deviceId, 100);
+                    innogyBridgeHandler.commandSetDimmLevel(deviceId, 100);
                 } else {
-                    getInnogyBridgeHandler().commandSetDimmLevel(deviceId, 0);
+                    innogyBridgeHandler.commandSetDimmLevel(deviceId, 0);
                 }
             }
 
@@ -96,7 +101,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         } else if (channelUID.getId().equals(CHANNEL_SET_TEMPERATURE)) {
             if (command instanceof DecimalType) {
                 DecimalType pointTemperature = (DecimalType) command;
-                getInnogyBridgeHandler().commandUpdatePointTemperature(deviceId, pointTemperature.doubleValue());
+                innogyBridgeHandler.commandUpdatePointTemperature(deviceId, pointTemperature.doubleValue());
             }
 
             // OPERATION_MODE
@@ -105,9 +110,9 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                 StringType autoModeCommand = (StringType) command;
 
                 if (autoModeCommand.toString().equals("Auto")) {
-                    getInnogyBridgeHandler().commandSetOperationMode(deviceId, true);
+                    innogyBridgeHandler.commandSetOperationMode(deviceId, true);
                 } else if (autoModeCommand.toString().equals("Manu")) {
-                    getInnogyBridgeHandler().commandSetOperationMode(deviceId, false);
+                    innogyBridgeHandler.commandSetOperationMode(deviceId, false);
                 } else {
                     logger.warn("Could not set operationmode. Invalid value '{}'! Only '{}' or '{}' allowed.",
                             autoModeCommand.toString(), "Auto", "Manu");
@@ -117,7 +122,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
             // ALARM
         } else if (channelUID.getId().equals(CHANNEL_ALARM)) {
             if (command instanceof OnOffType) {
-                getInnogyBridgeHandler().commandSwitchAlarm(deviceId, OnOffType.ON.equals(command));
+                innogyBridgeHandler.commandSwitchAlarm(deviceId, OnOffType.ON.equals(command));
             }
 
         } else {
@@ -192,6 +197,11 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         return null;
     }
 
+    /**
+     * Returns the innogy bridge handler.
+     * 
+     * @return the {@link InnogyBridgeHandler} or null
+     */
     private synchronized InnogyBridgeHandler getInnogyBridgeHandler() {
         if (this.bridgeHandler == null) {
             Bridge bridge = getBridge();
