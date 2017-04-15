@@ -13,7 +13,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
-import org.openhab.binding.innogysmarthome.InnogyBindingConstants;
 import org.openhab.binding.innogysmarthome.handler.InnogyBridgeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +26,13 @@ public class InnogyWebSocket {
     private InnogyBridgeHandler bridgeHandler;
     private WebSocketClient client;
     private URI webSocketURI;
+    private int maxIdleTimeout;
 
-    public InnogyWebSocket(InnogyBridgeHandler bridgeHandler, URI webSocketURI) {
+    public InnogyWebSocket(InnogyBridgeHandler bridgeHandler, URI webSocketURI, int maxIdleTimeout) {
         this.bridgeHandler = bridgeHandler;
         this.closeLatch = new CountDownLatch(1);
         this.webSocketURI = webSocketURI;
+        this.maxIdleTimeout = maxIdleTimeout;
     }
 
     public synchronized void start() throws Exception {
@@ -40,7 +41,7 @@ public class InnogyWebSocket {
 
         if (client == null || client.isStopped()) {
             client = new WebSocketClient(sslContextFactory);
-            client.setMaxIdleTimeout(InnogyBindingConstants.WEBSOCKET_MAX_IDLE_TIMEOUT);
+            client.setMaxIdleTimeout(this.maxIdleTimeout);
             client.start();
         }
 
@@ -48,7 +49,7 @@ public class InnogyWebSocket {
             session.close();
         }
 
-        logger.info("Connecting to innogy WebSocket...");
+        logger.debug("Connecting to innogy WebSocket...");
         session = client.connect(this, webSocketURI).get();
     }
 
