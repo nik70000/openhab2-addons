@@ -38,15 +38,6 @@ public class InnogyBindingConstants {
 
     // API URLs
     public final static String API_VERSION = "1.0";
-    // public final static String REDIRECT_URL = "https://www.ollie.in/rwe-smarthome-token/";
-    // public final static String API_URL_TOKEN = "https://api.services-smarthome.de/AUTH/token";
-    // public final static String API_URL_BASE = "https://api.services-smarthome.de/API/" + API_VERSION;
-    // public final static String API_URL_INITIALIZE = API_URL_BASE + "/initialize";
-    // public final static String API_URL_UNINITIALIZE = API_URL_BASE + "/uninitialize";
-    // public final static String API_URL_DEVICE = API_URL_BASE + "/device";
-    // public final static String API_URL_DEVICE_CAPABILITIES = API_URL_DEVICE + "/{id}/capabilities";
-    // public final static String API_URL_LOCATION = API_URL_BASE + "/location";
-    // public final static String API_URL_ACTION = "https://api.services-smarthome.de/API/1.0/action";
     public final static String WEBSOCKET_API_URL_EVENTS = "wss://api.services-smarthome.de/API/" + API_VERSION
             + "/events?token={token}";
 
