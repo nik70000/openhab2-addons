@@ -10,6 +10,7 @@ package org.openhab.binding.innogysmarthome.handler;
 import static org.openhab.binding.innogysmarthome.InnogyBindingConstants.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.util.Collections;
@@ -81,8 +82,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
         @Override
         public void run() {
-            String id = getThing().getUID().getId();
-            client = new InnogyClient(id, config);
+            client = new InnogyClient(config);
             client.setCredentialRefreshListener(InnogyBridgeHandler.this);
             try {
                 logger.info("Initializing innogy SmartHome client...");
@@ -154,7 +154,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
         @Override
         public void run() {
-            logger.info("Starting innogy web socket.");
             String webSocketUrl = WEBSOCKET_API_URL_EVENTS.replace("{token}", (String) getConfig().get(ACCESS_TOKEN));
             logger.debug("WebSocket URL: {}",
                     webSocketUrl.substring(0, 70) + "..." + webSocketUrl.substring(webSocketUrl.length() - 10));
@@ -164,11 +163,14 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                     webSocket.stop();
                     webSocket = null;
                 }
-                webSocket = new InnogyWebSocket(bridgeHandler, URI.create(webSocketUrl));
+
+                BigDecimal idleTimeout = (BigDecimal) getConfig().get(WEBSOCKET_IDLE_TIMEOUT);
+                webSocket = new InnogyWebSocket(bridgeHandler, URI.create(webSocketUrl), idleTimeout.intValue() * 1000);
+                logger.info("Starting innogy websocket.");
                 webSocket.start();
             } catch (Exception e) {
                 if (!handleClientException(e)) {
-                    logger.error("Error starting Websocket.");
+                    logger.error("Error starting websocket.");
                     return;
                 }
             }
@@ -419,7 +421,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
      */
     @Override
     public void onEvent(String msg) {
-        logger.debug("onEvent called. Msg: {}", msg);
+        logger.trace("onEvent called. Msg: {}", msg);
 
         try {
             Gson gson = new Gson();
@@ -594,7 +596,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
             // Controller offline
         } else if (e instanceof ControllerOfflineException) {
-            logger.error("innogy SmartHome Controller is offline. {}", e.getMessage());
+            logger.error("innogy SmartHome Controller is offline.");
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.BRIDGE_OFFLINE, e.getMessage());
             dispose();
             scheduleReinitialize();

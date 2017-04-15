@@ -35,15 +35,24 @@
                 <a href="https://api.services-smarthome.de/AUTH/authorize?response_type=code&client_id=24635748&redirect_uri=https%3A%2F%2Fwww.ollie.in%2Frwe-smarthome-token%2F&scope&lang=de-DE">innogy SmartHome Portal</a> to generate an auth-code and 
                 paste it here.</b> After initial authorization, this code is not needed anymore.]]></description>
             </parameter>
+            <parameter name="websocketidletimeout" type="integer" min="0" max="3600" unit="s" groupName="advanced">
+                <context>time</context>
+                <required>true</required>
+                <unitLabel>seconds</unitLabel>
+                <label>WebSocket idle timeout in seconds</label>
+                <description>The WebSocket is the connection to the innogy service that listens to status updates.
+                If no data is received over the websocket connection for the given time,
+                the websocket will reconnect. 0 will disable the idle timeout. Default is 900 seconds (15 minutes).</description>
+                <default>900</default>
+                <advanced>true</advanced>
+            </parameter>
             <parameter name="refreshtoken" type="text" groupName="advanced" readOnly="true">
-                <!-->context>password</context-->
                 <label>Refresh token</label>
                 <description>The refresh token is used to create a valid access token. It is automatically
                 pulled from innogy SmartHome backend with the initial auth-code. Normally you should never touch this!</description>
                 <advanced>true</advanced>
             </parameter>
             <parameter name="accesstoken" type="text" groupName="advanced" readOnly="true">
-                <!-->context>password</context-->
                 <label>Access token</label>
                 <description>The access token is used to access the innogy SmartHome backend. Is is automatically
                 pulled from innogy SmartHome backend with the initial auth-code. Normally you should never touch this!</description>
