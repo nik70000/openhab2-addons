@@ -1,4 +1,4 @@
-package org.openhab.binding.innogysmarthome.handler;
+package org.openhab.binding.innogysmarthome.internal.listener;
 
 public interface EventListener {
 
