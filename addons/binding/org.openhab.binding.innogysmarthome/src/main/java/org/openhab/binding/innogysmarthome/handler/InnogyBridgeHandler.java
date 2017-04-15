@@ -30,8 +30,10 @@ import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.innogysmarthome.InnogyBindingConstants;
-import org.openhab.binding.innogysmarthome.internal.DeviceStructureManager;
 import org.openhab.binding.innogysmarthome.internal.InnogyWebSocket;
+import org.openhab.binding.innogysmarthome.internal.listener.DeviceStatusListener;
+import org.openhab.binding.innogysmarthome.internal.listener.EventListener;
+import org.openhab.binding.innogysmarthome.internal.manager.DeviceStructureManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

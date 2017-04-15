@@ -13,9 +13,9 @@ import org.eclipse.smarthome.config.discovery.DiscoveryResult;
 import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.ThingUID;
-import org.openhab.binding.innogysmarthome.handler.DeviceStatusListener;
 import org.openhab.binding.innogysmarthome.handler.InnogyBridgeHandler;
 import org.openhab.binding.innogysmarthome.handler.InnogyDeviceHandler;
+import org.openhab.binding.innogysmarthome.internal.listener.DeviceStatusListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package org.openhab.binding.innogysmarthome.handler;
+package org.openhab.binding.innogysmarthome.internal.listener;
 
 import in.ollie.innogysmarthome.entity.device.Device;
 import in.ollie.innogysmarthome.entity.event.Event;

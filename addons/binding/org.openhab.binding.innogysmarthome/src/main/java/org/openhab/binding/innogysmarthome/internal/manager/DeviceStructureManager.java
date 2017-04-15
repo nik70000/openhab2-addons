@@ -1,4 +1,4 @@
-package org.openhab.binding.innogysmarthome.internal;
+package org.openhab.binding.innogysmarthome.internal.manager;
 
 import java.io.IOException;
 import java.util.ArrayList;
