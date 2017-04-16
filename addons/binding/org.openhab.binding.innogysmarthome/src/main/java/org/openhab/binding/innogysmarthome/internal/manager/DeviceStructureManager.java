@@ -100,7 +100,12 @@ public class DeviceStructureManager {
      */
     public void refreshDevice(String deviceId) throws IOException, ApiException {
         Device d = client.getFullDeviceById(deviceId);
-        addDeviceToStructure(d);
+        if (InnogyBindingConstants.SUPPORTED_DEVICES.contains(d.getType())) {
+            addDeviceToStructure(d);
+        } else {
+            logger.debug("Device {}:{} ({}) ignored - UNSUPPORTED.", d.getType(), d.getName(), d.getId());
+            return;
+        }
         if (d.isController()) {
             bridgeDeviceId = d.getId();
         }
