@@ -442,7 +442,8 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                                     deviceStatusListener.onDeviceStateChanged(device, event);
                                 }
                             } else {
-                                logger.debug("Device is null for Capability {}", event.getLink().getValue());
+                                logger.debug("Unknown/unsupported device for capability {}.",
+                                        event.getLink().getValue());
                             }
 
                             // DEVICE
@@ -455,7 +456,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                                     deviceStatusListener.onDeviceStateChanged(device, event);
                                 }
                             } else {
-                                logger.debug("DEVICE STATE CHANGED - BUT NULL!!!!");
+                                logger.debug("Unknown/unsupported device {}.", event.getLinkId());
                             }
                         } else {
                             logger.debug("link type {} not supported (yet?)", event.getLinkType());

@@ -57,6 +57,7 @@ public class InnogyBindingConstants {
     public final static String PROPERTY_TIME_OF_DISCOVERY = "Time of discovery";
 
     // List of main device types
+    public final static String DEVICE_SHC = "SHC"; // smarthome controller - the bridge
     public final static String DEVICE_PSS = "PSS"; // pluggable smart switch
     public final static String DEVICE_PSSO = "PSSO"; // pluggable smart switch outdoor
     public final static String DEVICE_VARIABLE_ACTUATOR = "VariableActuator";
@@ -73,6 +74,10 @@ public class InnogyBindingConstants {
     public final static String DEVICE_ISC2 = "ISC2"; // in wall smart controller (2 buttons)
     public final static String DEVICE_ISD2 = "ISD2"; // in wall smart dimmer (2 buttons)
     public final static String DEVICE_PSD = "PSD"; // pluggable smart dimmer
+
+    public final static Set<String> SUPPORTED_DEVICES = ImmutableSet.of(DEVICE_SHC, DEVICE_PSS, DEVICE_PSSO,
+            DEVICE_VARIABLE_ACTUATOR, DEVICE_RST, DEVICE_WRT, DEVICE_WDS, DEVICE_ISS2, DEVICE_WSD, DEVICE_WSD2,
+            DEVICE_WMD, DEVICE_WMDO, DEVICE_WSC2, DEVICE_BRC8, DEVICE_ISC2, DEVICE_ISD2, DEVICE_PSD);
 
     // List of all Thing Type UIDs
     public final static ThingTypeUID THING_TYPE_BRIDGE = new ThingTypeUID(BINDING_ID, "bridge");
