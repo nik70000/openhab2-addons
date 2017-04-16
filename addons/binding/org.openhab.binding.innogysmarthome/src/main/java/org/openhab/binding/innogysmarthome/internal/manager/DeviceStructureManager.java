@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openhab.binding.innogysmarthome.InnogyBindingConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,12 +62,19 @@ public class DeviceStructureManager {
     public void refreshDevices() throws IOException, ApiException {
         List<Device> devices = client.getFullDevices();
         for (Device d : devices) {
-            addDeviceToStructure(d);
+            if (InnogyBindingConstants.SUPPORTED_DEVICES.contains(d.getType())) {
+                addDeviceToStructure(d);
+            } else {
+                logger.debug("Device {}:{} ({}) ignored - UNSUPPORTED.", d.getType(), d.getName(), d.getId());
+                logger.debug("====================================");
+                continue;
+            }
+
             if (d.isController()) {
                 bridgeDeviceId = d.getId();
             }
             try {
-                logger.debug("Device {} ({}) loaded.", d.getName(), d.getId());
+                logger.debug("Device {}:{} ({}) loaded.", d.getType(), d.getName(), d.getId());
                 for (Capability c : d.getCapabilityMap().values()) {
                     logger.debug("> CAP: {} ({})", c.getName(), c.getId());
                     for (Property p : c.getCapabilityState().getPropertyMap().values()) {
