@@ -55,6 +55,7 @@ public class InnogyBindingConstants {
     public final static String PROPERTY_REGISTRATION_TIME = "Registration Time";
     public final static String PROPERTY_TIME_OF_ACCEPTANCE = "Time of acceptance";
     public final static String PROPERTY_TIME_OF_DISCOVERY = "Time of discovery";
+    public final static String PROPERTY_BATTERY_POWERED = "Battery powered";
 
     // List of main device types
     public final static String DEVICE_SHC = "SHC"; // smarthome controller - the bridge

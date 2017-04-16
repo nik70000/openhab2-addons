@@ -179,6 +179,11 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
             if (device.hasLocation()) {
                 properties.put(PROPERTY_LOCATION, device.getLocation().getName());
             }
+            if (device.isBatteryPowered()) {
+                properties.put(PROPERTY_BATTERY_POWERED, "yes");
+            } else {
+                properties.put(PROPERTY_BATTERY_POWERED, "no");
+            }
             properties.put(PROPERTY_TIME_OF_ACCEPTANCE,
                     device.getTimeOfAcceptance().toString(Constants.FORMAT_DATETIME));
             properties.put(PROPERTY_TIME_OF_DISCOVERY, device.getTimeOfDiscovery().toString(Constants.FORMAT_DATETIME));
@@ -200,7 +205,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
 
     /**
      * Returns the innogy bridge handler.
-     * 
+     *
      * @return the {@link InnogyBridgeHandler} or null
      */
     private synchronized InnogyBridgeHandler getInnogyBridgeHandler() {
