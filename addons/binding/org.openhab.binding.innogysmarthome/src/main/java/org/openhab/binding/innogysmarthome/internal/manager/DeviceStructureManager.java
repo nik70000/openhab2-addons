@@ -77,7 +77,7 @@ public class DeviceStructureManager {
                 logger.debug("Device {}:{} ({}) loaded.", d.getType(), d.getName(), d.getId());
                 for (Capability c : d.getCapabilityMap().values()) {
                     logger.debug("> CAP: {} ({})", c.getName(), c.getId());
-                    for (Property p : c.getCapabilityState().getPropertyMap().values()) {
+                    for (Property p : c.getCapabilityState().getStateMap().values()) {
                         logger.debug(">> CAP-State: {} -> {}", p.getName(), p.getValue());
                     }
                 }
@@ -113,7 +113,7 @@ public class DeviceStructureManager {
             logger.debug("Device {} ({}) loaded.", d.getName(), d.getId());
             for (Capability c : d.getCapabilityMap().values()) {
                 logger.debug("> CAP: {} ({})", c.getName(), c.getId());
-                for (Property p : c.getCapabilityState().getPropertyMap().values()) {
+                for (Property p : c.getCapabilityState().getStateMap().values()) {
                     logger.debug(">> CAP-State: {} -> {}", p.getName(), p.getValue());
                 }
             }
