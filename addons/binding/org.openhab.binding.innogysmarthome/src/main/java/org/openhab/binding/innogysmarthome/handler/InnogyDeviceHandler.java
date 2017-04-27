@@ -184,6 +184,13 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
             } else {
                 properties.put(PROPERTY_BATTERY_POWERED, "no");
             }
+            if (device.isController()) {
+                properties.put(PROPERTY_DEVICE_TYPE, "Controller");
+            } else if (device.isVirtualDevice()) {
+                properties.put(PROPERTY_DEVICE_TYPE, "Virtual");
+            } else if (device.isRadioDevice()) {
+                properties.put(PROPERTY_DEVICE_TYPE, "Radio");
+            }
             properties.put(PROPERTY_TIME_OF_ACCEPTANCE,
                     device.getTimeOfAcceptance().toString(Constants.FORMAT_DATETIME));
             properties.put(PROPERTY_TIME_OF_DISCOVERY, device.getTimeOfDiscovery().toString(Constants.FORMAT_DATETIME));
