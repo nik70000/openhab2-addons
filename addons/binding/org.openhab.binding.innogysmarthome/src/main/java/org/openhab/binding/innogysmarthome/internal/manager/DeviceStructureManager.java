@@ -35,6 +35,11 @@ public class DeviceStructureManager {
     private Map<String, Location> locationMap;
     private String bridgeDeviceId;
 
+    /**
+     * Constructs the {@link DeviceStructureManager}.
+     *
+     * @param client the {@link InnogyClient}
+     */
     public DeviceStructureManager(InnogyClient client) {
         this.client = client;
     }
@@ -50,6 +55,19 @@ public class DeviceStructureManager {
 
         refreshDevices();
         logger.info("Devices loaded. Device structure manager ready.");
+    }
+
+    /**
+     * Returns the {@link #deviceMap}, a map with the device id and the device.
+     *
+     * @return
+     */
+    public Map<String, Device> getDeviceMap() {
+        if (deviceMap == null) {
+            deviceMap = Collections.synchronizedMap(new HashMap<String, Device>());
+        }
+        return deviceMap;
+
     }
 
     /**
@@ -130,12 +148,9 @@ public class DeviceStructureManager {
      * @param device
      */
     public void addDeviceToStructure(Device device) {
-        if (deviceMap == null) {
-            deviceMap = Collections.synchronizedMap(new HashMap<String, Device>());
-        }
 
         if (device.getId() != null) {
-            deviceMap.put(device.getId(), device);
+            getDeviceMap().put(device.getId(), device);
         }
 
         if (capabilityToDeviceMap == null) {
@@ -154,8 +169,8 @@ public class DeviceStructureManager {
      * @return
      */
     public Device getDeviceById(String id) {
-        logger.debug("getDeviceById {}:{}", id, deviceMap.containsKey(id));
-        return deviceMap.get(id);
+        logger.debug("getDeviceById {}:{}", id, getDeviceMap().containsKey(id));
+        return getDeviceMap().get(id);
     }
 
     /**
@@ -184,19 +199,20 @@ public class DeviceStructureManager {
      * @return
      */
     public Device getBridgeDevice() {
-        return deviceMap.get(bridgeDeviceId);
+        return getDeviceMap().get(bridgeDeviceId);
     }
 
+    @Deprecated
     public Map<String, Device> getDeviceHashMapReference() {
-        return this.deviceMap;
+        return getDeviceMap();
     }
 
     public List<Device> getDeviceList() {
-        return new ArrayList<>(this.deviceMap.values());
+        return new ArrayList<>(getDeviceMap().values());
     }
 
     public String getCapabilityId(String deviceId, String capabilityType) {
-        Device device = deviceMap.get(deviceId);
+        Device device = getDeviceMap().get(deviceId);
         for (Capability c : device.getCapabilityMap().values()) {
             if (c.getType().equals(capabilityType)) {
                 return c.getId();
@@ -206,7 +222,7 @@ public class DeviceStructureManager {
     }
 
     public List<CapabilityLink> getCapabilityLinkListForDeviceId(String deviceId) {
-        Device device = deviceMap.get(deviceId);
+        Device device = getDeviceMap().get(deviceId);
         if (device != null) {
             return device.getCapabilityLinkList();
         }
