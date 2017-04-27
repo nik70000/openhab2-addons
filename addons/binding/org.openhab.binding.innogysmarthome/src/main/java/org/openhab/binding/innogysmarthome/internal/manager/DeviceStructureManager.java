@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import in.ollie.innogysmarthome.InnogyClient;
 import in.ollie.innogysmarthome.entity.Location;
+import in.ollie.innogysmarthome.entity.Message;
 import in.ollie.innogysmarthome.entity.Property;
 import in.ollie.innogysmarthome.entity.capability.Capability;
 import in.ollie.innogysmarthome.entity.device.Device;
@@ -209,6 +210,25 @@ public class DeviceStructureManager {
 
     public List<Device> getDeviceList() {
         return new ArrayList<>(getDeviceMap().values());
+    }
+
+    /**
+     * Returns the {@link Device}, that has the {@link Message} with the given messageId.
+     *
+     * @param messageId the id of the {@link Message}
+     * @return the {@link Device} or null if none found
+     */
+    public Device getDeviceWithMessageId(String messageId) {
+        for (Device d : getDeviceMap().values()) {
+            if (d.hasMessages()) {
+                for (Message m : d.getMessageList()) {
+                    if (messageId.equals(m.getId())) {
+                        return d;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public String getCapabilityId(String deviceId, String capabilityType) {

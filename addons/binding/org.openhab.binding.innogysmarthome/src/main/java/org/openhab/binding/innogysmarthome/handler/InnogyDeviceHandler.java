@@ -193,6 +193,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
             }
             properties.put(PROPERTY_TIME_OF_ACCEPTANCE,
                     device.getTimeOfAcceptance().toString(Constants.FORMAT_DATETIME));
+
             properties.put(PROPERTY_TIME_OF_DISCOVERY, device.getTimeOfDiscovery().toString(Constants.FORMAT_DATETIME));
             updateProperties(properties);
 
@@ -237,6 +238,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         if (deviceId.equals(device.getId())) {
             logger.debug("onDeviceStateChanged called with device {}/{}", device.getName(), device.getId());
 
+            // DEVICE STATES
             if (device.hasState()) {
                 Boolean reachable = device.getDeviceState().getIsReachable();
                 Boolean included = device.getDeviceState().deviceIsIncluded();
@@ -254,6 +256,15 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
 
             }
 
+            if (device.isBatteryPowered()) {
+                if (device.hasLowBattery()) {
+                    updateState(CHANNEL_BATTERY_LOW, OnOffType.ON);
+                } else {
+                    updateState(CHANNEL_BATTERY_LOW, OnOffType.OFF);
+                }
+            }
+
+            // CAPABILITY STATES
             for (Capability c : device.getCapabilityMap().values()) {
                 logger.debug("->capability:{} ({}/{})", c.getId(), c.getType(), c.getName());
 

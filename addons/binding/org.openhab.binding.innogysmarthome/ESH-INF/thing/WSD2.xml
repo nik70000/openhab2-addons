@@ -15,6 +15,7 @@
         <channels>
             <channel id="smoke" typeId="SmokeDetectorSensor" />
             <channel id="alarm" typeId="AlarmActuator" />
+            <channel id="battery_low" typeId="BatteryLow" />
         </channels>
 
         <config-description>

@@ -194,4 +194,16 @@
         <state readOnly="true"></state>
     </channel-type>
     
+    <!-- BatteryLow Channel -->
+    <channel-type id="BatteryLow">
+        <item-type>Switch</item-type>
+        <label>Low battery state</label>
+        <description>Active, if the device has a low battery.</description>
+        <category>Battery</category>
+        <tags>
+            <tag>battery</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
 </thing:thing-descriptions>

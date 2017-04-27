@@ -21,6 +21,7 @@
             <channel id="key6_count" typeId="PushButtonSensor" />
             <channel id="key7_count" typeId="PushButtonSensor" />
             <channel id="key8_count" typeId="PushButtonSensor" />
+            <channel id="battery_low" typeId="BatteryLow" />
         </channels>
 
         <config-description>
