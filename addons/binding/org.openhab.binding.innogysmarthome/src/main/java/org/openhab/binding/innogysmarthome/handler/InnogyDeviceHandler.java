@@ -368,7 +368,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
 
                         // mold warning
                         Boolean humiditySensorMoldWarningState = c.getCapabilityState()
-                                .getTemperatureSensorFrostWarningState();
+                                .getHumiditySensorMoldWarningState();
                         if (humiditySensorMoldWarningState != null) {
                             updateState(CHANNEL_MOLD_WARNING,
                                     humiditySensorMoldWarningState ? OnOffType.ON : OnOffType.OFF);
