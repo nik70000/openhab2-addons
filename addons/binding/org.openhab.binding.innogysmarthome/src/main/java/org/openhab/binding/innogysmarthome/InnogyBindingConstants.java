@@ -56,6 +56,7 @@ public class InnogyBindingConstants {
     public final static String PROPERTY_TIME_OF_ACCEPTANCE = "Time of acceptance";
     public final static String PROPERTY_TIME_OF_DISCOVERY = "Time of discovery";
     public final static String PROPERTY_BATTERY_POWERED = "Battery powered";
+    public final static String PROPERTY_DEVICE_TYPE = "Device Type";
 
     // List of main device types
     public final static String DEVICE_SHC = "SHC"; // smarthome controller - the bridge
@@ -128,5 +129,6 @@ public class InnogyBindingConstants {
     public final static String CHANNEL_KEY7_COUNT = "key7_count";
     public final static String CHANNEL_KEY8_COUNT = "key8_count";
     public final static String CHANNEL_DIMMER = "dimmer";
+    public final static String CHANNEL_BATTERY_LOW = "battery_low";
 
 }

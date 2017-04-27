@@ -45,9 +45,11 @@ import com.google.gson.Gson;
 
 import in.ollie.innogysmarthome.Configuration;
 import in.ollie.innogysmarthome.InnogyClient;
+import in.ollie.innogysmarthome.entity.Message;
 import in.ollie.innogysmarthome.entity.capability.Capability;
 import in.ollie.innogysmarthome.entity.device.Device;
 import in.ollie.innogysmarthome.entity.event.Event;
+import in.ollie.innogysmarthome.entity.link.Link;
 import in.ollie.innogysmarthome.exception.ApiException;
 import in.ollie.innogysmarthome.exception.ConfigurationException;
 import in.ollie.innogysmarthome.exception.ControllerOfflineException;
@@ -354,7 +356,11 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     }
 
     public Device getDeviceById(String deviceId) {
-        return deviceStructMan.getDeviceById(deviceId);
+        if (deviceStructMan != null) {
+            return deviceStructMan.getDeviceById(deviceId);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -458,6 +464,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                             } else {
                                 logger.debug("Unknown/unsupported device {}.", event.getLinkId());
                             }
+
                         } else {
                             logger.debug("link type {} not supported (yet?)", event.getLinkType());
                         }
@@ -490,6 +497,43 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                             }
                         } else {
                             logger.warn("isConnected property missing in event! (returned null)");
+                        }
+                        break;
+
+                    case Event.TYPE_NEW_MESSAGE_RECEIVED:
+                        List<Message> messageList = event.getDataListAsMessage();
+                        for (Message m : messageList) {
+                            if (Message.TYPE_DEVICE_LOW_BATTERY.equals(m.getType())) {
+                                for (Link dl : m.getDeviceLinkList()) {
+                                    deviceStructMan.refreshDevice(dl.getId());
+                                    Device device = deviceStructMan.getDeviceById(dl.getId());
+                                    if (device != null) {
+                                        for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                                            deviceStatusListener.onDeviceStateChanged(device);
+                                        }
+                                    } else {
+                                        logger.debug("Unknown/unsupported device {}.", event.getLinkId());
+                                    }
+                                }
+                            } else {
+                                logger.debug("Message received event not yet implemented for Messagetype {}.",
+                                        m.getType());
+                            }
+                        }
+                        break;
+
+                    case Event.TYPE_MESSAGE_DELETED:
+                        if (Link.LINK_TYPE_MESSAGE.equals(event.getLinkType())) {
+                            Device device = deviceStructMan.getDeviceWithMessageId(event.getLinkId());
+                            if (device != null) {
+                                deviceStructMan.refreshDevice(device.getId());
+                                device = deviceStructMan.getDeviceById(device.getId());
+                                for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                                    deviceStatusListener.onDeviceStateChanged(device);
+                                }
+                            } else {
+                                logger.debug("Unknown/unsupported device {}.", event.getLinkId());
+                            }
                         }
                         break;
 

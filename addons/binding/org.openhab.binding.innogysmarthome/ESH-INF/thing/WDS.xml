@@ -14,6 +14,7 @@
 
         <channels>
             <channel id="contact" typeId="WindowDoorSensor" />
+            <channel id="battery_low" typeId="BatteryLow" />
         </channels>
 
         <config-description>
