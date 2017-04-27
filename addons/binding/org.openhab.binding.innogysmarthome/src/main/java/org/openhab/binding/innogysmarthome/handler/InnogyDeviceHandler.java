@@ -468,7 +468,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
     @Override
     public synchronized void onDeviceStateChanged(Device device, Event event) {
         if (deviceId.equals(device.getId())) {
-            logger.debug("DeviceId {} relevant for this handler.", device.getId(), deviceId);
+            logger.trace("DeviceId {} relevant for this handler.", device.getId(), deviceId);
 
             if (event.isLinkedtoCapability()) {
                 boolean deviceChanged = false;
@@ -477,7 +477,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                     logger.debug("State changed {} to {}.", p.getName(), p.getValue());
                     HashMap<String, Capability> capabilityMap = device.getCapabilityMap();
                     Capability capability = capabilityMap.get(linkId);
-                    logger.debug("Loaded Capability {}, {} with id {}, device {} from device id {}",
+                    logger.trace("Loaded Capability {}, {} with id {}, device {} from device id {}",
                             capability.getType(), capability.getName(), capability.getId(),
                             capability.getDeviceLink().get(0).getValue(), device.getId());
 
