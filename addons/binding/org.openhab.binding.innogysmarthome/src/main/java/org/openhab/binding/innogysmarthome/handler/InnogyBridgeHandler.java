@@ -1,5 +1,6 @@
 /**
- * Copyright (c) 2014-2015 openHAB UG (haftungsbeschraenkt) and others.
+ * Copyright (c) 2010-2017 by the respective copyright holders.
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,14 +59,20 @@ import in.ollie.innogysmarthome.exception.InvalidAuthCodeException;
 import in.ollie.innogysmarthome.exception.SessionExistsException;
 
 /**
- * The {@link InnogyBridgeHandler} is responsible for handling commands, which are
- * sent to one of the channels.
+ * The {@link InnogyBridgeHandler} is responsible for handling the innogy SmartHome controller including the connection
+ * to the innogy backend for all communications with the innogy {@link Device}s.
+ * <p/>
+ * It implements the {@link CredentialRefreshListener} to handle updates of the oauth2 tokens and the
+ * {@link EventListener} to handle {@link Event}s, that are received by the {@link InnogyWebSocket}.
+ * <p/>
+ * The {@link Device}s are organized by the {@link DeviceStructureManager}, which is also responsible for the connection
+ * to the innogy SmartHome webservice {@Link InnogyClient}.
  *
  * @author Oliver Kuhl - Initial contribution
  */
 public class InnogyBridgeHandler extends BaseBridgeHandler implements CredentialRefreshListener, EventListener {
 
-    public final static Set<ThingTypeUID> SUPPORTED_THING_TYPES = Collections.singleton(THING_TYPE_BRIDGE);
+    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES = Collections.singleton(THING_TYPE_BRIDGE);
     private Logger logger = LoggerFactory.getLogger(InnogyBridgeHandler.class);
     private Configuration config = null;
     private InnogyClient client = null;
