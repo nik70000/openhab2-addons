@@ -1,5 +1,6 @@
 /**
- * Copyright (c) 2014-2015 openHAB UG (haftungsbeschraenkt) and others.
+ * Copyright (c) 2010-2017 by the respective copyright holders.
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,14 +42,14 @@ import in.ollie.innogysmarthome.entity.event.Event;
 import in.ollie.innogysmarthome.entity.state.CapabilityState;
 
 /**
- * The {@link InnogyDeviceHandler} is responsible for handling commands, which are
+ * The {@link InnogyDeviceHandler} is responsible for handling the {@link Device}s and their commands, which are
  * sent to one of the channels.
  *
  * @author Oliver Kuhl - Initial contribution
  */
 public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatusListener {
 
-    public final static Set<ThingTypeUID> SUPPORTED_THING_TYPES = SUPPORTED_DEVICE_THING_TYPES;
+    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES = SUPPORTED_DEVICE_THING_TYPES;
     private Logger logger = LoggerFactory.getLogger(InnogyDeviceHandler.class);
 
     private String deviceId;

@@ -16,7 +16,7 @@
             <channel id="set_temperature" typeId="ThermostatActuator" />
             <channel id="temperature" typeId="TemperatureSensor" />
             <channel id="humidity" typeId="HumiditySensor" />
-            <channel id="battery_low" typeId="BatteryLow" />            
+            <channel id="battery_low" typeId="BatteryLow" />
         </channels>
 
         <config-description>
