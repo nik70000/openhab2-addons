@@ -230,6 +230,13 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
      * @param seconds
      */
     private void scheduleReinitialize(long seconds) {
+        if (reinitJob != null) {
+            if (!reinitJob.isDone()) {
+                logger.debug("Scheduling reinitialize in {} seconds - ignored: already triggered in {} seconds.",
+                        reinitJob.getDelay(TimeUnit.SECONDS));
+                return;
+            }
+        }
         logger.info("Scheduling reinitialize in {} seconds.", seconds);
         reinitJob = scheduler.schedule(new Runnable() {
 
@@ -238,6 +245,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                 initialize();
             }
         }, seconds, TimeUnit.SECONDS);
+
     }
 
     /**
@@ -397,6 +405,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         String accessToken = credential.getAccessToken();
         config.setAccessToken(accessToken);
         getThing().getConfiguration().put(ACCESS_TOKEN, accessToken);
+        logger.info("Access token for innogy expired. New access token saved.");
         logger.debug("innogy access token saved (onTokenResponse): {}",
                 accessToken.substring(0, 10) + "..." + accessToken.substring(accessToken.length() - 10));
 
@@ -440,39 +449,45 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                 switch (event.getType()) {
                     case Event.TYPE_STATE_CHANGED:
 
-                        // CAPABILITY
-                        if (event.isLinkedtoCapability()) {
-                            Device device = deviceStructMan.getDeviceByCapabilityLink(event.getLink().getValue());
-                            if (device != null) {
-                                for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
-                                    deviceStatusListener.onDeviceStateChanged(device, event);
-                                }
-                            } else {
-                                logger.debug("Unknown/unsupported device for capability {}.",
-                                        event.getLink().getValue());
-                            }
+                        if (deviceStructMan != null) {
 
-                            // DEVICE
-                        } else if (event.isLinkedtoDevice()) {
-                            deviceStructMan.refreshDevice(event.getLinkId());
-                            Device device = deviceStructMan.getDeviceById(event.getLinkId());
-                            if (device != null) {
-                                logger.debug("DEVICE STATE CHANGED!!!");
-                                for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
-                                    deviceStatusListener.onDeviceStateChanged(device, event);
+                            // CAPABILITY
+                            if (event.isLinkedtoCapability()) {
+                                Device device = deviceStructMan.getDeviceByCapabilityLink(event.getLink().getValue());
+                                if (device != null) {
+                                    for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                                        deviceStatusListener.onDeviceStateChanged(device, event);
+                                    }
+                                } else {
+                                    logger.debug("Unknown/unsupported device for capability {}.",
+                                            event.getLink().getValue());
                                 }
-                            } else {
-                                logger.debug("Unknown/unsupported device {}.", event.getLinkId());
-                            }
 
+                                // DEVICE
+                            } else if (event.isLinkedtoDevice()) {
+                                deviceStructMan.refreshDevice(event.getLinkId());
+                                Device device = deviceStructMan.getDeviceById(event.getLinkId());
+                                if (device != null) {
+                                    logger.debug("DEVICE STATE CHANGED!!!");
+                                    for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                                        deviceStatusListener.onDeviceStateChanged(device, event);
+                                    }
+                                } else {
+                                    logger.debug("Unknown/unsupported device {}.", event.getLinkId());
+                                }
+
+                            } else {
+                                logger.debug("link type {} not supported (yet?)", event.getLinkType());
+                            }
                         } else {
-                            logger.debug("link type {} not supported (yet?)", event.getLinkType());
+                            scheduleReinitialize();
                         }
                         break;
 
                     case Event.TYPE_DISCONNECT:
                         logger.info("Websocket disconnected. Reason: {}", event.getPropertyList().get(0).getValue());
-                        onEventRunnerStopped();
+                        // onEventRunnerStopped();
+                        scheduleReinitialize(0);
                         break;
 
                     case Event.TYPE_CONFIG_CHANGED:
@@ -501,39 +516,47 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                         break;
 
                     case Event.TYPE_NEW_MESSAGE_RECEIVED:
-                        List<Message> messageList = event.getDataListAsMessage();
-                        for (Message m : messageList) {
-                            if (Message.TYPE_DEVICE_LOW_BATTERY.equals(m.getType())) {
-                                for (Link dl : m.getDeviceLinkList()) {
-                                    deviceStructMan.refreshDevice(dl.getId());
-                                    Device device = deviceStructMan.getDeviceById(dl.getId());
-                                    if (device != null) {
-                                        for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
-                                            deviceStatusListener.onDeviceStateChanged(device);
+                        if (deviceStructMan != null) {
+                            List<Message> messageList = event.getDataListAsMessage();
+                            for (Message m : messageList) {
+                                if (Message.TYPE_DEVICE_LOW_BATTERY.equals(m.getType())) {
+                                    for (Link dl : m.getDeviceLinkList()) {
+                                        deviceStructMan.refreshDevice(dl.getId());
+                                        Device device = deviceStructMan.getDeviceById(dl.getId());
+                                        if (device != null) {
+                                            for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                                                deviceStatusListener.onDeviceStateChanged(device);
+                                            }
+                                        } else {
+                                            logger.debug("Unknown/unsupported device {}.", event.getLinkId());
                                         }
-                                    } else {
-                                        logger.debug("Unknown/unsupported device {}.", event.getLinkId());
                                     }
+                                } else {
+                                    logger.debug("Message received event not yet implemented for Messagetype {}.",
+                                            m.getType());
                                 }
-                            } else {
-                                logger.debug("Message received event not yet implemented for Messagetype {}.",
-                                        m.getType());
                             }
+                        } else {
+                            scheduleReinitialize();
                         }
                         break;
 
                     case Event.TYPE_MESSAGE_DELETED:
-                        if (Link.LINK_TYPE_MESSAGE.equals(event.getLinkType())) {
-                            Device device = deviceStructMan.getDeviceWithMessageId(event.getLinkId());
-                            if (device != null) {
-                                deviceStructMan.refreshDevice(device.getId());
-                                device = deviceStructMan.getDeviceById(device.getId());
-                                for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
-                                    deviceStatusListener.onDeviceStateChanged(device);
+                        if (deviceStructMan != null) {
+                            if (Link.LINK_TYPE_MESSAGE.equals(event.getLinkType())) {
+                                Device device = deviceStructMan.getDeviceWithMessageId(event.getLinkId());
+                                if (device != null) {
+                                    deviceStructMan.refreshDevice(device.getId());
+                                    device = deviceStructMan.getDeviceById(device.getId());
+                                    for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                                        deviceStatusListener.onDeviceStateChanged(device);
+                                    }
+                                } else {
+                                    logger.debug("Unknown/unsupported device {}.", event.getLinkId());
                                 }
-                            } else {
-                                logger.debug("Unknown/unsupported device {}.", event.getLinkId());
                             }
+                        } else {
+                            scheduleReinitialize();
                         }
                         break;
 
