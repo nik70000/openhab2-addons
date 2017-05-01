@@ -13,9 +13,9 @@
         <description>A wall thermostat, that supports setting the temperature and measuring the current temperature and humidity.</description>
 
         <channels>
-            <channel id="set_temperature" typeId="ThermostatActuator" />
-            <channel id="temperature" typeId="TemperatureSensor" />
-            <channel id="humidity" typeId="HumiditySensor" />
+            <channel id="set_temperature" typeId="ThermostatActuator_PointTemperature" />
+            <channel id="temperature" typeId="TemperatureSensor_Temperature" />
+            <channel id="humidity" typeId="HumiditySensor_Humidity" />
             <channel id="battery_low" typeId="BatteryLow" />
         </channels>
 
