@@ -20,7 +20,7 @@
 	<channel-type id="DimmerActuator">
 	   <item-type>Dimmer</item-type>
 	   <label>Dimmer</label>
-	   <description>Dimms the connected light.</description>
+	   <description>Dimms the connected light</description>
 	   <category>DimmableLight</category>
 	   <tags>
 	       <tag>dimmer</tag>
@@ -54,7 +54,7 @@
     <channel-type id="ThermostatActuator_OperationMode" advanced="true">
 	    <item-type>String</item-type>
 	    <label>Operation Mode</label>
-	    <description>Thermostat operation mode</description>
+	    <description>Thermostat operation mode (manual/auto)</description>
 	    <category>Mode</category>
 	    <tags>
 	       <tag>heating</tag>
@@ -127,7 +127,7 @@
     <channel-type id="WindowDoorSensor">
         <item-type>Contact</item-type>
         <label>Contact</label>
-        <description>Shows the open/close state.</description>
+        <description>Shows the open/close state</description>
         <category>Contact</category>
         <tags>
             <tag>switch</tag>
@@ -139,7 +139,7 @@
     <channel-type id="SmokeDetectorSensor">
         <item-type>Switch</item-type>
         <label>Smoke</label>
-        <description>Shows if smoke was detected.</description>
+        <description>Shows if smoke was detected</description>
         <category>Smoke</category>
         <tags>
             <tag>smoke</tag>
@@ -151,7 +151,7 @@
     <channel-type id="AlarmActuator">
         <item-type>Switch</item-type>
         <label>Alarm</label>
-        <description>Switches the alarm on/off.</description>
+        <description>Switches the alarm on/off</description>
         <category>Alarm</category>
         <tags>
             <tag>smoke</tag>
@@ -162,7 +162,7 @@
     <channel-type id="MotionDetectionSensor">
         <item-type>Number</item-type>
         <label>Motion count</label>
-        <description>The count of detected motions.</description>
+        <description>The count of detected motions</description>
         <category>Count</category>
         <tags>
             <tag>motion</tag>
@@ -174,7 +174,7 @@
     <channel-type id="LuminanceSensor">
         <item-type>Number</item-type>
         <label>Luminance</label>
-        <description>Shows the detected luminance.</description>
+        <description>Shows the detected luminance in percent</description>
         <category>Light</category>
         <tags>
             <tag>luminance</tag>
@@ -198,7 +198,7 @@
     <channel-type id="BatteryLow">
         <item-type>Switch</item-type>
         <label>Low battery state</label>
-        <description>Active, if the device has a low battery.</description>
+        <description>Active, if the device has a low battery</description>
         <category>Battery</category>
         <tags>
             <tag>battery</tag>

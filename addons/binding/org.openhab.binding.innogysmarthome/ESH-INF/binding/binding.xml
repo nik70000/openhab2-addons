@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://eclipse.org/smarthome/schemas/binding/v1.0.0 http://eclipse.org/smarthome/schemas/binding-1.0.0.xsd">
 
     <name>innogy SmartHome Binding</name>
-    <description>This is the binding for innogy SmartHome.</description>
+    <description>The innogy SmartHome binding connects your innogy SmartHome system with openHAB.</description>
     <author>Oliver Kuhl</author>
 
 </binding:binding>
