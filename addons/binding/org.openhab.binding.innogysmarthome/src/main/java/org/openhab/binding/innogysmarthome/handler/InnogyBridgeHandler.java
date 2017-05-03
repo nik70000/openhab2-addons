@@ -19,10 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.ThingStatus;
@@ -319,7 +321,11 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         }
 
         if (client != null) {
-            client.dispose();
+            try {
+                client.dispose();
+            } catch (Exception e) {
+                logger.trace("Error disposing client: {}", e.getMessage());
+            }
             client = null;
         }
 
@@ -722,6 +728,13 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         } else if (e instanceof SocketTimeoutException) {
             logger.error("Socket timeout: {}", e.getMessage());
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
+            dispose();
+            scheduleReinitialize();
+            return false;
+
+            // ExecutionException
+        } else if (e instanceof ExecutionException) {
+            logger.error("ExecutionException: {}", ExceptionUtils.getRootCauseMessage(e));
             dispose();
             scheduleReinitialize();
             return false;
