@@ -99,6 +99,19 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                 }
             }
 
+            // ROLLERSHUTTER
+        } else if (channelUID.getId().equals(CHANNEL_ROLLERSHUTTER)) {
+            if (command instanceof DecimalType) {
+                DecimalType rollerShutterLevel = (DecimalType) command;
+                innogyBridgeHandler.commandSetRollerShutterLevel(deviceId, rollerShutterLevel.intValue());
+            } else if (command instanceof OnOffType) {
+                if (OnOffType.ON.equals(command)) {
+                    innogyBridgeHandler.commandSetRollerShutterLevel(deviceId, 100);
+                } else {
+                    innogyBridgeHandler.commandSetRollerShutterLevel(deviceId, 0);
+                }
+            }
+
             // SET_TEMPERATURE
         } else if (channelUID.getId().equals(CHANNEL_SET_TEMPERATURE)) {
             if (command instanceof DecimalType) {
@@ -309,6 +322,23 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                                     c.getCapabilityState().getId(), c.getId());
                         }
                         break;
+                    case Capability.TYPE_ROLLERSHUTTERACTUATOR:
+                        Double rollerShutterActuatorState = c.getCapabilityState().getDimmerActuatorState();
+                        if (rollerShutterActuatorState != null) {
+                            PercentType rollerShutterLevel = new PercentType(rollerShutterActuatorState.intValue());
+                            logger.debug("RollerShutterlevel state {} -> type {}", rollerShutterActuatorState,
+                                    rollerShutterLevel);
+                            if (rollerShutterActuatorState > 0) {
+                                updateState(CHANNEL_ROLLERSHUTTER, OnOffType.ON);
+                            } else {
+                                updateState(CHANNEL_ROLLERSHUTTER, OnOffType.OFF);
+                            }
+                            updateState(CHANNEL_ROLLERSHUTTER, rollerShutterLevel);
+                        } else {
+                            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                                    c.getCapabilityState().getId(), c.getId());
+                        }
+                        break;
                     case Capability.TYPE_TEMPERATURESENSOR:
                         // temperature
                         Double temperatureSensorState = c.getCapabilityState().getTemperatureSensorTemperatureState();
@@ -512,8 +542,14 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         capabilityState.setSwitchActuatorState((boolean) p.getValue());
                         deviceChanged = true;
 
+                        // DimmerActuator
                     } else if (capability.isTypeDimmerActuator()) {
                         capabilityState.setDimmerActuatorState((double) p.getValue());
+                        deviceChanged = true;
+
+                        // RollerShutterActuator
+                    } else if (capability.isTypeRollerShutterActuator()) {
+                        capabilityState.setRollerShutterActuatorState((double) p.getValue());
                         deviceChanged = true;
 
                         // TemperatureSensor
