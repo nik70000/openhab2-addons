@@ -608,7 +608,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     }
 
     public void commandSwitchDevice(String deviceId, boolean state) {
-
         try {
             // TODO: ADD DEVICES
             // VariableActuator
@@ -659,6 +658,15 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         try {
             String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_DIMMERACTUATOR);
             client.setDimmerActuatorState(capabilityId, dimLevel);
+        } catch (Exception e) {
+            handleClientException(e);
+        }
+    }
+
+    public void commandSetRollerShutterLevel(String deviceId, int rollerSchutterLevel) {
+        try {
+            String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_ROLLERSHUTTERACTUATOR);
+            client.setRollerShutterActuatorState(capabilityId, rollerSchutterLevel);
         } catch (Exception e) {
             handleClientException(e);
         }

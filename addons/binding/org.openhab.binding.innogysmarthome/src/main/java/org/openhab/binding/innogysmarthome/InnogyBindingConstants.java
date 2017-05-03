@@ -76,11 +76,12 @@ public class InnogyBindingConstants {
     public static final String DEVICE_BRC8 = "BRC8"; // basic remote controller (8 buttons)
     public static final String DEVICE_ISC2 = "ISC2"; // in wall smart controller (2 buttons)
     public static final String DEVICE_ISD2 = "ISD2"; // in wall smart dimmer (2 buttons)
+    public static final String DEVICE_ISR2 = "ISR2"; // in wall smart rollershutter (2 buttons)
     public static final String DEVICE_PSD = "PSD"; // pluggable smart dimmer
 
     public static final Set<String> SUPPORTED_DEVICES = ImmutableSet.of(DEVICE_SHC, DEVICE_PSS, DEVICE_PSSO,
             DEVICE_VARIABLE_ACTUATOR, DEVICE_RST, DEVICE_WRT, DEVICE_WDS, DEVICE_ISS2, DEVICE_WSD, DEVICE_WSD2,
-            DEVICE_WMD, DEVICE_WMDO, DEVICE_WSC2, DEVICE_BRC8, DEVICE_ISC2, DEVICE_ISD2, DEVICE_PSD);
+            DEVICE_WMD, DEVICE_WMDO, DEVICE_WSC2, DEVICE_BRC8, DEVICE_ISC2, DEVICE_ISD2, DEVICE_ISR2, DEVICE_PSD);
 
     // List of all Thing Type UIDs
     public static final ThingTypeUID THING_TYPE_BRIDGE = new ThingTypeUID(BINDING_ID, "bridge");
@@ -100,12 +101,13 @@ public class InnogyBindingConstants {
     public static final ThingTypeUID THING_TYPE_BRC8 = new ThingTypeUID(BINDING_ID, DEVICE_BRC8);
     public static final ThingTypeUID THING_TYPE_ISC2 = new ThingTypeUID(BINDING_ID, DEVICE_ISC2);
     public static final ThingTypeUID THING_TYPE_ISD2 = new ThingTypeUID(BINDING_ID, DEVICE_ISD2);
+    public static final ThingTypeUID THING_TYPE_ISR2 = new ThingTypeUID(BINDING_ID, DEVICE_ISR2);
     public static final ThingTypeUID THING_TYPE_PSD = new ThingTypeUID(BINDING_ID, DEVICE_PSD);
 
     public static final Set<ThingTypeUID> SUPPORTED_DEVICE_THING_TYPES = ImmutableSet.of(THING_TYPE_PSS,
             THING_TYPE_PSSO, THING_TYPE_VARIABLE_ACTUATOR, THING_TYPE_RST, THING_TYPE_WRT, THING_TYPE_WDS,
             THING_TYPE_ISS2, THING_TYPE_WSD, THING_TYPE_WSD2, THING_TYPE_WMD, THING_TYPE_WMDO, THING_TYPE_WSC2,
-            THING_TYPE_BRC8, THING_TYPE_ISC2, THING_TYPE_ISD2, THING_TYPE_PSD);
+            THING_TYPE_BRC8, THING_TYPE_ISC2, THING_TYPE_ISD2, THING_TYPE_ISR2, THING_TYPE_PSD);
 
     // List of all Channel ids
     public static final String CHANNEL_SWITCH = "switch";
@@ -130,6 +132,7 @@ public class InnogyBindingConstants {
     public static final String CHANNEL_KEY7_COUNT = "key7_count";
     public static final String CHANNEL_KEY8_COUNT = "key8_count";
     public static final String CHANNEL_DIMMER = "dimmer";
+    public static final String CHANNEL_ROLLERSHUTTER = "rollershutter";
     public static final String CHANNEL_BATTERY_LOW = "battery_low";
 
 }

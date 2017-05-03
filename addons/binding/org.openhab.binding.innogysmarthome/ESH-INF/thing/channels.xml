@@ -26,6 +26,17 @@
 	       <tag>dimmer</tag>
 	   </tags>
 	</channel-type>
+	
+	<!-- RollerShutter Channel -->
+	<channel-type id="RollerShutterActuator">
+	   <item-type>Rollershutter</item-type>
+	   <label>Rollershutter</label>
+	   <description>Controls the blinds</description>
+	   <category>Blinds</category>
+	   <tags>
+	       <tag>rollershutter</tag>
+	   </tags>
+	</channel-type>
 
     <!-- BooleanSwitch Channel -->
     <channel-type id="BooleanStateActuator">
