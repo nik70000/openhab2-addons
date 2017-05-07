@@ -242,7 +242,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         if (reinitJob != null) {
             if (!reinitJob.isDone()) {
                 logger.debug("Scheduling reinitialize in {} seconds - ignored: already triggered in {} seconds.",
-                        reinitJob.getDelay(TimeUnit.SECONDS));
+                        seconds, reinitJob.getDelay(TimeUnit.SECONDS));
                 return;
             }
         }
