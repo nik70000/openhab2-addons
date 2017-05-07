@@ -37,6 +37,9 @@ public class InnogyBindingConstants {
     public static final long REINITIALIZE_DELAY_SECONDS = 30;
     public static final long REINITIALIZE_DELAY_LONG_SECONDS = 120;
 
+    // device config parameters
+    public static final String CONFIG_INVERT_VALUES = "invert_values";
+
     // API URLs
     public static final String API_VERSION = "1.0";
     public static final String WEBSOCKET_API_URL_EVENTS = "wss://api.services-smarthome.de/API/" + API_VERSION

@@ -30,12 +30,24 @@
 	<!-- RollerShutter Channel -->
 	<channel-type id="RollerShutterActuator">
 	   <item-type>Rollershutter</item-type>
-	   <label>Rollershutter</label>
+	   <label>Blinds position</label>
 	   <description>Controls the blinds</description>
 	   <category>Blinds</category>
-	   <tags>
-	       <tag>rollershutter</tag>
-	   </tags>
+       <tags>
+           <tag>rollershutter</tag>
+       </tags>
+	   <config-description>
+	       <parameter name="invert_values" type="boolean">
+	           <label>Invert values</label>
+                  <description>Inverts the blinds values and control behavior</description>
+                  <default>true</default>
+                  <options>
+                     <option value="true">Yes</option>
+                     <option value="false">No</option>
+                  </options>
+                  <limitToOptions>true</limitToOptions>
+	       </parameter>
+	   </config-description>
 	</channel-type>
 
     <!-- BooleanSwitch Channel -->
