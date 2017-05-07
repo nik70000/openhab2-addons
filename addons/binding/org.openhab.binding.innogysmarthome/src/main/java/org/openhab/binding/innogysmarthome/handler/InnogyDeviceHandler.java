@@ -20,6 +20,7 @@ import org.eclipse.smarthome.core.library.types.OpenClosedType;
 import org.eclipse.smarthome.core.library.types.PercentType;
 import org.eclipse.smarthome.core.library.types.StringType;
 import org.eclipse.smarthome.core.thing.Bridge;
+import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
@@ -107,12 +108,15 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         } else if (channelUID.getId().equals(CHANNEL_ROLLERSHUTTER)) {
             if (command instanceof DecimalType) {
                 DecimalType rollerShutterLevel = (DecimalType) command;
-                innogyBridgeHandler.commandSetRollerShutterLevel(deviceId, rollerShutterLevel.intValue());
+                innogyBridgeHandler.commandSetRollerShutterLevel(deviceId,
+                        invertValueIfConfigured(CHANNEL_ROLLERSHUTTER, rollerShutterLevel.intValue()));
             } else if (command instanceof OnOffType) {
                 if (OnOffType.ON.equals(command)) {
-                    innogyBridgeHandler.commandSetRollerShutterLevel(deviceId, 100);
+                    innogyBridgeHandler.commandSetRollerShutterLevel(deviceId,
+                            invertValueIfConfigured(CHANNEL_ROLLERSHUTTER, 100));
                 } else {
-                    innogyBridgeHandler.commandSetRollerShutterLevel(deviceId, 0);
+                    innogyBridgeHandler.commandSetRollerShutterLevel(deviceId,
+                            invertValueIfConfigured(CHANNEL_ROLLERSHUTTER, 0));
                 }
             }
 
@@ -313,14 +317,14 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                     case Capability.TYPE_DIMMERACTUATOR:
                         Double dimmerActuatorState = c.getCapabilityState().getDimmerActuatorState();
                         if (dimmerActuatorState != null) {
-                            PercentType dimLevel = new PercentType(dimmerActuatorState.intValue());
+                            int dimLevel = dimmerActuatorState.intValue();
                             logger.debug("Dimlevel state {} -> type {}", dimmerActuatorState, dimLevel);
-                            if (dimmerActuatorState > 0) {
+                            if (dimLevel > 0) {
                                 updateState(CHANNEL_DIMMER, OnOffType.ON);
                             } else {
                                 updateState(CHANNEL_DIMMER, OnOffType.OFF);
                             }
-                            updateState(CHANNEL_DIMMER, dimLevel);
+                            updateState(CHANNEL_DIMMER, new PercentType(dimLevel));
                         } else {
                             logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
                                     c.getCapabilityState().getId(), c.getId());
@@ -329,15 +333,16 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                     case Capability.TYPE_ROLLERSHUTTERACTUATOR:
                         Double rollerShutterActuatorState = c.getCapabilityState().getRollerShutterActuatorState();
                         if (rollerShutterActuatorState != null) {
-                            PercentType rollerShutterLevel = new PercentType(rollerShutterActuatorState.intValue());
+                            int rollerShutterLevel = invertValueIfConfigured(CHANNEL_ROLLERSHUTTER,
+                                    rollerShutterActuatorState.intValue());
                             logger.debug("RollerShutterlevel state {} -> type {}", rollerShutterActuatorState,
                                     rollerShutterLevel);
-                            if (rollerShutterActuatorState > 0) {
+                            if (rollerShutterLevel > 0) {
                                 updateState(CHANNEL_ROLLERSHUTTER, OnOffType.ON);
                             } else {
                                 updateState(CHANNEL_ROLLERSHUTTER, OnOffType.OFF);
                             }
-                            updateState(CHANNEL_ROLLERSHUTTER, rollerShutterLevel);
+                            updateState(CHANNEL_ROLLERSHUTTER, new PercentType(rollerShutterLevel));
                         } else {
                             logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
                                     c.getCapabilityState().getId(), c.getId());
@@ -723,5 +728,30 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
             updateStatus(ThingStatus.ONLINE);
             onDeviceStateChanged(device);
         }
+    }
+
+    /**
+     * Returns the inverted value, if the invertion in active in the given {@link Channel}s
+     * configuration. Currently only rollershutter channels are supported.
+     *
+     * @param value
+     * @return the value or the inverted value
+     */
+    private int invertValueIfConfigured(String channelId, int value) {
+        if (!CHANNEL_ROLLERSHUTTER.equals(channelId)) {
+            logger.debug("Channel {} cannot be inverted.", channelId);
+            return value;
+        }
+
+        Channel channel = getThing().getChannel(channelId);
+        if (channel == null) {
+            logger.debug("Channel {} was null! Value not inverted.", channelId);
+            return value;
+        }
+        boolean invertValues = (boolean) channel.getConfiguration().get(CONFIG_INVERT_VALUES);
+        if (invertValues) {
+            value = 100 - value;
+        }
+        return value;
     }
 }
