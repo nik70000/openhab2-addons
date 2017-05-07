@@ -327,7 +327,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         }
                         break;
                     case Capability.TYPE_ROLLERSHUTTERACTUATOR:
-                        Double rollerShutterActuatorState = c.getCapabilityState().getDimmerActuatorState();
+                        Double rollerShutterActuatorState = c.getCapabilityState().getRollerShutterActuatorState();
                         if (rollerShutterActuatorState != null) {
                             PercentType rollerShutterLevel = new PercentType(rollerShutterActuatorState.intValue());
                             logger.debug("RollerShutterlevel state {} -> type {}", rollerShutterActuatorState,
