@@ -69,6 +69,10 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
             logger.warn("BridgeHandler not found. Cannot handle command without bridge.");
             return;
         }
+        if (!ThingStatus.ONLINE.equals(innogyBridgeHandler.getThing().getStatus())) {
+            logger.info("Cannot handle command - bridge is not online. Command ignored.");
+            return;
+        }
 
         if (command instanceof RefreshType) {
             // Device device = getInnogyBridgeHandler().refreshDevice(deviceId);
