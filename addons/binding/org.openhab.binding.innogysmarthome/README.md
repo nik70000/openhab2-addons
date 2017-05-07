@@ -83,3 +83,4 @@ The SmartHome Controller (SHC) can be configured in the PaperUI as follows:
 ### Configuring devices
 
 All devices bound to the bridge are can found by the discovery service once the SHC is online. As device discovery is not implemented as a background service, you should start it manually in the Inbox to find all devices. Now you can add all devices from your Inbox as things.
+
