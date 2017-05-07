@@ -32,6 +32,12 @@ The following table shows all supported and tested devices and their channels. T
 | WSD | Wall Mounted Smoke Detector, old version | smoke, alarm, battery_low |
 | WSD2 | Wall Mounted Smoke Detector, new version | smoke, alarm, battery_low |
 
+## Discovery
+
+If the bridge (SHC) is located in the same LAN as the openHAB server, the bridge should be discovered automatically by mDNS. However, this can sometimes take a couple of minutes. If the bridge is not found, it can be added manually (see below under "Configuration").
+
+After the bridge is added, devices are discovered automatically. As there is no background discovery implemented at the moment, you have to start the discovery manually by clicking on the discovery button in PaperUI's Inbox. However, only devices will appear that are added  in the innogy SmartHome app before, as the innogy Binding does not support the coupling of devices to the bridge.
+
 ## Channels
 
 | Channel Type ID | Item Type    | Description  | Available on thing |
@@ -61,4 +67,19 @@ The following table shows all supported and tested devices and their channels. T
 | temperature | Number | Holds the actual temperature in °C | RST, WRT |
 | window_reduction_active | Switch | indicates if a linked window is open and temperature reduced (ON/OFF)  | RST |
 
+## Thing configuration
 
+### Configuring the SmartHome Controller (SHC)
+
+The SmartHome Controller (SHC) can be configured in the PaperUI as follows:
+
+1. Goto the PaperUI Inbox, press the "+" Button on the top left and select the "innogy SmartHome Binding".
+2. If the SHC is found automatically, simply add it as thing and edit the newly added SHC under Configuration -> Things. Follow step 5.
+3. If the SHC is not found automatically, click on "ADD MANUALLY" and select the "innogy SmartHome Controller".
+4. For "Thing ID" and "Host", add the hostname of your SHC, which is normally "SMARTHOME01" (or with an increased number).
+5. Add the "Authorization code" by following the hints in the description. Save your changes.
+6. The SHC should now login and go online. Be sure it is connected to the internet.
+
+### Configuring devices
+
+All devices bound to the bridge are can found by the discovery service once the SHC is online. As device discovery is not implemented as a background service, you should start it manually in the Inbox to find all devices. Now you can add all devices from your Inbox as things.
