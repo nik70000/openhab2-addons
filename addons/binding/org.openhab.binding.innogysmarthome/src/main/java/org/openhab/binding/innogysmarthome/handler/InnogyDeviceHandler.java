@@ -506,6 +506,67 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                                     c.getCapabilityState().getId(), c.getId());
                         }
                         break;
+                    case Capability.TYPE_ENERGYCONSUMPTIONSENSOR:
+                        updateEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_MONTH_KWH,
+                                c.getCapabilityState().getEnergyConsumptionSensorEnergyConsumptionMonthKWhState(), c);
+                        updateEnergyChannel(CHANNEL_ABOLUTE_ENERGY_CONSUMPTION,
+                                c.getCapabilityState().getEnergyConsumptionSensorAbsoluteEnergyConsumptionState(), c);
+                        updateEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_MONTH_EURO,
+                                c.getCapabilityState().getEnergyConsumptionSensorEnergyConsumptionMonthEuroState(), c);
+                        updateEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_DAY_EURO,
+                                c.getCapabilityState().getEnergyConsumptionSensorEnergyConsumptionDayEuroState(), c);
+                        updateEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_DAY_KWH,
+                                c.getCapabilityState().getEnergyConsumptionSensorEnergyConsumptionDayKWhState(), c);
+                        break;
+                    case Capability.TYPE_POWERCONSUMPTIONSENSOR:
+                        updateEnergyChannel(CHANNEL_POWER_CONSUMPTION_WATT,
+                                c.getCapabilityState().getPowerConsumptionSensorPowerConsumptionWattState(), c);
+                        break;
+                    case Capability.TYPE_GENERATIONMETERENERGYSENSOR:
+                        updateEnergyChannel(CHANNEL_ENERGY_GENERATION_MONTH_KWH,
+                                c.getCapabilityState().getGenerationMeterEnergySensorEnergyPerMonthInKWhState(), c);
+                        updateEnergyChannel(CHANNEL_TOTAL_ENERGY_GENERATION,
+                                c.getCapabilityState().getGenerationMeterEnergySensorTotalEnergyState(), c);
+                        updateEnergyChannel(CHANNEL_ENERGY_GENERATION_MONTH_EURO,
+                                c.getCapabilityState().getGenerationMeterEnergySensorEnergyPerMonthInEuroState(), c);
+                        updateEnergyChannel(CHANNEL_ENERGY_GENERATION_DAY_EURO,
+                                c.getCapabilityState().getGenerationMeterEnergySensorEnergyPerDayInEuroState(), c);
+                        updateEnergyChannel(CHANNEL_ENERGY_GENERATION_DAY_KWH,
+                                c.getCapabilityState().getGenerationMeterEnergySensorEnergyPerDayInKWhState(), c);
+                        break;
+                    case Capability.TYPE_GENERATIONMETERPOWERCONSUMPTIONSENSOR:
+                        updateEnergyChannel(CHANNEL_POWER_GENERATION_WATT,
+                                c.getCapabilityState().getGenerationMeterPowerConsumptionSensorPowerInWattState(), c);
+                        break;
+                    case Capability.TYPE_TWOWAYMETERENERGYCONSUMPTIONSENSOR:
+                        updateEnergyChannel(CHANNEL_ENERGY_MONTH_KWH,
+                                c.getCapabilityState().getTwoWayMeterEnergyConsumptionSensorEnergyPerMonthInKWhState(),
+                                c);
+                        updateEnergyChannel(CHANNEL_TOTAL_ENERGY,
+                                c.getCapabilityState().getTwoWayMeterEnergyConsumptionSensorTotalEnergyState(), c);
+                        updateEnergyChannel(CHANNEL_ENERGY_MONTH_EURO,
+                                c.getCapabilityState().getTwoWayMeterEnergyConsumptionSensorEnergyPerMonthInEuroState(),
+                                c);
+                        updateEnergyChannel(CHANNEL_ENERGY_DAY_KWH,
+                                c.getCapabilityState().getTwoWayMeterEnergyConsumptionSensorEnergyPerDayInKWhState(),
+                                c);
+                        break;
+                    case Capability.TYPE_TWOWAYMETERENERGYFEEDSENSOR:
+                        updateEnergyChannel(CHANNEL_ENERGY_FEED_MONTH_KWH,
+                                c.getCapabilityState().getTwoWayMeterEnergyFeedSensorEnergyPerMonthInKWhState(), c);
+                        updateEnergyChannel(CHANNEL_TOTAL_ENERGY_FED,
+                                c.getCapabilityState().getTwoWayMeterEnergyFeedSensorTotalEnergyState(), c);
+                        updateEnergyChannel(CHANNEL_ENERGY_FEED_MONTH_EURO,
+                                c.getCapabilityState().getTwoWayMeterEnergyFeedSensorEnergyPerMonthInEuroState(), c);
+                        updateEnergyChannel(CHANNEL_ENERGY_FEED_DAY_EURO,
+                                c.getCapabilityState().getTwoWayMeterEnergyFeedSensorEnergyPerDayInEuroState(), c);
+                        updateEnergyChannel(CHANNEL_ENERGY_FEED_DAY_KWH,
+                                c.getCapabilityState().getTwoWayMeterEnergyFeedSensorEnergyPerDayInKWhState(), c);
+                        break;
+                    case Capability.TYPE_TWOWAYMETERPOWERCONSUMPTIONSENSOR:
+                        updateEnergyChannel(CHANNEL_POWER_WATT,
+                                c.getCapabilityState().getTwoWayMeterPowerConsumptionSensorPowerInWattState(), c);
+                        break;
                     default:
                         logger.debug("Unsupported capability type {}.", c.getType());
                 }
@@ -513,6 +574,16 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
             }
         } else {
             logger.trace("DeviceId {} not relevant for this handler (responsible for id {})", device.getId(), deviceId);
+        }
+    }
+
+    private void updateEnergyChannel(String channelId, Double state, Capability c) {
+        if (state != null) {
+            DecimalType newValue = new DecimalType(state);
+            updateState(channelId, newValue);
+        } else {
+            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
+                    c.getCapabilityState().getId(), c.getId());
         }
     }
 
@@ -673,11 +744,146 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                             logger.debug("Capability-property {} not yet supported.", p.getName());
                         }
 
+                        // EnergyConsumptionSensor
+                    } else if (capability.isTypeEnergyConsumptionSensor()) {
+                        if (p.getName().equals(
+                                CapabilityState.STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_MONTH_KWH)) {
+                            capabilityState
+                                    .setEnergyConsumptionSensorEnergyConsumptionMonthKWhState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ABSOLUTE_ENERGY_CONSUMPTION)) {
+                            capabilityState
+                                    .setEnergyConsumptionSensorAbsoluteEnergyConsumptionState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_MONTH_EURO)) {
+                            capabilityState
+                                    .setEnergyConsumptionSensorEnergyConsumptionMonthEuroState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_DAY_EURO)) {
+                            capabilityState
+                                    .setEnergyConsumptionSensorEnergyConsumptionDayEuroState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_DAY_KWH)) {
+                            capabilityState
+                                    .setEnergyConsumptionSensorEnergyConsumptionDayKWhState((double) p.getValue());
+                            deviceChanged = true;
+                        }
+
+                        // PowerConsumptionSensor
+                    } else if (capability.isTypePowerConsumptionSensor()) {
+                        if (p.getName()
+                                .equals(CapabilityState.STATE_NAME_POWER_CONSUMPTION_SENSOR_POWER_CONSUMPTION_WATT)) {
+                            capabilityState.setPowerConsumptionSensorPowerConsumptionWattState((double) p.getValue());
+                            deviceChanged = true;
+                        }
+
+                        // GenerationMeterEnergySensor
+                    } else if (capability.isTypeGenerationMeterEnergySensor()) {
+                        if (p.getName().equals(
+                                CapabilityState.STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_MONTH_IN_KWH)) {
+                            capabilityState
+                                    .setGenerationMeterEnergySensorEnergyPerMonthInKWhState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName()
+                                .equals(CapabilityState.STATE_NAME_GENERATION_METER_ENERGY_SENSOR_TOTAL_ENERGY)) {
+                            capabilityState.setGenerationMeterEnergySensorTotalEnergyState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_MONTH_IN_EURO)) {
+                            capabilityState
+                                    .setGenerationMeterEnergySensorEnergyPerMonthInEuroState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_DAY_IN_EURO)) {
+                            capabilityState
+                                    .setGenerationMeterEnergySensorEnergyPerDayInEuroState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_DAY_IN_KWH)) {
+                            capabilityState.setGenerationMeterEnergySensorEnergyPerDayInKWhState((double) p.getValue());
+                            deviceChanged = true;
+                        }
+
+                        // GenerationMeterPowerConsumptionSensor
+                    } else if (capability.isTypeGenerationMeterPowerConsumptionSensor()) {
+                        if (p.getName().equals(
+                                CapabilityState.STATE_NAME_GENERATION_METER_POWER_CONSUMPTION_SENSOR_POWER_IN_WATT)) {
+                            capabilityState
+                                    .setGenerationMeterPowerConsumptionSensorPowerInWattState((double) p.getValue());
+                            deviceChanged = true;
+                        }
+
+                        // TwoWayMeterEnergyConsumptionSensor
+                    } else if (capability.isTypeTwoWayMeterEnergyConsumptionSensor()) {
+                        if (p.getName().equals(
+                                CapabilityState.STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_MONTH_IN_KWH)) {
+                            capabilityState.setTwoWayMeterEnergyConsumptionSensorEnergyPerMonthInKWhState(
+                                    (double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_TOTAL_ENERGY)) {
+                            capabilityState
+                                    .setTwoWayMeterEnergyConsumptionSensorTotalEnergyState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_MONTH_IN_EURO)) {
+                            capabilityState.setTwoWayMeterEnergyConsumptionSensorEnergyPerMonthInEuroState(
+                                    (double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_DAY_IN_EURO)) {
+                            capabilityState.setTwoWayMeterEnergyConsumptionSensorEnergyPerDayInEuroState(
+                                    (double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_DAY_IN_KWH)) {
+                            capabilityState
+                                    .setTwoWayMeterEnergyConsumptionSensorEnergyPerDayInKWhState((double) p.getValue());
+                            deviceChanged = true;
+                        }
+
+                        // TwoWayMeterEnergyFeedSensor
+                    } else if (capability.isTypeTwoWayMeterEnergyFeedSensor()) {
+                        if (p.getName().equals(
+                                CapabilityState.STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_MONTH_IN_KWH)) {
+                            capabilityState
+                                    .setTwoWayMeterEnergyFeedSensorEnergyPerMonthInKWhState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName()
+                                .equals(CapabilityState.STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_TOTAL_ENERGY)) {
+                            capabilityState.setTwoWayMeterEnergyFeedSensorTotalEnergyState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_MONTH_IN_EURO)) {
+                            capabilityState
+                                    .setTwoWayMeterEnergyFeedSensorEnergyPerMonthInEuroState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_DAY_IN_EURO)) {
+                            capabilityState
+                                    .setTwoWayMeterEnergyFeedSensorEnergyPerDayInEuroState((double) p.getValue());
+                            deviceChanged = true;
+                        } else if (p.getName().equals(
+                                CapabilityState.STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_DAY_IN_KWH)) {
+                            capabilityState.setTwoWayMeterEnergyFeedSensorEnergyPerDayInKWhState((double) p.getValue());
+                            deviceChanged = true;
+                        }
+
+                        // TwoWayMeterPowerConsumptionSensor
+                    } else if (capability.isTypeTwoWayMeterPowerConsumptionSensor()) {
+                        if (p.getName().equals(
+                                CapabilityState.STATE_NAME_TWO_WAY_METER_POWER_CONSUMPTION_SENSOR_POWER_IN_WATT)) {
+                            capabilityState.setTwoWayMeterPowerConsumptionSensorPowerInWattState((double) p.getValue());
+                            deviceChanged = true;
+                        }
                     } else {
                         logger.debug("Unsupported capability type {}.", capability.getType());
                         continue;
                     }
-
                 }
 
                 if (deviceChanged) {
