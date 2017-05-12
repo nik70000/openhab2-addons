@@ -19,6 +19,7 @@ import org.eclipse.smarthome.core.library.types.OnOffType;
 import org.eclipse.smarthome.core.library.types.OpenClosedType;
 import org.eclipse.smarthome.core.library.types.PercentType;
 import org.eclipse.smarthome.core.library.types.StringType;
+import org.eclipse.smarthome.core.library.types.UpDownType;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -112,6 +113,14 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         invertValueIfConfigured(CHANNEL_ROLLERSHUTTER, rollerShutterLevel.intValue()));
             } else if (command instanceof OnOffType) {
                 if (OnOffType.ON.equals(command)) {
+                    innogyBridgeHandler.commandSetRollerShutterLevel(deviceId,
+                            invertValueIfConfigured(CHANNEL_ROLLERSHUTTER, 100));
+                } else {
+                    innogyBridgeHandler.commandSetRollerShutterLevel(deviceId,
+                            invertValueIfConfigured(CHANNEL_ROLLERSHUTTER, 0));
+                }
+            } else if (command instanceof UpDownType) {
+                if (UpDownType.DOWN.equals(command)) {
                     innogyBridgeHandler.commandSetRollerShutterLevel(deviceId,
                             invertValueIfConfigured(CHANNEL_ROLLERSHUTTER, 100));
                 } else {
