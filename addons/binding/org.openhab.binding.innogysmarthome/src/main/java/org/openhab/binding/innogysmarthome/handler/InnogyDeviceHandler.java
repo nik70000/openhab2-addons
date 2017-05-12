@@ -387,6 +387,9 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                                 .getThermostatActuatorPointTemperatureState();
                         if (thermostatActuatorPointTemperatureState != null) {
                             DecimalType pointTemp = new DecimalType(thermostatActuatorPointTemperatureState);
+                            logger.debug(
+                                    "Update CHANNEL_SET_TEMPERATURE: state:{}->decType:{} (DeviceName {}, Capab-ID:{})",
+                                    thermostatActuatorPointTemperatureState, pointTemp, device.getName(), c.getId());
                             updateState(CHANNEL_SET_TEMPERATURE, pointTemp);
                         } else {
                             logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
