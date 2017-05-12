@@ -229,4 +229,224 @@
         <state readOnly="true"></state>
     </channel-type>
     
+    <!-- EnergyConsumptionMonthKWh -->
+    <channel-type id="EnergyConsumptionMonthKWh">
+        <item-type>Number</item-type>
+        <label>Energy consumption per month in KWh</label>
+        <description>The energy consumption per month in KWh</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <!-- AbsoluteEnergyConsumption -->
+    <channel-type id="AbsoluteEnergyConsumption">
+        <item-type>Number</item-type>
+        <label>Absolute energy consumption</label>
+        <description>The absolute Energy consumption</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <!-- EnergyConsumptionMonthEuro -->
+    <channel-type id="EnergyConsumptionMonthEuro">
+        <item-type>Number</item-type>
+        <label>Energy consumption per month in Euro</label>
+        <description>The energy consumption per month in Euro</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>  
+ 
+    <!-- EnergyConsumptionDayEuro -->
+    <channel-type id="EnergyConsumptionDayEuro">
+        <item-type>Number</item-type>
+        <label>Energy consumption per day in Euro</label>
+        <description>The energy consumption per day in Euro</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <!-- EnergyConsumptionDayKWh -->
+    <channel-type id="EnergyConsumptionDayKWh">
+        <item-type>Number</item-type>
+        <label>Energy consumption per day in KWh</label>
+        <description>The energy consumption per day in KWh</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <!-- PowerConsumptionWatt -->
+    <channel-type id="PowerConsumptionWatt">
+        <item-type>Number</item-type>
+        <label>Power consumption in Watt</label>
+        <description>The current power consumption in Watt</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    
+    
+    <!-- EnergyGenerationMonthKWh -->
+    <channel-type id="EnergyGenerationMonthKWh">
+        <item-type>Number</item-type>
+        <label>Energy generation per month in KWh</label>
+        <description>The energy generation per month in KWh</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <!-- TotalEnergyGeneration -->
+    <channel-type id="TotalEnergyGeneration">
+        <item-type>Number</item-type>
+        <label>Total energy generation</label>
+        <description>The total Energy generation</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <!-- EnergyGenerationMonthEuro -->
+    <channel-type id="EnergyGenerationMonthEuro">
+        <item-type>Number</item-type>
+        <label>Energy generation per month in Euro</label>
+        <description>The energy generation per month in Euro</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>  
+ 
+    <!-- EnergyGenerationDayEuro -->
+    <channel-type id="EnergyGenerationDayEuro">
+        <item-type>Number</item-type>
+        <label>Energy generation per day in Euro</label>
+        <description>The energy generation per day in Euro</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <!-- EnergyGenerationDayKWh -->
+    <channel-type id="EnergyGenerationDayKWh">
+        <item-type>Number</item-type>
+        <label>Energy generation per day in KWh</label>
+        <description>The energy generation per day in KWh</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <!-- PowerGenerationWatt -->
+    <channel-type id="PowerGenerationWatt">
+        <item-type>Number</item-type>
+        <label>Power generation in Watt</label>
+        <description>The current power generation in Watt</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    
+    <!-- TotalEnergyConsumption -->
+    <channel-type id="TotalEnergyConsumption">
+        <item-type>Number</item-type>
+        <label>Total energy consumption</label>
+        <description>The total Energy consumption</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    
+    <!-- EnergyFeedMonthKWh -->
+    <channel-type id="EnergyFeedMonthKWh">
+        <item-type>Number</item-type>
+        <label>Energy feed per month in KWh</label>
+        <description>The energy feed per month in KWh</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <!-- TotalEnergyFeed -->
+    <channel-type id="TotalEnergyFed">
+        <item-type>Number</item-type>
+        <label>Total energy fed</label>
+        <description>The total Energy fed</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <!-- EnergyFeedMonthEuro -->
+    <channel-type id="EnergyFeedMonthEuro">
+        <item-type>Number</item-type>
+        <label>Energy feed per month in Euro</label>
+        <description>The energy feed per month in Euro</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>  
+ 
+    <!-- EnergyFeedDayEuro -->
+    <channel-type id="EnergyFeedDayEuro">
+        <item-type>Number</item-type>
+        <label>Energy feed per day in Euro</label>
+        <description>The energy feed per day in Euro</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+    <!-- EnergyFeedDayKWh -->
+    <channel-type id="EnergyFeedDayKWh">
+        <item-type>Number</item-type>
+        <label>Energy feed per day in KWh</label>
+        <description>The energy feed per day in KWh</description>
+        <category>Energy</category>
+        <tags>
+            <tag>energy</tag>
+        </tags>
+        <state readOnly="true"></state>
+    </channel-type>
+    
 </thing:thing-descriptions>

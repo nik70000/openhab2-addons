@@ -137,5 +137,28 @@ public class InnogyBindingConstants {
     public static final String CHANNEL_DIMMER = "dimmer";
     public static final String CHANNEL_ROLLERSHUTTER = "rollershutter";
     public static final String CHANNEL_BATTERY_LOW = "battery_low";
+    public static final String CHANNEL_ENERGY_CONSUMPTION_MONTH_KWH = "energy_consumption_month_kwh";
+    public static final String CHANNEL_ABOLUTE_ENERGY_CONSUMPTION = "absolute_energy_consumption";
+    public static final String CHANNEL_ENERGY_CONSUMPTION_MONTH_EURO = "energy_consumption_month_euro";
+    public static final String CHANNEL_ENERGY_CONSUMPTION_DAY_EURO = "energy_consumption_day_euro";
+    public static final String CHANNEL_ENERGY_CONSUMPTION_DAY_KWH = "energy_consumption_day_kwh";
+    public static final String CHANNEL_POWER_CONSUMPTION_WATT = "power_consumption_watt";
+    public static final String CHANNEL_ENERGY_GENERATION_MONTH_KWH = "energy_generation_month_kwh";
+    public static final String CHANNEL_TOTAL_ENERGY_GENERATION = "total_energy_generation";
+    public static final String CHANNEL_ENERGY_GENERATION_MONTH_EURO = "energy_generation_month_euro";
+    public static final String CHANNEL_ENERGY_GENERATION_DAY_EURO = "energy_generation_day_euro";
+    public static final String CHANNEL_ENERGY_GENERATION_DAY_KWH = "energy_generation_day_kwh";
+    public static final String CHANNEL_POWER_GENERATION_WATT = "power_generation_watt";
+    public static final String CHANNEL_ENERGY_MONTH_KWH = "energy_month_kwh";
+    public static final String CHANNEL_TOTAL_ENERGY = "total_energy";
+    public static final String CHANNEL_ENERGY_MONTH_EURO = "energy_month_euro";
+    public static final String CHANNEL_ENERGY_DAY_EURO = "energy_day_euro";
+    public static final String CHANNEL_ENERGY_DAY_KWH = "energy_day_kwh";
+    public static final String CHANNEL_ENERGY_FEED_MONTH_KWH = "energy_feed_month_kwh";
+    public static final String CHANNEL_TOTAL_ENERGY_FED = "total_energy_fed";
+    public static final String CHANNEL_ENERGY_FEED_MONTH_EURO = "energy_feed_month_euro";
+    public static final String CHANNEL_ENERGY_FEED_DAY_EURO = "energy_feed_day_euro";
+    public static final String CHANNEL_ENERGY_FEED_DAY_KWH = "energy_feed_day_kwh";
+    public static final String CHANNEL_POWER_WATT = "power_watt";
 
 }
