@@ -42,6 +42,13 @@ public class InnogyWebSocket {
     private URI webSocketURI;
     private int maxIdleTimeout;
 
+    /**
+     * Constructs the {@link InnogyWebSocket}.
+     *
+     * @param bridgeHandler the responsible {@link InnogyBridgeHandler}
+     * @param webSocketURI the {@link URI} of the websocket endpoint
+     * @param maxIdleTimeout
+     */
     public InnogyWebSocket(InnogyBridgeHandler bridgeHandler, URI webSocketURI, int maxIdleTimeout) {
         this.bridgeHandler = bridgeHandler;
         this.closeLatch = new CountDownLatch(1);
@@ -49,6 +56,11 @@ public class InnogyWebSocket {
         this.maxIdleTimeout = maxIdleTimeout;
     }
 
+    /**
+     * Starts the {@link InnogyWebSocket}.
+     *
+     * @throws Exception
+     */
     public synchronized void start() throws Exception {
         SslContextFactory sslContextFactory = new SslContextFactory();
         sslContextFactory.setTrustAll(true); // The magic
@@ -67,15 +79,25 @@ public class InnogyWebSocket {
         session = client.connect(this, webSocketURI).get();
     }
 
+    /**
+     * Stops the {@link InnogyWebSocket}.
+     */
     public synchronized void stop() {
-        logger.info("Stopping innogy WebSocket...");
         if (isRunning()) {
             logger.debug("Closing session...");
             session.close();
             session = null;
+            logger.info("innogy WebSocket stopped.");
+        } else {
+            logger.debug("Stopping websocket ignored - was not running.");
         }
     }
 
+    /**
+     * Return true, if the websocket is running.
+     *
+     * @return
+     */
     public synchronized boolean isRunning() {
         return session != null && session.isOpen();
     }
@@ -97,6 +119,14 @@ public class InnogyWebSocket {
         }
     }
 
+    /**
+     * Await the closing of the websocket.
+     * 
+     * @param duration
+     * @param unit
+     * @return
+     * @throws InterruptedException
+     */
     public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
         logger.debug("innogy WebSocket awaitClose() - {}{}", duration, unit);
         return this.closeLatch.await(duration, unit);

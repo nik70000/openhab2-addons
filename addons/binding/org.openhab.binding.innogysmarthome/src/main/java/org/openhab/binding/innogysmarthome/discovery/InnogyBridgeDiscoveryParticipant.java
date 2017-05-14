@@ -72,5 +72,4 @@ public class InnogyBridgeDiscoveryParticipant implements MDNSDiscoveryParticipan
 
         return null;
     }
-
 }

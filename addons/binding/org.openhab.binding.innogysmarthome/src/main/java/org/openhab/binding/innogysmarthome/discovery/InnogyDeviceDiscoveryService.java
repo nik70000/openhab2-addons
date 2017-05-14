@@ -21,6 +21,7 @@ import org.eclipse.smarthome.config.discovery.DiscoveryResult;
 import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.ThingUID;
+import org.eclipse.smarthome.core.thing.binding.BridgeHandler;
 import org.openhab.binding.innogysmarthome.handler.InnogyBridgeHandler;
 import org.openhab.binding.innogysmarthome.handler.InnogyDeviceHandler;
 import org.openhab.binding.innogysmarthome.internal.listener.DeviceStatusListener;
@@ -41,6 +42,11 @@ public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService imple
     private final static Logger logger = LoggerFactory.getLogger(InnogyDeviceDiscoveryService.class);
     private InnogyBridgeHandler bridgeHandler;
 
+    /**
+     * Construct an {@link InnogyDeviceDiscoveryService} with the given {@link BridgeHandler}.
+     *
+     * @param bridgeHandler
+     */
     public InnogyDeviceDiscoveryService(InnogyBridgeHandler bridgeHandler) {
         super(SEARCH_TIME);
         this.bridgeHandler = bridgeHandler;
@@ -106,12 +112,12 @@ public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService imple
 
     @Override
     public void onDeviceStateChanged(Device device) {
-        // TODO Auto-generated method stub
+        // ignored
     }
 
     @Override
     public void onDeviceStateChanged(Device device, Event event) {
-        // TODO Auto-generated method stub
+        // ignored
     }
 
     @Override
