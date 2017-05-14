@@ -19,7 +19,7 @@ import in.ollie.innogysmarthome.entity.event.Event;
 public interface DeviceStatusListener {
 
     /**
-     * This method is called whenever the state of the given device has changed.
+     * This method is called whenever the state of the given {@link Device} has changed.
      *
      * @param device
      *            The device which received the state update.
@@ -36,7 +36,7 @@ public interface DeviceStatusListener {
     public void onDeviceStateChanged(Device device, Event event);
 
     /**
-     * This method us called whenever a device is removed.
+     * This method is called whenever a {@link Device} is removed.
      *
      * @param device
      *            The device which is removed.
@@ -44,20 +44,10 @@ public interface DeviceStatusListener {
     public void onDeviceRemoved(Device device);
 
     /**
-     * This method us called whenever a device is added.
+     * This method is called whenever a {@link Device} is added.
      *
      * @param device
      *            The device which is added.
      */
     public void onDeviceAdded(Device device);
-
-    /**
-     * This method us called whenever a device config is updated.
-     *
-     * @param device
-     *            The device which config is changed.
-     * @param bridge
-     *            The innogy SmartHome bridge the device was connected to.
-     */
-    // public void onDeviceConfigUpdate(Device device);
 }

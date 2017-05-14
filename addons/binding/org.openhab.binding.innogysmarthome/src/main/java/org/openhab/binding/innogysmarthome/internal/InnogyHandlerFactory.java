@@ -64,6 +64,11 @@ public class InnogyHandlerFactory extends BaseThingHandlerFactory {
         }
     }
 
+    /**
+     * Registers the device discovery service.
+     * 
+     * @param bridgeHandler
+     */
     private synchronized void registerDeviceDiscoveryService(InnogyBridgeHandler bridgeHandler) {
         InnogyDeviceDiscoveryService discoveryService = new InnogyDeviceDiscoveryService(bridgeHandler);
         discoveryService.activate();

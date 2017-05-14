@@ -29,7 +29,7 @@ import in.ollie.innogysmarthome.entity.link.CapabilityLink;
 import in.ollie.innogysmarthome.exception.ApiException;
 
 /**
- * Manages the structure of the {@link Device}s and the calls to the {@Link InnogyClient} to load the {@link Device}
+ * Manages the structure of the {@link Device}s and the calls to the {@link InnogyClient} to load the {@link Device}
  * data from the innogy SmartHome web service.
  *
  * @author Oliver Kuhl - Initial contribution
@@ -90,32 +90,7 @@ public class DeviceStructureManager {
     public void refreshDevices() throws IOException, ApiException {
         List<Device> devices = client.getFullDevices();
         for (Device d : devices) {
-            if (InnogyBindingConstants.SUPPORTED_DEVICES.contains(d.getType())) {
-                addDeviceToStructure(d);
-            } else {
-                logger.debug("Device {}:{} ({}) ignored - UNSUPPORTED.", d.getType(), d.getName(), d.getId());
-                logger.debug("====================================");
-                continue;
-            }
-
-            if (d.isController()) {
-                bridgeDeviceId = d.getId();
-            }
-            try {
-                logger.debug("Device {}:{} ({}) loaded.", d.getType(), d.getName(), d.getId());
-                for (Capability c : d.getCapabilityMap().values()) {
-                    logger.debug("> CAP: {} ({})", c.getName(), c.getId());
-                    for (Property p : c.getCapabilityState().getStateMap().values()) {
-                        logger.debug(">> CAP-State: {} -> {}", p.getName(), p.getValue());
-                    }
-                }
-            } catch (NullPointerException e) {
-                logger.warn("NPEX.");
-            } catch (Exception e) {
-                logger.error("EX: ", e);
-            }
-            logger.debug("====================================");
-
+            handleRefreshedDevice(d);
         }
     }
 
@@ -128,27 +103,52 @@ public class DeviceStructureManager {
      */
     public void refreshDevice(String deviceId) throws IOException, ApiException {
         Device d = client.getFullDeviceById(deviceId);
+        handleRefreshedDevice(d);
+    }
+
+    /**
+     * Stores the newly refreshed {@link Device} in the {@link DeviceStructureManager} structure and logs the
+     * {@link Device}s details and state, if the debug logging is enabled.
+     *
+     * @param d the {@link Device}
+     */
+    private void handleRefreshedDevice(Device d) {
         if (InnogyBindingConstants.SUPPORTED_DEVICES.contains(d.getType())) {
             addDeviceToStructure(d);
         } else {
-            logger.debug("Device {}:{} ({}) ignored - UNSUPPORTED.", d.getType(), d.getName(), d.getId());
+            logger.debug("Device {}:'{}' by {} ({}) ignored - UNSUPPORTED.", d.getType(), d.getName(),
+                    d.getManufacturer(), d.getId());
+            logger.debug("====================================");
             return;
         }
+
         if (d.isController()) {
             bridgeDeviceId = d.getId();
         }
-        try {
-            logger.debug("Device {} ({}) loaded.", d.getName(), d.getId());
-            for (Capability c : d.getCapabilityMap().values()) {
-                logger.debug("> CAP: {} ({})", c.getName(), c.getId());
-                for (Property p : c.getCapabilityState().getStateMap().values()) {
-                    logger.debug(">> CAP-State: {} -> {}", p.getName(), p.getValue());
+
+        if (logger.isDebugEnabled()) {
+            try {
+                logger.debug("Device {}:'{}' by {} ({}) loaded.", d.getType(), d.getName(), d.getManufacturer(),
+                        d.getId());
+                for (Capability c : d.getCapabilityMap().values()) {
+                    logger.debug("> CAP: {}/{} ({})", c.getType(), c.getName(), c.getId());
+                    if (d.isRadioDevice() && !d.isReachable()) {
+                        logger.debug(">> CAP-State: unknown (device NOT REACHABLE).");
+                    } else {
+                        if (c.getCapabilityState() != null) {
+                            for (Property p : c.getCapabilityState().getStateMap().values()) {
+                                logger.debug(">> CAP-State: {} -> {} ({})", p.getName(), p.getValue(),
+                                        p.getLastchanged());
+                            }
+                        } else {
+                            logger.debug(">> CAP-State: unknown (NULL)");
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                logger.error("EX: ", e);
             }
-        } catch (NullPointerException e) {
-            logger.warn("NPEX.");
-        } catch (Exception e) {
-            logger.error("EX: ", e);
+            logger.debug("====================================");
         }
     }
 
@@ -176,7 +176,7 @@ public class DeviceStructureManager {
      * Returns the {@link Device} with the given id.
      *
      * @param id
-     * @return
+     * @return the {@link Device} or null, if it does not exist
      */
     public Device getDeviceById(String id) {
         logger.debug("getDeviceById {}:{}", id, getDeviceMap().containsKey(id));
@@ -212,11 +212,11 @@ public class DeviceStructureManager {
         return getDeviceMap().get(bridgeDeviceId);
     }
 
-    @Deprecated
-    public Map<String, Device> getDeviceHashMapReference() {
-        return getDeviceMap();
-    }
-
+    /**
+     * Returns a {@link List} of all {@link Device}s handled by the {@link DeviceStructureManager}.
+     *
+     * @return
+     */
     public List<Device> getDeviceList() {
         return new ArrayList<>(getDeviceMap().values());
     }
@@ -240,6 +240,13 @@ public class DeviceStructureManager {
         return null;
     }
 
+    /**
+     * Returns the id of the {@link Capability} for {@link Device} with the given id and the given capabilityType.
+     *
+     * @param deviceId
+     * @param capabilityType
+     * @return the id of the found {@link Capability} or null
+     */
     public String getCapabilityId(String deviceId, String capabilityType) {
         Device device = getDeviceMap().get(deviceId);
         for (Capability c : device.getCapabilityMap().values()) {
@@ -250,6 +257,12 @@ public class DeviceStructureManager {
         return null;
     }
 
+    /**
+     * Returns a {@link List} of {@link CapabilityLink}s for the {@link Device} with the given id.
+     *
+     * @param deviceId
+     * @return a {@link List} of {@link CapabilityLink}s or null, if the {@link Device} does not exist.
+     */
     public List<CapabilityLink> getCapabilityLinkListForDeviceId(String deviceId) {
         Device device = getDeviceMap().get(deviceId);
         if (device != null) {

@@ -55,9 +55,13 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
     private Logger logger = LoggerFactory.getLogger(InnogyDeviceHandler.class);
 
     private String deviceId;
-    private Device device;
     private InnogyBridgeHandler bridgeHandler;
 
+    /**
+     * Constructs a new {@link InnogyDeviceHandler} for the given {@link Thing}.
+     *
+     * @param thing
+     */
     public InnogyDeviceHandler(Thing thing) {
         super(thing);
     }
@@ -77,7 +81,6 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         }
 
         if (command instanceof RefreshType) {
-            // Device device = getInnogyBridgeHandler().refreshDevice(deviceId);
             Device device = innogyBridgeHandler.getDeviceById(deviceId);
             if (device != null) {
                 onDeviceStateChanged(device);
@@ -174,6 +177,11 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         initializeThing(bridgeStatusInfo.getStatus());
     }
 
+    /**
+     * Initializes the {@link Thing} corresponding to the given status of the bridge.
+     *
+     * @param bridgeStatus
+     */
     private void initializeThing(ThingStatus bridgeStatus) {
         logger.debug("initializeThing thing {} bridge status {}", getThing().getUID(), bridgeStatus);
         final String configDeviceId = (String) getConfig().get(PROPERTY_ID);
@@ -194,9 +202,11 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         } else {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, "device id unknown");
         }
-
     }
 
+    /**
+     * Initializes all properties of the {@link Device}, like vendor, serialnumber etc.
+     */
     private synchronized void initializeProperties() {
         Device device = getDevice();
         if (device != null) {
@@ -235,6 +245,12 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         }
     }
 
+    /**
+     * Returns the {@link Device} associated with this {@link InnogyDeviceHandler} (referenced by the
+     * {@link InnogyDeviceHandler#deviceId}).
+     *
+     * @return the {@link Device} or null, if not found or no {@link InnogyBridgeHandler} is available
+     */
     private Device getDevice() {
         if (getInnogyBridgeHandler() != null) {
             return getInnogyBridgeHandler().getDeviceById(deviceId);
@@ -519,64 +535,64 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         }
                         break;
                     case Capability.TYPE_ENERGYCONSUMPTIONSENSOR:
-                        updateEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_MONTH_KWH,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_MONTH_KWH,
                                 c.getCapabilityState().getEnergyConsumptionSensorEnergyConsumptionMonthKWhState(), c);
-                        updateEnergyChannel(CHANNEL_ABOLUTE_ENERGY_CONSUMPTION,
+                        updateStateForEnergyChannel(CHANNEL_ABOLUTE_ENERGY_CONSUMPTION,
                                 c.getCapabilityState().getEnergyConsumptionSensorAbsoluteEnergyConsumptionState(), c);
-                        updateEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_MONTH_EURO,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_MONTH_EURO,
                                 c.getCapabilityState().getEnergyConsumptionSensorEnergyConsumptionMonthEuroState(), c);
-                        updateEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_DAY_EURO,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_DAY_EURO,
                                 c.getCapabilityState().getEnergyConsumptionSensorEnergyConsumptionDayEuroState(), c);
-                        updateEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_DAY_KWH,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_CONSUMPTION_DAY_KWH,
                                 c.getCapabilityState().getEnergyConsumptionSensorEnergyConsumptionDayKWhState(), c);
                         break;
                     case Capability.TYPE_POWERCONSUMPTIONSENSOR:
-                        updateEnergyChannel(CHANNEL_POWER_CONSUMPTION_WATT,
+                        updateStateForEnergyChannel(CHANNEL_POWER_CONSUMPTION_WATT,
                                 c.getCapabilityState().getPowerConsumptionSensorPowerConsumptionWattState(), c);
                         break;
                     case Capability.TYPE_GENERATIONMETERENERGYSENSOR:
-                        updateEnergyChannel(CHANNEL_ENERGY_GENERATION_MONTH_KWH,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_GENERATION_MONTH_KWH,
                                 c.getCapabilityState().getGenerationMeterEnergySensorEnergyPerMonthInKWhState(), c);
-                        updateEnergyChannel(CHANNEL_TOTAL_ENERGY_GENERATION,
+                        updateStateForEnergyChannel(CHANNEL_TOTAL_ENERGY_GENERATION,
                                 c.getCapabilityState().getGenerationMeterEnergySensorTotalEnergyState(), c);
-                        updateEnergyChannel(CHANNEL_ENERGY_GENERATION_MONTH_EURO,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_GENERATION_MONTH_EURO,
                                 c.getCapabilityState().getGenerationMeterEnergySensorEnergyPerMonthInEuroState(), c);
-                        updateEnergyChannel(CHANNEL_ENERGY_GENERATION_DAY_EURO,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_GENERATION_DAY_EURO,
                                 c.getCapabilityState().getGenerationMeterEnergySensorEnergyPerDayInEuroState(), c);
-                        updateEnergyChannel(CHANNEL_ENERGY_GENERATION_DAY_KWH,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_GENERATION_DAY_KWH,
                                 c.getCapabilityState().getGenerationMeterEnergySensorEnergyPerDayInKWhState(), c);
                         break;
                     case Capability.TYPE_GENERATIONMETERPOWERCONSUMPTIONSENSOR:
-                        updateEnergyChannel(CHANNEL_POWER_GENERATION_WATT,
+                        updateStateForEnergyChannel(CHANNEL_POWER_GENERATION_WATT,
                                 c.getCapabilityState().getGenerationMeterPowerConsumptionSensorPowerInWattState(), c);
                         break;
                     case Capability.TYPE_TWOWAYMETERENERGYCONSUMPTIONSENSOR:
-                        updateEnergyChannel(CHANNEL_ENERGY_MONTH_KWH,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_MONTH_KWH,
                                 c.getCapabilityState().getTwoWayMeterEnergyConsumptionSensorEnergyPerMonthInKWhState(),
                                 c);
-                        updateEnergyChannel(CHANNEL_TOTAL_ENERGY,
+                        updateStateForEnergyChannel(CHANNEL_TOTAL_ENERGY,
                                 c.getCapabilityState().getTwoWayMeterEnergyConsumptionSensorTotalEnergyState(), c);
-                        updateEnergyChannel(CHANNEL_ENERGY_MONTH_EURO,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_MONTH_EURO,
                                 c.getCapabilityState().getTwoWayMeterEnergyConsumptionSensorEnergyPerMonthInEuroState(),
                                 c);
-                        updateEnergyChannel(CHANNEL_ENERGY_DAY_KWH,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_DAY_KWH,
                                 c.getCapabilityState().getTwoWayMeterEnergyConsumptionSensorEnergyPerDayInKWhState(),
                                 c);
                         break;
                     case Capability.TYPE_TWOWAYMETERENERGYFEEDSENSOR:
-                        updateEnergyChannel(CHANNEL_ENERGY_FEED_MONTH_KWH,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_FEED_MONTH_KWH,
                                 c.getCapabilityState().getTwoWayMeterEnergyFeedSensorEnergyPerMonthInKWhState(), c);
-                        updateEnergyChannel(CHANNEL_TOTAL_ENERGY_FED,
+                        updateStateForEnergyChannel(CHANNEL_TOTAL_ENERGY_FED,
                                 c.getCapabilityState().getTwoWayMeterEnergyFeedSensorTotalEnergyState(), c);
-                        updateEnergyChannel(CHANNEL_ENERGY_FEED_MONTH_EURO,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_FEED_MONTH_EURO,
                                 c.getCapabilityState().getTwoWayMeterEnergyFeedSensorEnergyPerMonthInEuroState(), c);
-                        updateEnergyChannel(CHANNEL_ENERGY_FEED_DAY_EURO,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_FEED_DAY_EURO,
                                 c.getCapabilityState().getTwoWayMeterEnergyFeedSensorEnergyPerDayInEuroState(), c);
-                        updateEnergyChannel(CHANNEL_ENERGY_FEED_DAY_KWH,
+                        updateStateForEnergyChannel(CHANNEL_ENERGY_FEED_DAY_KWH,
                                 c.getCapabilityState().getTwoWayMeterEnergyFeedSensorEnergyPerDayInKWhState(), c);
                         break;
                     case Capability.TYPE_TWOWAYMETERPOWERCONSUMPTIONSENSOR:
-                        updateEnergyChannel(CHANNEL_POWER_WATT,
+                        updateStateForEnergyChannel(CHANNEL_POWER_WATT,
                                 c.getCapabilityState().getTwoWayMeterPowerConsumptionSensorPowerInWattState(), c);
                         break;
                     default:
@@ -589,13 +605,20 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         }
     }
 
-    private void updateEnergyChannel(String channelId, Double state, Capability c) {
+    /**
+     * Updates the state for the {@link Channel} of an energy {@link Device}.
+     *
+     * @param channelId
+     * @param state
+     * @param capability
+     */
+    private void updateStateForEnergyChannel(String channelId, Double state, Capability capability) {
         if (state != null) {
             DecimalType newValue = new DecimalType(state);
             updateState(channelId, newValue);
         } else {
-            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", c.getType(),
-                    c.getCapabilityState().getId(), c.getId());
+            logger.debug("State for {} is STILL NULL!! cstate-id: {}, c-id: {}", capability.getType(),
+                    capability.getCapabilityState().getId(), capability.getId());
         }
     }
 
@@ -928,10 +951,8 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         logger.debug("onDeviceRemoved called with device {}/{}", device.getName(), device.getId());
         if (device.getId().equals(deviceId)) {
             deviceId = null;
-            this.device = null;
             getInnogyBridgeHandler().unregisterDeviceStatusListener(this);
             bridgeHandler = null;
-            // forceRefresh = true // TODO: bisher nicht implementiert, aber ggf. nötig?
             updateStatus(ThingStatus.OFFLINE);
         } else {
             logger.debug("onDeviceRemoved called WITH WRONG ID?!?!");
@@ -941,7 +962,6 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
     @Override
     public synchronized void onDeviceAdded(Device device) {
         logger.debug("onDeviceAdded called with device {}/{}", device.getName(), device.getId());
-        this.device = device;
         if (device.getId().equals(deviceId)) {
             updateStatus(ThingStatus.ONLINE);
             onDeviceStateChanged(device);

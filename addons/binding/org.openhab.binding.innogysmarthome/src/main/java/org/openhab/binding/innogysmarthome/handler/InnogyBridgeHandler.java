@@ -68,7 +68,7 @@ import in.ollie.innogysmarthome.exception.SessionExistsException;
  * {@link EventListener} to handle {@link Event}s, that are received by the {@link InnogyWebSocket}.
  * <p/>
  * The {@link Device}s are organized by the {@link DeviceStructureManager}, which is also responsible for the connection
- * to the innogy SmartHome webservice {@Link InnogyClient}.
+ * to the innogy SmartHome webservice via the {@link InnogyClient}.
  *
  * @author Oliver Kuhl - Initial contribution
  */
@@ -85,13 +85,14 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
     private ScheduledFuture<?> reinitJob;
 
+    /**
+     * The {@link Initializer} class implements the initialization process of the bridge including starting the
+     * {@link DeviceStructureManager} (who loads all the {@link Device}s and states) and the {@link InnogyWebSocket}.
+     *
+     * @author Oliver Kuhl - Initial contribution
+     *
+     */
     private class Initializer implements Runnable {
-
-        InnogyBridgeHandler bridgeHandler = null;
-
-        public Initializer(InnogyBridgeHandler bridgeHandler) {
-            this.bridgeHandler = bridgeHandler;
-        }
 
         @Override
         public void run() {
@@ -151,16 +152,26 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                 updateProperties(properties);
 
             } else {
-                logger.error("device structure manager is not available.");
+                logger.warn("device structure manager is not available.");
             }
 
         }
     };
 
+    /**
+     * Runnable to run the websocket for receiving permanent update {@link Event}s from the innogy API.
+     *
+     * @author Oliver Kuhl - Initial contribution
+     */
     private class WebSocketRunner implements Runnable {
 
         private InnogyBridgeHandler bridgeHandler;
 
+        /**
+         * Constructs the {@link WebSocketRunner} with the given {@link InnogyBridgeHandler}.
+         *
+         * @param bridgeHandler
+         */
         public WebSocketRunner(InnogyBridgeHandler bridgeHandler) {
             this.bridgeHandler = bridgeHandler;
         }
@@ -226,10 +237,9 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
         if (config != null) {
             logger.debug(config.toString());
-            // scheduler.execute(new Initializer(this));
-            Initializer i = new Initializer(this);
-            i.run();
-
+            scheduler.execute(new Initializer());
+            // Initializer i = new Initializer();
+            // i.run();
         }
     }
 
@@ -248,13 +258,11 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         }
         logger.info("Scheduling reinitialize in {} seconds.", seconds);
         reinitJob = scheduler.schedule(new Runnable() {
-
             @Override
             public void run() {
                 initialize();
             }
         }, seconds, TimeUnit.SECONDS);
-
     }
 
     /**
@@ -335,27 +343,30 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         logger.info("innogy SmartHome bridge handler shut down.");
     }
 
+    /**
+     * Registers a {@link DeviceStatusListener}.
+     *
+     * @param deviceStatusListener
+     * @return true, if successful
+     */
     public boolean registerDeviceStatusListener(DeviceStatusListener deviceStatusListener) {
         if (deviceStatusListener == null) {
             throw new IllegalArgumentException("It's not allowed to pass a null deviceStatusListener.");
         }
-        boolean result = deviceStatusListeners.add(deviceStatusListener);
-        if (result) {
-            // onUpdate();
-            // TODO initially set current device states
-        }
-        return result;
+        return deviceStatusListeners.add(deviceStatusListener);
     }
 
+    /**
+     * Unregisters a {@link DeviceStatusListener}.
+     *
+     * @param deviceStatusListener
+     * @return true, if successful
+     */
     public boolean unregisterDeviceStatusListener(DeviceStatusListener deviceStatusListener) {
         if (deviceStatusListener == null) {
             throw new IllegalArgumentException("It's not allowed to pass a null deviceStatusListener.");
         }
-        boolean result = deviceStatusListeners.remove(deviceStatusListener);
-        if (result) {
-            // clearDeviceList();
-        }
-        return result;
+        return deviceStatusListeners.remove(deviceStatusListener);
     }
 
     /**
@@ -376,6 +387,12 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         return devices;
     }
 
+    /**
+     * Returns the {@link Device} with the given deviceId.
+     *
+     * @param deviceId
+     * @return {@link Device} or null, if it does not exist or no {@link DeviceStructureManager} is available
+     */
     public Device getDeviceById(String deviceId) {
         if (deviceStructMan != null) {
             return deviceStructMan.getDeviceById(deviceId);
@@ -385,8 +402,10 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     }
 
     /**
+     * Refreshes the {@link Device} with the given id, by reloading the full device from the innogy webservice.
      *
      * @param deviceId
+     * @return the {@link Device} or null, if it does not exist or no {@link DeviceStructureManager} is available
      */
     public Device refreshDevice(String deviceId) {
         if (deviceStructMan == null) {
@@ -401,7 +420,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             handleClientException(e);
         }
         return device;
-
     }
 
     // CredentialRefreshListener implementation
@@ -461,7 +479,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                         event.getLink() != null ? event.getLink().getValue() : "(no link)");
                 switch (event.getType()) {
                     case Event.TYPE_STATE_CHANGED:
-
                         if (deviceStructMan != null) {
 
                             // CAPABILITY
@@ -481,7 +498,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                                 deviceStructMan.refreshDevice(event.getLinkId());
                                 Device device = deviceStructMan.getDeviceById(event.getLinkId());
                                 if (device != null) {
-                                    logger.debug("DEVICE STATE CHANGED!!!");
                                     for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
                                         deviceStatusListener.onDeviceStateChanged(device, event);
                                     }
@@ -499,7 +515,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
                     case Event.TYPE_DISCONNECT:
                         logger.info("Websocket disconnected. Reason: {}", event.getPropertyList().get(0).getValue());
-                        // onEventRunnerStopped();
                         scheduleReinitialize(0);
                         break;
 
@@ -591,10 +606,10 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
      */
     @Override
     public void onEventRunnerStopped(long delay) {
-        // scheduler.schedule(new WebSocketRunner(this), delay, TimeUnit.SECONDS);
         logger.debug("onEventRunnerStopped called");
-        WebSocketRunner wsr = new WebSocketRunner(this);
-        wsr.run();
+        scheduler.schedule(new WebSocketRunner(this), delay, TimeUnit.SECONDS);
+        // WebSocketRunner wsr = new WebSocketRunner(this);
+        // wsr.run();
     }
 
     /*
@@ -607,6 +622,13 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         onEventRunnerStopped(0);
     }
 
+    /**
+     * Sends the command to switch the {@link Device} with the given id to the new state. Is called by the
+     * {@link InnogyDeviceHandler} for switch devices like the VariableActuator, PSS, PSSO or ISS2.
+     *
+     * @param deviceId
+     * @param state
+     */
     public void commandSwitchDevice(String deviceId, boolean state) {
         try {
             // TODO: ADD DEVICES
@@ -627,6 +649,13 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         }
     }
 
+    /**
+     * Sends the command to update the point temperature of the {@link Device} with the given deviceId. Is called by the
+     * {@link InnogyDeviceHandler} for thermostat {@link Device}s like RST or WRT.
+     *
+     * @param deviceId
+     * @param pointTemperature
+     */
     public void commandUpdatePointTemperature(String deviceId, double pointTemperature) {
         try {
             String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_THERMOSTATACTUATOR);
@@ -636,6 +665,13 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         }
     }
 
+    /**
+     * Sends the command to turn the alarm of the {@link Device} with the given id on or off. Is called by the
+     * {@link InnogyDeviceHandler} for smoke detector {@link Device}s like WSD or WSD2.
+     *
+     * @param deviceId
+     * @param alarmState
+     */
     public void commandSwitchAlarm(String deviceId, boolean alarmState) {
         try {
             String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_ALARMACTUATOR);
@@ -645,6 +681,13 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         }
     }
 
+    /**
+     * Sends the command to set the operation mode of the {@link Device} with the given deviceId to auto (or manual, if
+     * false). Is called by the {@link InnogyDeviceHandler} for thermostat {@link Device}s like RST.
+     *
+     * @param deviceId
+     * @param autoMode true activates the automatic mode, false the manual mode.
+     */
     public void commandSetOperationMode(String deviceId, boolean autoMode) {
         try {
             String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_THERMOSTATACTUATOR);
@@ -654,6 +697,13 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         }
     }
 
+    /**
+     * Sends the command to set the dimm level of the {@link Device} with the given id. Is called by the
+     * {@link InnogyDeviceHandler} for {@link Device}s like ISD2 or PSD.
+     *
+     * @param deviceId
+     * @param dimLevel
+     */
     public void commandSetDimmLevel(String deviceId, int dimLevel) {
         try {
             String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_DIMMERACTUATOR);
@@ -663,6 +713,13 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         }
     }
 
+    /**
+     * Sends the command to set the rollershutter level of the {@link Device} with the given id. Is called by the
+     * {@link InnogyDeviceHandler} for {@link Device}s like ISR2.
+     *
+     * @param deviceId
+     * @param rollerSchutterLevel
+     */
     public void commandSetRollerShutterLevel(String deviceId, int rollerSchutterLevel) {
         try {
             String capabilityId = deviceStructMan.getCapabilityId(deviceId, Capability.TYPE_ROLLERSHUTTERACTUATOR);
@@ -673,7 +730,9 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     }
 
     /**
-     * Handles all Exceptions of the client communication.
+     * Handles all Exceptions of the client communication. For minor "errors" like an already existing session, it
+     * returns true to inform the binding to continue running. In other cases it may e.g. schedule a reinitialization of
+     * the binding.
      *
      * @param e the Exception
      * @return boolean true, if binding should continue.
