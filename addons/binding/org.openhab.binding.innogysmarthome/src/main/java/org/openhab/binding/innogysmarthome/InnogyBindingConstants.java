@@ -24,15 +24,32 @@ public class InnogyBindingConstants {
 
     public static final String BINDING_ID = "innogysmarthome";
 
-    // Bridge config parameters
-    public static final String HOST = "host";
-    public static final String CLIENT_ID = "24635748";
-    public static final String CLIENT_SECRET = "no secret";
+    // brands and client ids
+    public static final String BRAND_INNOGY_SMARTHOME = "innogy_smarthome";
+    public static final String BRAND_SMARTHOME_AUSTRIA = "smarthome_austria";
+    public static final String BRAND_START_SMARTHOME = "start_smarthome";
+    public static final String DEFAULT_BRAND = BRAND_INNOGY_SMARTHOME;
 
-    public static final String AUTH_CODE = "authcode";
-    public static final String ACCESS_TOKEN = "accesstoken";
-    public static final String REFRESH_TOKEN = "refreshtoken";
-    public static final String WEBSOCKET_IDLE_TIMEOUT = "websocketidletimeout";
+    public static final String CLIENT_ID_INNOGY_SMARTHOME = "24635748";
+    public static final String CLIENT_ID_SMARTHOME_AUSTRIA = "24635749";
+    public static final String CLIENT_ID_START_SMARTHOME = "24635750";
+
+    public static final String CLIENT_SECRET_INNOGY_SMARTHOME = "no secret";
+    public static final String CLIENT_SECRET_SMARTHOME_AUSTRIA = "no secret";
+    public static final String CLIENT_SECRET_START_SMARTHOME = "no secret";
+
+    public static final String REDIRECT_URL_INNOGY_SMARTHOME = "https://www.ollie.in/innogy-smarthome-token/";
+    public static final String REDIRECT_URL_SMARTHOME_AUSTRIA = "https://www.ollie.in/smarthome-austria-token/";
+    public static final String REDIRECT_URL_START_SMARTHOME = "https://www.ollie.in/start-smarthome-token/";
+
+    // Bridge config parameters
+    public static final String CONFIG_BRAND = "brand";
+    public static final String CONFIG_HOST = "host";
+
+    public static final String CONFIG_AUTH_CODE = "authcode";
+    public static final String CONFIG_ACCESS_TOKEN = "accesstoken";
+    public static final String CONFIG_REFRESH_TOKEN = "refreshtoken";
+    public static final String CONFIG_WEBSOCKET_IDLE_TIMEOUT = "websocketidletimeout";
 
     public static final long REINITIALIZE_DELAY_SECONDS = 30;
     public static final long REINITIALIZE_DELAY_LONG_SECONDS = 120;

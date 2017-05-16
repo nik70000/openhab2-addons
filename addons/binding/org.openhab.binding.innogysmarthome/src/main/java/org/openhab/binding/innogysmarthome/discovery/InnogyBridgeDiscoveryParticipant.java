@@ -50,7 +50,7 @@ public class InnogyBridgeDiscoveryParticipant implements MDNSDiscoveryParticipan
         ThingUID uid = getThingUID(service);
         if (uid != null) {
             Map<String, Object> properties = new HashMap<>(2);
-            properties.put(HOST, service.getName());
+            properties.put(CONFIG_HOST, service.getName());
 
             DiscoveryResult result = DiscoveryResultBuilder.create(uid).withProperties(properties)
                     .withLabel("innogy SmartHome Controller (" + service.getName() + ")").build();

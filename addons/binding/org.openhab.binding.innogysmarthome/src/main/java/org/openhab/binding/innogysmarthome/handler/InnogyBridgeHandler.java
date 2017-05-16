@@ -109,12 +109,12 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             }
 
             if (StringUtils.isNotBlank(client.getConfig().getRefreshToken())) {
-                getThing().getConfiguration().put(REFRESH_TOKEN, client.getConfig().getRefreshToken());
+                getThing().getConfiguration().put(CONFIG_REFRESH_TOKEN, client.getConfig().getRefreshToken());
                 if (StringUtils.isNotBlank(client.getConfig().getAccessToken())) {
-                    getThing().getConfiguration().put(ACCESS_TOKEN, client.getConfig().getAccessToken());
+                    getThing().getConfiguration().put(CONFIG_ACCESS_TOKEN, client.getConfig().getAccessToken());
                 }
                 org.eclipse.smarthome.config.core.Configuration configuration = editConfiguration();
-                configuration.put(AUTH_CODE, "");
+                configuration.put(CONFIG_AUTH_CODE, "");
                 updateConfiguration(configuration);
                 config.setAuthCode("");
             }
@@ -178,7 +178,8 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
         @Override
         public void run() {
-            String webSocketUrl = WEBSOCKET_API_URL_EVENTS.replace("{token}", (String) getConfig().get(ACCESS_TOKEN));
+            String webSocketUrl = WEBSOCKET_API_URL_EVENTS.replace("{token}",
+                    (String) getConfig().get(CONFIG_ACCESS_TOKEN));
             logger.debug("WebSocket URL: {}",
                     webSocketUrl.substring(0, 70) + "..." + webSocketUrl.substring(webSocketUrl.length() - 10));
 
@@ -188,7 +189,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                     webSocket = null;
                 }
 
-                BigDecimal idleTimeout = (BigDecimal) getConfig().get(WEBSOCKET_IDLE_TIMEOUT);
+                BigDecimal idleTimeout = (BigDecimal) getConfig().get(CONFIG_WEBSOCKET_IDLE_TIMEOUT);
                 webSocket = new InnogyWebSocket(bridgeHandler, URI.create(webSocketUrl), idleTimeout.intValue() * 1000);
                 logger.info("Starting innogy websocket.");
                 webSocket.start();
@@ -286,21 +287,45 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         }
 
         // load and check connection and authorization data
-        config.setClientId(CLIENT_ID);
-        config.setClientSecret(CLIENT_SECRET);
-
-        if (StringUtils.isNotBlank((String) thingConfig.get(ACCESS_TOKEN))) {
-            config.setAccessToken(thingConfig.get(ACCESS_TOKEN).toString());
+        String brand;
+        if (StringUtils.isNotBlank((String) thingConfig.get(CONFIG_BRAND))) {
+            brand = thingConfig.get(CONFIG_BRAND).toString();
+        } else {
+            brand = DEFAULT_BRAND;
         }
-        if (StringUtils.isNotBlank((String) thingConfig.get(REFRESH_TOKEN))) {
-            config.setRefreshToken(thingConfig.get(REFRESH_TOKEN).toString());
+        switch (brand) {
+            case BRAND_INNOGY_SMARTHOME:
+                config.setClientId(CLIENT_ID_INNOGY_SMARTHOME);
+                config.setClientSecret(CLIENT_SECRET_INNOGY_SMARTHOME);
+                config.setRedirectUrl(REDIRECT_URL_INNOGY_SMARTHOME);
+                break;
+            case BRAND_SMARTHOME_AUSTRIA:
+                config.setClientId(CLIENT_ID_SMARTHOME_AUSTRIA);
+                config.setClientSecret(CLIENT_SECRET_SMARTHOME_AUSTRIA);
+                config.setRedirectUrl(REDIRECT_URL_SMARTHOME_AUSTRIA);
+                break;
+            case BRAND_START_SMARTHOME:
+                config.setClientId(CLIENT_ID_START_SMARTHOME);
+                config.setClientSecret(CLIENT_SECRET_START_SMARTHOME);
+                config.setRedirectUrl(REDIRECT_URL_START_SMARTHOME);
+                break;
+            default:
+                logger.error("Invalid brand '{}'. Make sure to select a brand in the SHC thing configuration!", brand);
+                dispose();
+        }
+
+        if (StringUtils.isNotBlank((String) thingConfig.get(CONFIG_ACCESS_TOKEN))) {
+            config.setAccessToken(thingConfig.get(CONFIG_ACCESS_TOKEN).toString());
+        }
+        if (StringUtils.isNotBlank((String) thingConfig.get(CONFIG_REFRESH_TOKEN))) {
+            config.setRefreshToken(thingConfig.get(CONFIG_REFRESH_TOKEN).toString());
         }
 
         if (config.checkTokens()) {
             return config;
         } else {
-            if (StringUtils.isNotBlank((String) thingConfig.get(AUTH_CODE))) {
-                config.setAuthCode(thingConfig.get(AUTH_CODE).toString());
+            if (StringUtils.isNotBlank((String) thingConfig.get(CONFIG_AUTH_CODE))) {
+                config.setAuthCode(thingConfig.get(CONFIG_AUTH_CODE).toString());
                 return config;
             } else {
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
@@ -435,7 +460,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     public void onTokenResponse(Credential credential, TokenResponse tokenResponse) throws IOException {
         String accessToken = credential.getAccessToken();
         config.setAccessToken(accessToken);
-        getThing().getConfiguration().put(ACCESS_TOKEN, accessToken);
+        getThing().getConfiguration().put(CONFIG_ACCESS_TOKEN, accessToken);
         logger.info("Access token for innogy expired. New access token saved.");
         logger.debug("innogy access token saved (onTokenResponse): {}",
                 accessToken.substring(0, 10) + "..." + accessToken.substring(accessToken.length() - 10));
@@ -454,7 +479,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     public void onTokenErrorResponse(Credential credential, TokenErrorResponse tokenErrorResponse) throws IOException {
         String accessToken = credential.getAccessToken();
         config.setAccessToken(accessToken);
-        getThing().getConfiguration().put(ACCESS_TOKEN, accessToken);
+        getThing().getConfiguration().put(CONFIG_ACCESS_TOKEN, accessToken);
         logger.debug("innogy access token saved (onTokenErrorResponse): {}",
                 accessToken.substring(0, 10) + "..." + accessToken.substring(accessToken.length() - 10));
 
@@ -763,7 +788,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         } else if (e instanceof InvalidAuthCodeException) {
             logger.error("Error fetching access tokens. Invalid authcode! Please generate a new one.");
             org.eclipse.smarthome.config.core.Configuration configuration = editConfiguration();
-            configuration.put(AUTH_CODE, "");
+            configuration.put(CONFIG_AUTH_CODE, "");
             updateConfiguration(configuration);
             config.setAuthCode("");
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
