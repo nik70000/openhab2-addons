@@ -80,7 +80,14 @@ The SmartHome Controller (SHC) can be configured in the PaperUI as follows:
 5. Add the "Authorization code" by following the hints in the description. Save your changes.
 6. The SHC should now login and go online. Be sure it is connected to the internet.
 
+### Obtaining the authorization code and tokens
+Authorization is done as oauth2 workflow in the innogy API.
+
+To receive the auth-code, go to [innogy SmartHome authorization page](https://api.services-smarthome.de/AUTH/authorize?response_type=code&client_id=24635748&redirect_uri=https%3A%2F%2Fwww.ollie.in%2Frwe-smarthome-token%2F&scope&lang=de-DE) and login with your credentials. You will be redirected to the webpage of the maintainer of the binding, that displays the auth-code. Copy and paste it into your SHC configuration and you are done.
+
+The binding then requests the access and refresh tokens and saves them in the SHC configuration. The auth-code can only be used once and therefore is dropped. The access token is then used to login at the innogy API, but is valid only for a couple of hours. The binding automatically requests a new access token as needed by using the refresh token. So the refresh token is the relevant credential. Never give it to anybody!
+
 ### Configuring devices
 
-All devices bound to the bridge are can found by the discovery service once the SHC is online. As device discovery is not implemented as a background service, you should start it manually in the Inbox to find all devices. Now you can add all devices from your Inbox as things.
+All devices bound to the bridge are found by the discovery service once the SHC is online. As device discovery is not implemented as a background service, you should start it manually in the Inbox to find all devices. Now you can add all devices from your Inbox as things.
 
