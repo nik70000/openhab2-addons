@@ -8,11 +8,9 @@
  */
 package org.openhab.binding.innogysmarthome.discovery;
 
-import static org.openhab.binding.innogysmarthome.InnogyBindingConstants.*;
+import static org.openhab.binding.innogysmarthome.InnogyBindingConstants.THING_TYPE_BRIDGE;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import javax.jmdns.ServiceInfo;
@@ -49,10 +47,7 @@ public class InnogyBridgeDiscoveryParticipant implements MDNSDiscoveryParticipan
     public DiscoveryResult createResult(ServiceInfo service) {
         ThingUID uid = getThingUID(service);
         if (uid != null) {
-            Map<String, Object> properties = new HashMap<>(2);
-            properties.put(CONFIG_HOST, service.getName());
-
-            DiscoveryResult result = DiscoveryResultBuilder.create(uid).withProperties(properties)
+            DiscoveryResult result = DiscoveryResultBuilder.create(uid)
                     .withLabel("innogy SmartHome Controller (" + service.getName() + ")").build();
             return result;
         }
