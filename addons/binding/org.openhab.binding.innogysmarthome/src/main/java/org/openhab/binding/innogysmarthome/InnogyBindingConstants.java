@@ -44,7 +44,6 @@ public class InnogyBindingConstants {
 
     // Bridge config parameters
     public static final String CONFIG_BRAND = "brand";
-    public static final String CONFIG_HOST = "host";
 
     public static final String CONFIG_AUTH_CODE = "authcode";
     public static final String CONFIG_ACCESS_TOKEN = "accesstoken";

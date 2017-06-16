@@ -321,7 +321,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             config.setRefreshToken(thingConfig.get(CONFIG_REFRESH_TOKEN).toString());
         }
 
-        if (config.checkTokens()) {
+        if (config.checkRefreshToken()) {
             return config;
         } else {
             if (StringUtils.isNotBlank((String) thingConfig.get(CONFIG_AUTH_CODE))) {
@@ -786,7 +786,8 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
             // invalid auth code
         } else if (e instanceof InvalidAuthCodeException) {
-            logger.error("Error fetching access tokens. Invalid authcode! Please generate a new one.");
+            logger.error("Error fetching access tokens. Invalid authcode! Please generate a new one. Detail: {}",
+                    e.getMessage());
             org.eclipse.smarthome.config.core.Configuration configuration = editConfiguration();
             configuration.put(CONFIG_AUTH_CODE, "");
             updateConfiguration(configuration);
