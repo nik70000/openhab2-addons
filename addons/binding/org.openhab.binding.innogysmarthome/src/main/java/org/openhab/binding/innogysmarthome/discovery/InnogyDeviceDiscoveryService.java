@@ -39,7 +39,7 @@ import in.ollie.innogysmarthome.entity.event.Event;
 public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService implements DeviceStatusListener {
 
     private static int SEARCH_TIME = 60;
-    private final static Logger logger = LoggerFactory.getLogger(InnogyDeviceDiscoveryService.class);
+    private Logger logger = LoggerFactory.getLogger(InnogyDeviceDiscoveryService.class);
     private InnogyBridgeHandler bridgeHandler;
 
     /**
