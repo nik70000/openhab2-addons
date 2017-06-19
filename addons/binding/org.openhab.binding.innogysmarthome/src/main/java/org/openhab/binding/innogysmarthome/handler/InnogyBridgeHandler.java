@@ -250,12 +250,10 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
      * @param seconds
      */
     private void scheduleReinitialize(long seconds) {
-        if (reinitJob != null) {
-            if (!reinitJob.isDone()) {
-                logger.debug("Scheduling reinitialize in {} seconds - ignored: already triggered in {} seconds.",
-                        seconds, reinitJob.getDelay(TimeUnit.SECONDS));
-                return;
-            }
+        if (reinitJob != null && !reinitJob.isDone()) {
+            logger.debug("Scheduling reinitialize in {} seconds - ignored: already triggered in {} seconds.", seconds,
+                    reinitJob.getDelay(TimeUnit.SECONDS));
+            return;
         }
         logger.info("Scheduling reinitialize in {} seconds.", seconds);
         reinitJob = scheduler.schedule(new Runnable() {
@@ -312,6 +310,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             default:
                 logger.error("Invalid brand '{}'. Make sure to select a brand in the SHC thing configuration!", brand);
                 dispose();
+                break;
         }
 
         if (StringUtils.isNotBlank((String) thingConfig.get(CONFIG_ACCESS_TOKEN))) {

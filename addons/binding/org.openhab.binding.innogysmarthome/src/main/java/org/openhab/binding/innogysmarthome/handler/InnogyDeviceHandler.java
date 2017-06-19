@@ -597,6 +597,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
                         break;
                     default:
                         logger.debug("Unsupported capability type {}.", c.getType());
+                        break;
                 }
 
             }
@@ -988,7 +989,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
         }
         boolean invertValues = (boolean) channel.getConfiguration().get(CONFIG_INVERT_VALUES);
         if (invertValues) {
-            value = 100 - value;
+            return 100 - value;
         }
         return value;
     }
