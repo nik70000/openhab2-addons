@@ -37,4 +37,9 @@ public interface EventListener {
      * @param delay long in seconds
      */
     public void onEventRunnerStopped(long delay);
+
+    /**
+     * This method is called, when the evenRunner stops abnormally (statuscode <> 1000).
+     */
+    public void onEventRunnerStoppedAbnormally();
 }

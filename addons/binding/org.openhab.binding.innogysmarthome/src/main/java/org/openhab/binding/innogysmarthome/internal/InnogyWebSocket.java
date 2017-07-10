@@ -114,14 +114,15 @@ public class InnogyWebSocket {
         if (statusCode == StatusCode.NORMAL) {
             logger.info("Connection to innogy WebSocket was closed normally.");
         } else {
-            logger.info("Connection to innogy WebSocket was closed (code: {}). Reason: {}", statusCode, reason);
-            bridgeHandler.onEventRunnerStopped();
+            logger.info("Connection to innogy WebSocket was closed abnormally (code: {}). Reason: {}", statusCode,
+                    reason);
+            bridgeHandler.onEventRunnerStoppedAbnormally();
         }
     }
 
     /**
      * Await the closing of the websocket.
-     * 
+     *
      * @param duration
      * @param unit
      * @return

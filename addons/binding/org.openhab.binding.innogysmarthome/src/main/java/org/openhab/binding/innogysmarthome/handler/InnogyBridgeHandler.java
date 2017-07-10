@@ -646,6 +646,16 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         onEventRunnerStopped(0);
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.openhab.binding.innogysmarthome.internal.listener.EventListener#onEventRunnerStoppedAbnormally()
+     */
+    @Override
+    public void onEventRunnerStoppedAbnormally() {
+        scheduleReinitialize(REINITIALIZE_DELAY_SECONDS);
+    }
+
     /**
      * Sends the command to switch the {@link Device} with the given id to the new state. Is called by the
      * {@link InnogyDeviceHandler} for switch devices like the VariableActuator, PSS, PSSO or ISS2.
