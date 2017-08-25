@@ -15,7 +15,7 @@ import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * The {@link InnogySmartHome2Binding} class defines common constants, which are
+ * The {@link InnogyBindingConstants} class defines common constants, which are
  * used across the whole binding.
  *
  * @author Oliver Kuhl - Initial contribution

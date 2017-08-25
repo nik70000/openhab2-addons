@@ -8,8 +8,8 @@
  */
 package org.openhab.binding.innogysmarthome.internal.listener;
 
-import in.ollie.innogysmarthome.entity.device.Device;
-import in.ollie.innogysmarthome.entity.event.Event;
+import org.openhab.binding.innogysmarthome.internal.client.entity.device.Device;
+import org.openhab.binding.innogysmarthome.internal.client.entity.event.Event;
 
 /**
  * The {@link DeviceStatusListener} is called, when {@link Device}s are added, removed or changed.
@@ -34,20 +34,4 @@ public interface DeviceStatusListener {
      *
      */
     public void onDeviceStateChanged(Device device, Event event);
-
-    /**
-     * This method is called whenever a {@link Device} is removed.
-     *
-     * @param device
-     *            The device which is removed.
-     */
-    public void onDeviceRemoved(Device device);
-
-    /**
-     * This method is called whenever a {@link Device} is added.
-     *
-     * @param device
-     *            The device which is added.
-     */
-    public void onDeviceAdded(Device device);
 }

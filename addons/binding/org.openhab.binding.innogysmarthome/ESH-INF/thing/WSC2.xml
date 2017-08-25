@@ -15,7 +15,7 @@
         <channels>
             <channel id="key1_count" typeId="PushButtonSensor" />
             <channel id="key2_count" typeId="PushButtonSensor" />
-            <channel id="battery_low" typeId="BatteryLow" />
+            <channel id="battery_low" typeId="system.low-battery" />
         </channels>
 
         <config-description>

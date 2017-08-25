@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.net.URI;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.ThingStatus;
@@ -34,6 +35,19 @@ import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.innogysmarthome.InnogyBindingConstants;
 import org.openhab.binding.innogysmarthome.internal.InnogyWebSocket;
+import org.openhab.binding.innogysmarthome.internal.client.Configuration;
+import org.openhab.binding.innogysmarthome.internal.client.InnogyClient;
+import org.openhab.binding.innogysmarthome.internal.client.entity.Message;
+import org.openhab.binding.innogysmarthome.internal.client.entity.capability.Capability;
+import org.openhab.binding.innogysmarthome.internal.client.entity.device.Device;
+import org.openhab.binding.innogysmarthome.internal.client.entity.event.Event;
+import org.openhab.binding.innogysmarthome.internal.client.entity.link.Link;
+import org.openhab.binding.innogysmarthome.internal.client.exception.ApiException;
+import org.openhab.binding.innogysmarthome.internal.client.exception.ConfigurationException;
+import org.openhab.binding.innogysmarthome.internal.client.exception.ControllerOfflineException;
+import org.openhab.binding.innogysmarthome.internal.client.exception.InvalidActionTriggeredException;
+import org.openhab.binding.innogysmarthome.internal.client.exception.InvalidAuthCodeException;
+import org.openhab.binding.innogysmarthome.internal.client.exception.SessionExistsException;
 import org.openhab.binding.innogysmarthome.internal.listener.DeviceStatusListener;
 import org.openhab.binding.innogysmarthome.internal.listener.EventListener;
 import org.openhab.binding.innogysmarthome.internal.manager.DeviceStructureManager;
@@ -45,20 +59,6 @@ import com.google.api.client.auth.oauth2.CredentialRefreshListener;
 import com.google.api.client.auth.oauth2.TokenErrorResponse;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.gson.Gson;
-
-import in.ollie.innogysmarthome.Configuration;
-import in.ollie.innogysmarthome.InnogyClient;
-import in.ollie.innogysmarthome.entity.Message;
-import in.ollie.innogysmarthome.entity.capability.Capability;
-import in.ollie.innogysmarthome.entity.device.Device;
-import in.ollie.innogysmarthome.entity.event.Event;
-import in.ollie.innogysmarthome.entity.link.Link;
-import in.ollie.innogysmarthome.exception.ApiException;
-import in.ollie.innogysmarthome.exception.ConfigurationException;
-import in.ollie.innogysmarthome.exception.ControllerOfflineException;
-import in.ollie.innogysmarthome.exception.InvalidActionTriggeredException;
-import in.ollie.innogysmarthome.exception.InvalidAuthCodeException;
-import in.ollie.innogysmarthome.exception.SessionExistsException;
 
 /**
  * The {@link InnogyBridgeHandler} is responsible for handling the innogy SmartHome controller including the connection
@@ -75,11 +75,12 @@ import in.ollie.innogysmarthome.exception.SessionExistsException;
 public class InnogyBridgeHandler extends BaseBridgeHandler implements CredentialRefreshListener, EventListener {
 
     public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES = Collections.singleton(THING_TYPE_BRIDGE);
-    private Logger logger = LoggerFactory.getLogger(InnogyBridgeHandler.class);
-    private Configuration config = null;
-    private InnogyClient client = null;
+    private final Logger logger = LoggerFactory.getLogger(InnogyBridgeHandler.class);
+    private Configuration config;
+    private InnogyClient client;
     private InnogyWebSocket webSocket;
-    private DeviceStructureManager deviceStructMan = null;
+    private DeviceStructureManager deviceStructMan;
+    private Gson gson = new Gson();
 
     private Set<DeviceStatusListener> deviceStatusListeners = new CopyOnWriteArraySet<>();
 
@@ -394,12 +395,12 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     }
 
     /**
-     * Loads a list of {@link Device}s from the bridge and returns them.
+     * Loads a Collection of {@link Device}s from the bridge and returns them.
      *
-     * @return a list of {@link Device}s
+     * @return a Collection of {@link Device}s
      */
-    public List<Device> loadDevices() {
-        List<Device> devices = null;
+    public Collection<Device> loadDevices() {
+        Collection<Device> devices = null;
         if (client != null) {
             try {
                 devices = deviceStructMan.getDeviceList();
@@ -420,9 +421,8 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     public Device getDeviceById(String deviceId) {
         if (deviceStructMan != null) {
             return deviceStructMan.getDeviceById(deviceId);
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -496,45 +496,13 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         logger.trace("onEvent called. Msg: {}", msg);
 
         try {
-            Gson gson = new Gson();
             Event[] eventArray = gson.fromJson(msg, Event[].class);
             for (Event event : eventArray) {
                 logger.debug("Event found: Type:{} Capability:{}", event.getType(),
                         event.getLink() != null ? event.getLink().getValue() : "(no link)");
                 switch (event.getType()) {
                     case Event.TYPE_STATE_CHANGED:
-                        if (deviceStructMan != null) {
-
-                            // CAPABILITY
-                            if (event.isLinkedtoCapability()) {
-                                Device device = deviceStructMan.getDeviceByCapabilityLink(event.getLink().getValue());
-                                if (device != null) {
-                                    for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
-                                        deviceStatusListener.onDeviceStateChanged(device, event);
-                                    }
-                                } else {
-                                    logger.debug("Unknown/unsupported device for capability {}.",
-                                            event.getLink().getValue());
-                                }
-
-                                // DEVICE
-                            } else if (event.isLinkedtoDevice()) {
-                                deviceStructMan.refreshDevice(event.getLinkId());
-                                Device device = deviceStructMan.getDeviceById(event.getLinkId());
-                                if (device != null) {
-                                    for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
-                                        deviceStatusListener.onDeviceStateChanged(device, event);
-                                    }
-                                } else {
-                                    logger.debug("Unknown/unsupported device {}.", event.getLinkId());
-                                }
-
-                            } else {
-                                logger.debug("link type {} not supported (yet?)", event.getLinkType());
-                            }
-                        } else {
-                            scheduleReinitialize();
-                        }
+                        handleStateChangedEvent(event);
                         break;
 
                     case Event.TYPE_DISCONNECT:
@@ -550,66 +518,15 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                         break;
 
                     case Event.TYPE_CONTROLLER_CONNECTIVITY_CHANGED:
-                        Boolean connected = event.getIsConnected();
-                        if (connected != null) {
-                            logger.info("SmartHome Controller connectivity changed to {}.",
-                                    connected ? "online" : "offline");
-                            if (connected) {
-                                deviceStructMan = new DeviceStructureManager(client);
-                                deviceStructMan.start();
-                                updateStatus(ThingStatus.ONLINE);
-                            } else {
-                                updateStatus(ThingStatus.OFFLINE);
-                                deviceStructMan = null;
-                            }
-                        } else {
-                            logger.warn("isConnected property missing in event! (returned null)");
-                        }
+                        handleControllerConnectivityChangedEvent(event);
                         break;
 
                     case Event.TYPE_NEW_MESSAGE_RECEIVED:
-                        if (deviceStructMan != null) {
-                            List<Message> messageList = event.getDataListAsMessage();
-                            for (Message m : messageList) {
-                                if (Message.TYPE_DEVICE_LOW_BATTERY.equals(m.getType())) {
-                                    for (Link dl : m.getDeviceLinkList()) {
-                                        deviceStructMan.refreshDevice(dl.getId());
-                                        Device device = deviceStructMan.getDeviceById(dl.getId());
-                                        if (device != null) {
-                                            for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
-                                                deviceStatusListener.onDeviceStateChanged(device);
-                                            }
-                                        } else {
-                                            logger.debug("Unknown/unsupported device {}.", event.getLinkId());
-                                        }
-                                    }
-                                } else {
-                                    logger.debug("Message received event not yet implemented for Messagetype {}.",
-                                            m.getType());
-                                }
-                            }
-                        } else {
-                            scheduleReinitialize();
-                        }
+                        handleNewMessageReceivedEvent(event);
                         break;
 
                     case Event.TYPE_MESSAGE_DELETED:
-                        if (deviceStructMan != null) {
-                            if (Link.LINK_TYPE_MESSAGE.equals(event.getLinkType())) {
-                                Device device = deviceStructMan.getDeviceWithMessageId(event.getLinkId());
-                                if (device != null) {
-                                    deviceStructMan.refreshDevice(device.getId());
-                                    device = deviceStructMan.getDeviceById(device.getId());
-                                    for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
-                                        deviceStatusListener.onDeviceStateChanged(device);
-                                    }
-                                } else {
-                                    logger.debug("Unknown/unsupported device {}.", event.getLinkId());
-                                }
-                            }
-                        } else {
-                            scheduleReinitialize();
-                        }
+                        handleMessageDeletedEvent(event);
                         break;
 
                     default:
@@ -623,6 +540,132 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         }
     }
 
+    /**
+     * Handles the event that occurs, when the state of a device (like reachability) or a capability (like a temperature
+     * value) has changed.
+     *
+     * @param event
+     * @throws ApiException
+     * @throws IOException
+     */
+    public void handleStateChangedEvent(Event event) throws ApiException, IOException {
+        if (deviceStructMan != null) {
+
+            // CAPABILITY
+            if (event.isLinkedtoCapability()) {
+                Device device = deviceStructMan.getDeviceByCapabilityLink(event.getLink().getValue());
+                if (device != null) {
+                    for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                        deviceStatusListener.onDeviceStateChanged(device, event);
+                    }
+                } else {
+                    logger.debug("Unknown/unsupported device for capability {}.", event.getLink().getValue());
+                }
+
+                // DEVICE
+            } else if (event.isLinkedtoDevice()) {
+                deviceStructMan.refreshDevice(event.getLinkId());
+                Device device = deviceStructMan.getDeviceById(event.getLinkId());
+                if (device != null) {
+                    for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                        deviceStatusListener.onDeviceStateChanged(device, event);
+                    }
+                } else {
+                    logger.debug("Unknown/unsupported device {}.", event.getLinkId());
+                }
+
+            } else {
+                logger.debug("link type {} not supported (yet?)", event.getLinkType());
+            }
+        } else {
+            scheduleReinitialize();
+        }
+    }
+
+    /**
+     * Handles the event that occurs, when the connectivity of the bridge has changed.
+     *
+     * @param event
+     * @throws ApiException
+     * @throws IOException
+     */
+    public void handleControllerConnectivityChangedEvent(Event event) throws ApiException, IOException {
+        Boolean connected = event.getIsConnected();
+        if (connected != null) {
+            logger.info("SmartHome Controller connectivity changed to {}.", connected ? "online" : "offline");
+            if (connected) {
+                deviceStructMan = new DeviceStructureManager(client);
+                deviceStructMan.start();
+                updateStatus(ThingStatus.ONLINE);
+            } else {
+                updateStatus(ThingStatus.OFFLINE);
+                deviceStructMan = null;
+            }
+        } else {
+            logger.warn("isConnected property missing in event! (returned null)");
+        }
+    }
+
+    /**
+     * Handles the event that occurs, when a new message was received. Currently only handles low battery messages.
+     *
+     * @param event
+     * @throws ApiException
+     * @throws IOException
+     */
+    public void handleNewMessageReceivedEvent(Event event) throws ApiException, IOException {
+        if (deviceStructMan != null) {
+            List<Message> messageList = event.getDataListAsMessage();
+            for (Message m : messageList) {
+                if (Message.TYPE_DEVICE_LOW_BATTERY.equals(m.getType())) {
+                    for (Link dl : m.getDeviceLinkList()) {
+                        deviceStructMan.refreshDevice(dl.getId());
+                        Device device = deviceStructMan.getDeviceById(dl.getId());
+                        if (device != null) {
+                            for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                                deviceStatusListener.onDeviceStateChanged(device);
+                            }
+                        } else {
+                            logger.debug("Unknown/unsupported device {}.", event.getLinkId());
+                        }
+                    }
+                } else {
+                    logger.debug("Message received event not yet implemented for Messagetype {}.", m.getType());
+                }
+            }
+        } else {
+            scheduleReinitialize();
+        }
+    }
+
+    /**
+     * Handle the event that occurs, when a message was deleted. In case of a low battery message this means, that the
+     * device is back to normal. Currently, only messages linked to devices are handled by refreshing the device data
+     * and informing the {@link InnogyDeviceHandler} about the changed device.
+     *
+     * @param event
+     * @throws ApiException
+     * @throws IOException
+     */
+    public void handleMessageDeletedEvent(Event event) throws ApiException, IOException {
+        if (deviceStructMan != null) {
+            if (Link.LINK_TYPE_MESSAGE.equals(event.getLinkType())) {
+                Device device = deviceStructMan.getDeviceWithMessageId(event.getLinkId());
+                if (device != null) {
+                    deviceStructMan.refreshDevice(device.getId());
+                    device = deviceStructMan.getDeviceById(device.getId());
+                    for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                        deviceStatusListener.onDeviceStateChanged(device);
+                    }
+                } else {
+                    logger.debug("Unknown/unsupported device {}.", event.getLinkId());
+                }
+            }
+        } else {
+            scheduleReinitialize();
+        }
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -632,8 +675,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
     public void onEventRunnerStopped(long delay) {
         logger.debug("onEventRunnerStopped called");
         scheduler.schedule(new WebSocketRunner(this), delay, TimeUnit.SECONDS);
-        // WebSocketRunner wsr = new WebSocketRunner(this);
-        // wsr.run();
     }
 
     /*
@@ -775,27 +816,30 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
         // Session exists
         if (e instanceof SessionExistsException) {
-            logger.info("Session already exists. Continuing...");
+            logger.debug("Session already exists. Continuing...");
             return true;
+        }
 
-            // Controller offline
-        } else if (e instanceof ControllerOfflineException) {
-            logger.error("innogy SmartHome Controller is offline.");
+        // Controller offline
+        if (e instanceof ControllerOfflineException) {
+            logger.info("innogy SmartHome Controller is offline.");
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.BRIDGE_OFFLINE, e.getMessage());
             dispose();
             scheduleReinitialize();
             return false;
+        }
 
-            // Configuration error
-        } else if (e instanceof ConfigurationException) {
-            logger.error("Configuration error: {}", e.getMessage());
+        // Configuration error
+        if (e instanceof ConfigurationException) {
+            logger.warn("Configuration error: {}", e.getMessage());
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, e.getMessage());
             dispose();
             return false;
+        }
 
-            // invalid auth code
-        } else if (e instanceof InvalidAuthCodeException) {
-            logger.error("Error fetching access tokens. Invalid authcode! Please generate a new one. Detail: {}",
+        // invalid auth code
+        if (e instanceof InvalidAuthCodeException) {
+            logger.warn("Error fetching access tokens. Invalid authcode! Please generate a new one. Detail: {}",
                     e.getMessage());
             org.eclipse.smarthome.config.core.Configuration configuration = editConfiguration();
             configuration.put(CONFIG_AUTH_CODE, "");
@@ -805,49 +849,53 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                     "Invalid authcode. Please generate a new one!");
             dispose();
             return false;
+        }
 
-        } else if (e instanceof InvalidActionTriggeredException) {
-            logger.error("Error triggering action: {}", e.getMessage());
+        if (e instanceof InvalidActionTriggeredException) {
+            logger.debug("Error triggering action: {}", e.getMessage());
             return true;
+        }
 
-            // io error
-        } else if (e instanceof IOException) {
-            logger.error("IO error: {}", e.getMessage());
+        // io error
+        if (e instanceof IOException) {
+            logger.debug("IO error: {}", e.getMessage());
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
             dispose();
             scheduleReinitialize(REINITIALIZE_DELAY_LONG_SECONDS);
             return false;
+        }
 
-            // unexpected API error
-        } else if (e instanceof ApiException) {
-            logger.error("Unexcepted API error: {}", e.getMessage());
+        // unexpected API error
+        if (e instanceof ApiException) {
+            logger.debug("Unexcepted API error: {}", e.getMessage());
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
             dispose();
             scheduleReinitialize(REINITIALIZE_DELAY_LONG_SECONDS);
             return false;
+        }
 
-            // java.net.SocketTimeoutException
-        } else if (e instanceof SocketTimeoutException) {
-            logger.error("Socket timeout: {}", e.getMessage());
+        // java.net.SocketTimeoutException
+        if (e instanceof SocketTimeoutException) {
+            logger.debug("Socket timeout: {}", e.getMessage());
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
-            dispose();
-            scheduleReinitialize();
-            return false;
-
-            // ExecutionException
-        } else if (e instanceof ExecutionException) {
-            logger.error("ExecutionException: {}", ExceptionUtils.getRootCauseMessage(e));
-            dispose();
-            scheduleReinitialize();
-            return false;
-
-            // unknown
-        } else {
-            logger.error("Unknown exception", e);
-            e.printStackTrace();
             dispose();
             scheduleReinitialize();
             return false;
         }
+
+        // ExecutionException
+        if (e instanceof ExecutionException) {
+            logger.debug("ExecutionException: {}", ExceptionUtils.getRootCauseMessage(e));
+            dispose();
+            scheduleReinitialize();
+            return false;
+        }
+
+        // unknown
+        logger.debug("Unknown exception", e);
+        e.printStackTrace();
+        dispose();
+        scheduleReinitialize();
+        return false;
     }
 }

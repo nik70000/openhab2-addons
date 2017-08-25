@@ -8,12 +8,11 @@
  */
 package org.openhab.binding.innogysmarthome.internal.listener;
 
-import org.openhab.binding.innogysmarthome.handler.InnogyBridgeHandler;
 import org.openhab.binding.innogysmarthome.internal.InnogyWebSocket;
 
 /**
- * The {@link EventListener} is called by the {@link InnogyWebSocket} on new Events and by the
- * {@link InnogyBridgeHandler}, if the {@link InnogyWebSocket} stopped.
+ * The {@link EventListener} is called by the {@link InnogyWebSocket} on new Events and if the {@link InnogyWebSocket}
+ * stopped.
  *
  * @author Oliver Kuhl - Initial contribution
  */

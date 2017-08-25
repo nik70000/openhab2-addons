@@ -15,7 +15,7 @@
         <channels>
             <channel id="motion_count" typeId="MotionDetectionSensor" />
             <channel id="luminance" typeId="LuminanceSensor" />
-            <channel id="battery_low" typeId="BatteryLow" />
+            <channel id="battery_low" typeId="system.low-battery" />
         </channels>
 
         <config-description>

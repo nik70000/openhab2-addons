@@ -10,24 +10,23 @@ package org.openhab.binding.innogysmarthome.internal.manager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.openhab.binding.innogysmarthome.InnogyBindingConstants;
+import org.openhab.binding.innogysmarthome.internal.client.InnogyClient;
+import org.openhab.binding.innogysmarthome.internal.client.entity.Message;
+import org.openhab.binding.innogysmarthome.internal.client.entity.Property;
+import org.openhab.binding.innogysmarthome.internal.client.entity.capability.Capability;
+import org.openhab.binding.innogysmarthome.internal.client.entity.device.Device;
+import org.openhab.binding.innogysmarthome.internal.client.entity.link.CapabilityLink;
+import org.openhab.binding.innogysmarthome.internal.client.exception.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import in.ollie.innogysmarthome.InnogyClient;
-import in.ollie.innogysmarthome.entity.Location;
-import in.ollie.innogysmarthome.entity.Message;
-import in.ollie.innogysmarthome.entity.Property;
-import in.ollie.innogysmarthome.entity.capability.Capability;
-import in.ollie.innogysmarthome.entity.device.Device;
-import in.ollie.innogysmarthome.entity.link.CapabilityLink;
-import in.ollie.innogysmarthome.exception.ApiException;
 
 /**
  * Manages the structure of the {@link Device}s and the calls to the {@link InnogyClient} to load the {@link Device}
@@ -38,12 +37,11 @@ import in.ollie.innogysmarthome.exception.ApiException;
  */
 public class DeviceStructureManager {
 
-    private Logger logger = LoggerFactory.getLogger(DeviceStructureManager.class);
+    private final Logger logger = LoggerFactory.getLogger(DeviceStructureManager.class);
 
-    private InnogyClient client;
-    private Map<String, Device> deviceMap;
-    private Map<String, Device> capabilityToDeviceMap;
-    private Map<String, Location> locationMap;
+    private final InnogyClient client;
+    private final Map<String, Device> deviceMap;
+    private final Map<String, Device> capabilityToDeviceMap;
     private String bridgeDeviceId;
 
     /**
@@ -53,6 +51,8 @@ public class DeviceStructureManager {
      */
     public DeviceStructureManager(InnogyClient client) {
         this.client = client;
+        deviceMap = Collections.synchronizedMap(new HashMap<String, Device>());
+        capabilityToDeviceMap = Collections.synchronizedMap(new HashMap<String, Device>());
     }
 
     /**
@@ -75,11 +75,7 @@ public class DeviceStructureManager {
      * @return
      */
     public Map<String, Device> getDeviceMap() {
-        if (deviceMap == null) {
-            deviceMap = Collections.synchronizedMap(new HashMap<String, Device>());
-        }
         return deviceMap;
-
     }
 
     /**
@@ -160,44 +156,45 @@ public class DeviceStructureManager {
      */
     private void writeExampleConfigToLog() {
         Device bridge = getBridgeDevice();
-        if (bridge != null) {
-            String bridgeId = "SHC";
-            List<String> exampleConfig = new ArrayList<String>();
-            String exampleThingId;
-            String exampleThingLocation;
-            Map<String, String> deviceThingIdMap = new HashMap<String, String>();
+        if (bridge == null) {
+            logger.warn("Cannot create example config. No bridge found - add one first!");
+            return;
+        }
 
-            List<Device> deviceList = getDeviceList();
-            for (Device d : deviceList) {
-                if (d.isController()) {
-                    continue;
-                }
+        String bridgeId = "SHC";
+        List<String> exampleConfig = new ArrayList<String>();
+        String exampleThingId;
+        String exampleThingLocation;
+        Map<String, String> deviceThingIdMap = new HashMap<String, String>();
 
-                exampleThingId = "ngy" + d.getType() + d.getId().substring(0, 5);
-                if (d.getLocation() != null) {
-                    exampleThingLocation = d.getLocation().getName();
-                } else {
-                    exampleThingLocation = null;
-                }
-                deviceThingIdMap.put(d.getId(), exampleThingId);
-                exampleConfig
-                        .add(String.format("\tThing %s %s \"%s\" [ id=\"%s\" ]", d.getType(), exampleThingId,
-                                d.getName() + (exampleThingLocation != null
-                                        ? " (" + exampleThingLocation + ")\" @ \"" + exampleThingLocation : ""),
-                                d.getId()));
+        Collection<Device> devices = getDeviceList();
+        for (Device d : devices) {
+            if (d.isController()) {
+                continue;
             }
 
-            Collections.sort(exampleConfig);
-            exampleConfig.add(0,
-                    String.format(
-                            "Bridge innogysmarthome:bridge:%s \"innogy SmartHome Controller\" [ refreshtoken=\"<insert-your-refresh-token-here>\" ] {",
-                            bridgeId));
-            exampleConfig.add("}");
-            logger.info("EXAMPLE Thing configuration (copy to your 'innogy.things' config file):\n{}",
-                    StringUtils.join(exampleConfig, "\n"));
-        } else {
-            logger.warn("Cannot create example config. No bridge found - add one first!");
+            exampleThingId = "ngy" + d.getType() + d.getId().substring(0, 5);
+            if (d.getLocation() != null) {
+                exampleThingLocation = d.getLocation().getName();
+            } else {
+                exampleThingLocation = null;
+            }
+            deviceThingIdMap.put(d.getId(), exampleThingId);
+            exampleConfig
+                    .add(String.format("\tThing %s %s \"%s\" [ id=\"%s\" ]", d.getType(), exampleThingId,
+                            d.getName() + (exampleThingLocation != null
+                                    ? " (" + exampleThingLocation + ")\" @ \"" + exampleThingLocation : ""),
+                            d.getId()));
         }
+
+        Collections.sort(exampleConfig);
+        exampleConfig.add(0,
+                String.format(
+                        "Bridge innogysmarthome:bridge:%s \"innogy SmartHome Controller\" [ refreshtoken=\"<insert-your-refresh-token-here>\" ] {",
+                        bridgeId));
+        exampleConfig.add("}");
+        logger.info("EXAMPLE Thing configuration (copy to your 'innogy.things' config file):\n{}",
+                StringUtils.join(exampleConfig, "\n"));
 
     }
 
@@ -210,10 +207,6 @@ public class DeviceStructureManager {
 
         if (device.getId() != null) {
             getDeviceMap().put(device.getId(), device);
-        }
-
-        if (capabilityToDeviceMap == null) {
-            capabilityToDeviceMap = Collections.synchronizedMap(new HashMap<String, Device>());
         }
 
         for (CapabilityLink cl : device.getCapabilityLinkList()) {
@@ -243,16 +236,6 @@ public class DeviceStructureManager {
     }
 
     /**
-     * Returns the {@link Device} with the given deviceLink.
-     *
-     * @param deviceLink
-     * @return {@link Device} or null
-     */
-    public Device getDeviceByDeviceLink(String deviceLink) {
-        return getDeviceById(deviceLink.replace("/device/", ""));
-    }
-
-    /**
      * Returns the bridge {@link Device}.
      *
      * @return
@@ -262,12 +245,12 @@ public class DeviceStructureManager {
     }
 
     /**
-     * Returns a {@link List} of all {@link Device}s handled by the {@link DeviceStructureManager}.
+     * Returns a {@link Collection} of all {@link Device}s handled by the {@link DeviceStructureManager}.
      *
      * @return
      */
-    public List<Device> getDeviceList() {
-        return new ArrayList<>(getDeviceMap().values());
+    public Collection<Device> getDeviceList() {
+        return Collections.unmodifiableCollection(getDeviceMap().values());
     }
 
     /**
@@ -305,44 +288,4 @@ public class DeviceStructureManager {
         }
         return null;
     }
-
-    /**
-     * Returns a {@link List} of {@link CapabilityLink}s for the {@link Device} with the given id.
-     *
-     * @param deviceId
-     * @return a {@link List} of {@link CapabilityLink}s or null, if the {@link Device} does not exist.
-     */
-    public List<CapabilityLink> getCapabilityLinkListForDeviceId(String deviceId) {
-        Device device = getDeviceMap().get(deviceId);
-        if (device != null) {
-            return device.getCapabilityLinkList();
-        }
-        return null;
-    }
-
-    /**
-     * Adds the {@link Location} to the structure.
-     *
-     * @param location
-     */
-    public void addLocationToStructure(Location location) {
-        if (locationMap == null) {
-            locationMap = Collections.synchronizedMap(new HashMap<String, Location>());
-        }
-
-        if (location.getId() != null) {
-            locationMap.put(location.getId(), location);
-        }
-    }
-
-    /**
-     * Returns the {@link Location} with the given id.
-     *
-     * @param id
-     * @return
-     */
-    public Location getLocationById(String id) {
-        return locationMap.get(id);
-    }
-
 }

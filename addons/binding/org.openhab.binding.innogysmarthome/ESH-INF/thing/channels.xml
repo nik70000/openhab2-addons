@@ -59,7 +59,6 @@
         <tags>
             <tag>switch</tag>
         </tags>
-        <state min="0" max="100" step="1" pattern="%d"></state>
     </channel-type>
     
     <!-- ThermostatActuator -->
@@ -213,18 +212,6 @@
         <category>Count</category>
         <tags>
             <tag>button</tag>
-        </tags>
-        <state readOnly="true"></state>
-    </channel-type>
-    
-    <!-- BatteryLow Channel -->
-    <channel-type id="BatteryLow">
-        <item-type>Switch</item-type>
-        <label>Low battery state</label>
-        <description>Active, if the device has a low battery</description>
-        <category>Battery</category>
-        <tags>
-            <tag>battery</tag>
         </tags>
         <state readOnly="true"></state>
     </channel-type>

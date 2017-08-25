@@ -10,9 +10,9 @@ package org.openhab.binding.innogysmarthome.discovery;
 
 import static org.openhab.binding.innogysmarthome.InnogyBindingConstants.*;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,19 +24,17 @@ import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.BridgeHandler;
 import org.openhab.binding.innogysmarthome.handler.InnogyBridgeHandler;
 import org.openhab.binding.innogysmarthome.handler.InnogyDeviceHandler;
+import org.openhab.binding.innogysmarthome.internal.client.entity.device.Device;
 import org.openhab.binding.innogysmarthome.internal.listener.DeviceStatusListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import in.ollie.innogysmarthome.entity.device.Device;
-import in.ollie.innogysmarthome.entity.event.Event;
 
 /**
  * The {@link InnogyDeviceDiscoveryService} is responsible for discovering new devices.
  *
  * @author Oliver Kuhl - Initial contribution
  */
-public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService implements DeviceStatusListener {
+public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService {
 
     private static int SEARCH_TIME = 60;
     private Logger logger = LoggerFactory.getLogger(InnogyDeviceDiscoveryService.class);
@@ -57,7 +55,7 @@ public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService imple
      * {@link InnogyBridgeHandler}.
      */
     public void activate() {
-        bridgeHandler.registerDeviceStatusListener(this);
+        // bridgeHandler.registerDeviceStatusListener(this);
     }
 
     /**
@@ -69,7 +67,7 @@ public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService imple
     @Override
     public void deactivate() {
         removeOlderResults(new Date().getTime());
-        bridgeHandler.unregisterDeviceStatusListener(this);
+        // bridgeHandler.unregisterDeviceStatusListener(this);
     }
 
     /*
@@ -91,7 +89,7 @@ public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService imple
     protected void startScan() {
         logger.debug("SCAN for new innogy devices started...");
 
-        List<Device> devices = bridgeHandler.loadDevices();
+        Collection<Device> devices = bridgeHandler.loadDevices();
         if (devices != null) {
             for (Device d : devices) {
                 onDeviceAdded(d);
@@ -110,32 +108,6 @@ public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService imple
         removeOlderResults(getTimestampOfLastScan());
     }
 
-    @Override
-    public void onDeviceStateChanged(Device device) {
-        // ignored
-    }
-
-    @Override
-    public void onDeviceStateChanged(Device device, Event event) {
-        // ignored
-    }
-
-    @Override
-    public void onDeviceRemoved(Device device) {
-        ThingUID thingUID = getThingUID(device);
-
-        if (thingUID != null) {
-            thingRemoved(thingUID);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.openhab.binding.innogysmarthome2.handler.DeviceStatusListener#onDeviceAdded(in.ollie.innogysmarthome.
-     * InnogyClient, in.ollie.innogysmarthome.entity.device.Device)
-     */
-    @Override
     public void onDeviceAdded(Device device) {
         ThingUID thingUID = getThingUID(device);
         ThingTypeUID thingTypeUID = getThingTypeUID(device);
@@ -180,9 +152,9 @@ public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService imple
 
         if (thingTypeUID != null && getSupportedThingTypes().contains(thingTypeUID)) {
             return new ThingUID(thingTypeUID, bridgeUID, device.getId());
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**

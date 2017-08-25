@@ -20,7 +20,7 @@
             <channel id="mold_warning" typeId="HumiditySensor_MoldWarning" />
             <channel id="operation_mode" typeId="ThermostatActuator_OperationMode" />
             <channel id="window_reduction_active" typeId="ThermostatActuator_WindowReductionActive" />
-            <channel id="battery_low" typeId="BatteryLow" />
+            <channel id="battery_low" typeId="system.low-battery" />
         </channels>
 
         <config-description>
