@@ -941,7 +941,7 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
     }
 
     /**
-     * Returns the inverted value, if the invertion in active in the given {@link Channel}s
+     * Returns the inverted value, if the invertion is active in the given {@link Channel}s
      * configuration. Currently only rollershutter channels are supported.
      *
      * @param value

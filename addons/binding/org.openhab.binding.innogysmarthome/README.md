@@ -45,7 +45,7 @@ After the bridge is added, devices are discovered automatically. As there is no 
 | contact | Contact | Indicates the contact state (OPEN/CLOSED) | WDS |
 | dimmer | Dimmer | Allows to dimm a light device | ISD2, PSD |
 | frost_warning | Switch | active, if the measured temperature is too low (ON/OFF) | RST |
-| humidity | Number | The actual humidity in percents | RST, WRT |
+| humidity | Number | Relative humidity in percent | RST, WRT |
 | key1_count | Number | number of key pushes for key 1, increased with each push | BRC8, ISC2, ISD2, ISR2, ISS2, WSC2 |
 | key2_count | Number | number of key pushes for key 2, increased with each push | BRC8, ISC2, ISD2, ISR2, ISS2, WSC2 |
 | key3_count | Number | number of key pushes for key 3, increased with each push | BRC8 |
@@ -54,7 +54,7 @@ After the bridge is added, devices are discovered automatically. As there is no 
 | key6_count | Number | number of key pushes for key 6, increased with each push | BRC8 |
 | key7_count | Number | number of key pushes for key 7, increased with each push | BRC8 |
 | key8_count | Number | number of key pushes for key 8, increased with each push | BRC8 |
-| luminance | Number | Indicates the measured luminance in percents | WMD, WMD0 |
+| luminance | Number | Indicates the measured luminance in percent | WMD, WMD0 |
 | mold_warning | Switch | active, if the measured humidity is too low (ON/OFF) | RST | 
 | motion_count | Number | Number of detected motions, increases with each detected motion | WMD, WMDO |
 | operation_mode | String | the mode of a thermostat (auto/manual) | RST | 

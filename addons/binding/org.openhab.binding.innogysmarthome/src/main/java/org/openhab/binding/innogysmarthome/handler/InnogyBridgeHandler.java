@@ -131,31 +131,23 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             }
 
             updateStatus(ThingStatus.ONLINE);
-            setBridgeProperties();
+            setBridgeProperties(deviceStructMan.getBridgeDevice());
 
             onEventRunnerStopped();
         }
 
-        private void setBridgeProperties() {
-            if (deviceStructMan != null) {
-                Device bridgeDevice = deviceStructMan.getBridgeDevice();
-
-                Map<String, String> properties = editProperties();
-                properties.put(PROPERTY_VENDOR, bridgeDevice.getManufacturer());
-                properties.put(PROPERTY_SERIAL_NUMBER, bridgeDevice.getSerialnumber());
-                properties.put(PROPERTY_ID, bridgeDevice.getId());
-                properties.put(PROPERTY_FIRMWARE_VERSION, bridgeDevice.getFirmwareVersion());
-                properties.put(PROPERTY_HARDWARE_VERSION, bridgeDevice.getHardwareVersion());
-                properties.put(PROPERTY_SOFTWARE_VERSION, bridgeDevice.getSoftwareVersion());
-                properties.put(PROPERTY_IP_ADDRESS, bridgeDevice.getIpAddress());
-                properties.put(PROPERTY_MAC_ADDRESS, bridgeDevice.getMacAddress());
-                properties.put(PROPERTY_REGISTRATION_TIME, bridgeDevice.getRegistrationTimeFormattedString());
-                updateProperties(properties);
-
-            } else {
-                logger.warn("device structure manager is not available.");
-            }
-
+        private void setBridgeProperties(Device bridgeDevice) {
+            Map<String, String> properties = editProperties();
+            properties.put(PROPERTY_VENDOR, bridgeDevice.getManufacturer());
+            properties.put(PROPERTY_SERIAL_NUMBER, bridgeDevice.getSerialnumber());
+            properties.put(PROPERTY_ID, bridgeDevice.getId());
+            properties.put(PROPERTY_FIRMWARE_VERSION, bridgeDevice.getFirmwareVersion());
+            properties.put(PROPERTY_HARDWARE_VERSION, bridgeDevice.getHardwareVersion());
+            properties.put(PROPERTY_SOFTWARE_VERSION, bridgeDevice.getSoftwareVersion());
+            properties.put(PROPERTY_IP_ADDRESS, bridgeDevice.getIpAddress());
+            properties.put(PROPERTY_MAC_ADDRESS, bridgeDevice.getMacAddress());
+            properties.put(PROPERTY_REGISTRATION_TIME, bridgeDevice.getRegistrationTimeFormattedString());
+            updateProperties(properties);
         }
     };
 
@@ -181,8 +173,8 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         public void run() {
             String webSocketUrl = WEBSOCKET_API_URL_EVENTS.replace("{token}",
                     (String) getConfig().get(CONFIG_ACCESS_TOKEN));
-            logger.debug("WebSocket URL: {}",
-                    webSocketUrl.substring(0, 70) + "..." + webSocketUrl.substring(webSocketUrl.length() - 10));
+            logger.debug("WebSocket URL: {}...{}", webSocketUrl.substring(0, 70),
+                    webSocketUrl.substring(webSocketUrl.length() - 10));
 
             try {
                 if (webSocket != null && webSocket.isRunning()) {
@@ -240,8 +232,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         if (config != null) {
             logger.debug("innogy config: {}", config.toString());
             scheduler.execute(new Initializer());
-            // Initializer i = new Initializer();
-            // i.run();
         }
     }
 
@@ -348,7 +338,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
             reinitJob = null;
         }
 
-        if (webSocket != null && webSocket.isRunning()) {
+        if (webSocket != null) {
             webSocket.stop();
             webSocket = null;
         }
@@ -401,7 +391,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
      */
     public Collection<Device> loadDevices() {
         Collection<Device> devices = null;
-        if (client != null) {
+        if (deviceStructMan != null) {
             try {
                 devices = deviceStructMan.getDeviceList();
             } catch (Exception e) {
@@ -461,8 +451,8 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         config.setAccessToken(accessToken);
         getThing().getConfiguration().put(CONFIG_ACCESS_TOKEN, accessToken);
         logger.info("Access token for innogy expired. New access token saved.");
-        logger.debug("innogy access token saved (onTokenResponse): {}",
-                accessToken.substring(0, 10) + "..." + accessToken.substring(accessToken.length() - 10));
+        logger.debug("innogy access token saved (onTokenResponse): {}...{}", accessToken.substring(0, 10),
+                accessToken.substring(accessToken.length() - 10));
 
         // restart WebSocket
         onEventRunnerStopped();
@@ -476,14 +466,14 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
      */
     @Override
     public void onTokenErrorResponse(Credential credential, TokenErrorResponse tokenErrorResponse) throws IOException {
-        String accessToken = credential.getAccessToken();
+        String accessToken = "";
         config.setAccessToken(accessToken);
         getThing().getConfiguration().put(CONFIG_ACCESS_TOKEN, accessToken);
-        logger.debug("innogy access token saved (onTokenErrorResponse): {}",
-                accessToken.substring(0, 10) + "..." + accessToken.substring(accessToken.length() - 10));
+        logger.debug("innogy access token removed (onTokenErrorResponse): {}...{}", accessToken.substring(0, 10),
+                accessToken.substring(accessToken.length() - 10));
 
-        // restart WebSocket
-        onEventRunnerStopped();
+        // restart binding
+        scheduleReinitialize();
     }
 
     /*
@@ -535,8 +525,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
                 }
             }
         } catch (Exception e) {
-            logger.error("Error with Event: {}", e);
-            e.printStackTrace();
+            logger.debug("Error with Event: {}", e);
         }
     }
 
@@ -549,37 +538,38 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
      * @throws IOException
      */
     public void handleStateChangedEvent(Event event) throws ApiException, IOException {
-        if (deviceStructMan != null) {
-
-            // CAPABILITY
-            if (event.isLinkedtoCapability()) {
-                Device device = deviceStructMan.getDeviceByCapabilityLink(event.getLink().getValue());
-                if (device != null) {
-                    for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
-                        deviceStatusListener.onDeviceStateChanged(device, event);
-                    }
-                } else {
-                    logger.debug("Unknown/unsupported device for capability {}.", event.getLink().getValue());
-                }
-
-                // DEVICE
-            } else if (event.isLinkedtoDevice()) {
-                deviceStructMan.refreshDevice(event.getLinkId());
-                Device device = deviceStructMan.getDeviceById(event.getLinkId());
-                if (device != null) {
-                    for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
-                        deviceStatusListener.onDeviceStateChanged(device, event);
-                    }
-                } else {
-                    logger.debug("Unknown/unsupported device {}.", event.getLinkId());
-                }
-
-            } else {
-                logger.debug("link type {} not supported (yet?)", event.getLinkType());
-            }
-        } else {
+        if (deviceStructMan == null) {
             scheduleReinitialize();
+            return;
         }
+
+        // CAPABILITY
+        if (event.isLinkedtoCapability()) {
+            Device device = deviceStructMan.getDeviceByCapabilityLink(event.getLink().getValue());
+            if (device != null) {
+                for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                    deviceStatusListener.onDeviceStateChanged(device, event);
+                }
+            } else {
+                logger.debug("Unknown/unsupported device for capability {}.", event.getLink().getValue());
+            }
+
+            // DEVICE
+        } else if (event.isLinkedtoDevice()) {
+            deviceStructMan.refreshDevice(event.getLinkId());
+            Device device = deviceStructMan.getDeviceById(event.getLinkId());
+            if (device != null) {
+                for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                    deviceStatusListener.onDeviceStateChanged(device, event);
+                }
+            } else {
+                logger.debug("Unknown/unsupported device {}.", event.getLinkId());
+            }
+
+        } else {
+            logger.debug("link type {} not supported (yet?)", event.getLinkType());
+        }
+
     }
 
     /**
@@ -614,28 +604,29 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
      * @throws IOException
      */
     public void handleNewMessageReceivedEvent(Event event) throws ApiException, IOException {
-        if (deviceStructMan != null) {
-            List<Message> messageList = event.getDataListAsMessage();
-            for (Message m : messageList) {
-                if (Message.TYPE_DEVICE_LOW_BATTERY.equals(m.getType())) {
-                    for (Link dl : m.getDeviceLinkList()) {
-                        deviceStructMan.refreshDevice(dl.getId());
-                        Device device = deviceStructMan.getDeviceById(dl.getId());
-                        if (device != null) {
-                            for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
-                                deviceStatusListener.onDeviceStateChanged(device);
-                            }
-                        } else {
-                            logger.debug("Unknown/unsupported device {}.", event.getLinkId());
-                        }
-                    }
-                } else {
-                    logger.debug("Message received event not yet implemented for Messagetype {}.", m.getType());
-                }
-            }
-        } else {
+        if (deviceStructMan == null) {
             scheduleReinitialize();
         }
+
+        List<Message> messageList = event.getDataListAsMessage();
+        for (Message m : messageList) {
+            if (Message.TYPE_DEVICE_LOW_BATTERY.equals(m.getType())) {
+                for (Link dl : m.getDeviceLinkList()) {
+                    deviceStructMan.refreshDevice(dl.getId());
+                    Device device = deviceStructMan.getDeviceById(dl.getId());
+                    if (device != null) {
+                        for (DeviceStatusListener deviceStatusListener : deviceStatusListeners) {
+                            deviceStatusListener.onDeviceStateChanged(device);
+                        }
+                    } else {
+                        logger.debug("Unknown/unsupported device {}.", event.getLinkId());
+                    }
+                }
+            } else {
+                logger.debug("Message received event not yet implemented for Messagetype {}.", m.getType());
+            }
+        }
+
     }
 
     /**
@@ -666,23 +657,19 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * This method is called, when the eventRunner stops and must be restarted after the given delay in seconds.
      *
-     * @see org.openhab.binding.innogysmarthome.handler.EventListener#onEventRunnerStopped(long)
+     * @param delay long in seconds
      */
-    @Override
     public void onEventRunnerStopped(long delay) {
-        logger.debug("onEventRunnerStopped called");
+        logger.trace("onEventRunnerStopped called");
         scheduler.schedule(new WebSocketRunner(this), delay, TimeUnit.SECONDS);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.openhab.binding.innogysmarthome.handler.EventListener#onEventRunnerStopped()
+    /**
+     * This method is called, whenever the eventRunner stops and must be restarted immediately.
      */
-    @Override
     public void onEventRunnerStopped() {
         onEventRunnerStopped(0);
     }
@@ -693,7 +680,7 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
      * @see org.openhab.binding.innogysmarthome.internal.listener.EventListener#onEventRunnerStoppedAbnormally()
      */
     @Override
-    public void onEventRunnerStoppedAbnormally() {
+    public void connectionClosed() {
         scheduleReinitialize(REINITIALIZE_DELAY_SECONDS);
     }
 
@@ -893,7 +880,6 @@ public class InnogyBridgeHandler extends BaseBridgeHandler implements Credential
 
         // unknown
         logger.debug("Unknown exception", e);
-        e.printStackTrace();
         dispose();
         scheduleReinitialize();
         return false;

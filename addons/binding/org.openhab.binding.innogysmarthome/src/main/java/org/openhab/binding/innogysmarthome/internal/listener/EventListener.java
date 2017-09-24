@@ -12,7 +12,7 @@ import org.openhab.binding.innogysmarthome.internal.InnogyWebSocket;
 
 /**
  * The {@link EventListener} is called by the {@link InnogyWebSocket} on new Events and if the {@link InnogyWebSocket}
- * stopped.
+ * closed the connection.
  *
  * @author Oliver Kuhl - Initial contribution
  */
@@ -26,19 +26,7 @@ public interface EventListener {
     public void onEvent(String msg);
 
     /**
-     * This method is called, whenever the eventRunner stops and must be restarted immediately.
-     */
-    public void onEventRunnerStopped();
-
-    /**
-     * This method is called, when the eventRunner stops and must be restarted after the given delay in seconds.
-     *
-     * @param delay long in seconds
-     */
-    public void onEventRunnerStopped(long delay);
-
-    /**
      * This method is called, when the evenRunner stops abnormally (statuscode <> 1000).
      */
-    public void onEventRunnerStoppedAbnormally();
+    public void connectionClosed();
 }

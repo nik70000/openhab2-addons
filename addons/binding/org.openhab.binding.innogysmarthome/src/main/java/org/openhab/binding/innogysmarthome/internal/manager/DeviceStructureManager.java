@@ -85,7 +85,7 @@ public class DeviceStructureManager {
      * @throws IOException
      * @throws ApiException
      */
-    public void refreshDevices() throws IOException, ApiException {
+    private void refreshDevices() throws IOException, ApiException {
         List<Device> devices = client.getFullDevices();
         for (Device d : devices) {
             handleRefreshedDevice(d);

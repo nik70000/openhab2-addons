@@ -20,12 +20,6 @@
             <channel id="energy_consumption_day_kwh" typeId="EnergyConsumptionDayKWh" />
         </channels>
 
-        <config-description>
-            <parameter name="id" type="text">
-                <label>ID</label>
-                <description>The identifier identifies one certain device.</description>
-                <required>true</required>
-            </parameter>
-        </config-description>
+        <config-description-ref uri="thing-type:innogysmarthome:config" />
     </thing-type>
 </thing:thing-descriptions>

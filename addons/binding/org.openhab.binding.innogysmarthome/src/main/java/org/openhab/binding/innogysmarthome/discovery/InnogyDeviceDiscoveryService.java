@@ -51,14 +51,6 @@ public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService {
     }
 
     /**
-     * Activates the {@link InnogyDeviceDiscoveryService} by registering it as {@link DeviceStatusListener} on the
-     * {@link InnogyBridgeHandler}.
-     */
-    public void activate() {
-        // bridgeHandler.registerDeviceStatusListener(this);
-    }
-
-    /**
      * Deactivates the {@link InnogyDeviceDiscoveryService} by unregistering it as {@link DeviceStatusListener} on the
      * {@link InnogyBridgeHandler}. Older discovery results will be removed.
      *
@@ -67,7 +59,6 @@ public class InnogyDeviceDiscoveryService extends AbstractDiscoveryService {
     @Override
     public void deactivate() {
         removeOlderResults(new Date().getTime());
-        // bridgeHandler.unregisterDeviceStatusListener(this);
     }
 
     /*

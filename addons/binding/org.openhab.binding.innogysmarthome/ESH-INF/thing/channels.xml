@@ -3,17 +3,12 @@
 	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
 	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
-
-
     <!-- Switch Channel -->
 	<channel-type id="SwitchActuator">
 		<item-type>Switch</item-type>
 		<label>Switch</label>
 		<description>Switches the currency on/off</description>
 		<category>Switch</category>
-		<tags>
-			<tag>switch</tag>
-		</tags>
 	</channel-type>
 	
 	<!-- Dimmer Channel -->
@@ -22,9 +17,6 @@
 	   <label>Dimmer</label>
 	   <description>Dimms the connected light</description>
 	   <category>DimmableLight</category>
-	   <tags>
-	       <tag>dimmer</tag>
-	   </tags>
 	</channel-type>
 	
 	<!-- RollerShutter Channel -->
@@ -33,9 +25,6 @@
 	   <label>Blinds position</label>
 	   <description>Controls the blinds</description>
 	   <category>Blinds</category>
-       <tags>
-           <tag>rollershutter</tag>
-       </tags>
 	   <config-description>
 	       <parameter name="invert_values" type="boolean">
 	           <label>Invert values</label>
@@ -56,9 +45,6 @@
         <label>Switch</label>
         <description>Switches the state on/off</description>
         <category>Switch</category>
-        <tags>
-            <tag>switch</tag>
-        </tags>
     </channel-type>
     
     <!-- ThermostatActuator -->
@@ -67,9 +53,6 @@
         <label>Point Temperature</label>
         <description>Thermostat temperature setpoint</description>
         <category>Temperature</category>
-        <tags>
-            <tag>heating</tag>
-        </tags>
         <state min="6" max="30" step="0.5" pattern="%.1f °C" readOnly="false">
         </state>
     </channel-type>
@@ -78,9 +61,6 @@
 	    <label>Operation Mode</label>
 	    <description>Thermostat operation mode (manual/auto)</description>
 	    <category>Mode</category>
-	    <tags>
-	       <tag>heating</tag>
-	    </tags>
 	    <state>
 	       <options>
 	           <option value="Auto">auto</option>
@@ -93,9 +73,6 @@
         <label>Window reduction active</label>
         <description>Thermostat temperature reduced, if window is open.</description>
         <category>Temperature</category>
-        <tags>
-            <tag>heating</tag>
-        </tags>
         <state readOnly="true" />
     </channel-type>
 
@@ -105,9 +82,6 @@
         <label>Actual Temperature</label>
         <description>Actual measured room temperature</description>
         <category>Temperature</category>
-        <tags>
-            <tag>heating</tag>
-        </tags>
         <state pattern="%.1f °C" readOnly="true">
         </state>
     </channel-type>
@@ -116,9 +90,6 @@
         <label>Frost Warning</label>
         <description>Warns, if temperature drop below a threshold (configured in innogy app)</description>
         <category>Temperature</category>
-        <tags>
-            <tag>heating</tag>
-        </tags>
         <state readOnly="true" />
     </channel-type>
 
@@ -128,20 +99,14 @@
         <label>Actual Humidity</label>
         <description>Actual measured room humidity</description>
         <category>Humidity</category>
-        <tags>
-            <tag>heating</tag>
-        </tags>
         <state pattern="%.1f%%" readOnly="true">
         </state>
-    </channel-type>
-        <channel-type id="HumiditySensor_MoldWarning" advanced="true">
+    </channel-type>    
+    <channel-type id="HumiditySensor_MoldWarning" advanced="true">
         <item-type>Switch</item-type>
         <label>Mold Warning</label>
         <description>Active, if humidity is over a threshold (configured in innogy app)</description>
         <category>Humidity</category>
-        <tags>
-            <tag>heating</tag>
-        </tags>
         <state readOnly="true" />
     </channel-type>
 
@@ -151,9 +116,6 @@
         <label>Contact</label>
         <description>Shows the open/close state</description>
         <category>Contact</category>
-        <tags>
-            <tag>switch</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -163,9 +125,6 @@
         <label>Smoke</label>
         <description>Shows if smoke was detected</description>
         <category>Smoke</category>
-        <tags>
-            <tag>smoke</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -175,9 +134,6 @@
         <label>Alarm</label>
         <description>Switches the alarm on/off</description>
         <category>Alarm</category>
-        <tags>
-            <tag>smoke</tag>
-        </tags>
     </channel-type>
 
     <!-- MotionDetectionSensor Channel -->
@@ -186,9 +142,6 @@
         <label>Motion count</label>
         <description>The count of detected motions</description>
         <category>Count</category>
-        <tags>
-            <tag>motion</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -198,9 +151,6 @@
         <label>Luminance</label>
         <description>Shows the detected luminance in percent</description>
         <category>Light</category>
-        <tags>
-            <tag>luminance</tag>
-        </tags>
         <state pattern="%d%%" readOnly="true"></state>
     </channel-type>
     
@@ -210,9 +160,6 @@
         <label>Button pushed count</label>
         <description>The count of button pushes.</description>
         <category>Count</category>
-        <tags>
-            <tag>button</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -222,9 +169,6 @@
         <label>Energy consumption per month in KWh</label>
         <description>The energy consumption per month in KWh</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -234,9 +178,6 @@
         <label>Absolute energy consumption</label>
         <description>The absolute Energy consumption</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -246,9 +187,6 @@
         <label>Energy consumption per month in Euro</label>
         <description>The energy consumption per month in Euro</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>  
  
@@ -258,9 +196,6 @@
         <label>Energy consumption per day in Euro</label>
         <description>The energy consumption per day in Euro</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -270,9 +205,6 @@
         <label>Energy consumption per day in KWh</label>
         <description>The energy consumption per day in KWh</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -282,13 +214,8 @@
         <label>Power consumption in Watt</label>
         <description>The current power consumption in Watt</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
-    
-    
     
     <!-- EnergyGenerationMonthKWh -->
     <channel-type id="EnergyGenerationMonthKWh">
@@ -296,9 +223,6 @@
         <label>Energy generation per month in KWh</label>
         <description>The energy generation per month in KWh</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -308,9 +232,6 @@
         <label>Total energy generation</label>
         <description>The total Energy generation</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -320,9 +241,6 @@
         <label>Energy generation per month in Euro</label>
         <description>The energy generation per month in Euro</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>  
  
@@ -332,9 +250,6 @@
         <label>Energy generation per day in Euro</label>
         <description>The energy generation per day in Euro</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -344,9 +259,6 @@
         <label>Energy generation per day in KWh</label>
         <description>The energy generation per day in KWh</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -356,12 +268,8 @@
         <label>Power generation in Watt</label>
         <description>The current power generation in Watt</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
-    
     
     <!-- TotalEnergyConsumption -->
     <channel-type id="TotalEnergyConsumption">
@@ -369,12 +277,8 @@
         <label>Total energy consumption</label>
         <description>The total Energy consumption</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
-    
     
     <!-- EnergyFeedMonthKWh -->
     <channel-type id="EnergyFeedMonthKWh">
@@ -382,9 +286,6 @@
         <label>Energy feed per month in KWh</label>
         <description>The energy feed per month in KWh</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -394,9 +295,6 @@
         <label>Total energy fed</label>
         <description>The total Energy fed</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -406,9 +304,6 @@
         <label>Energy feed per month in Euro</label>
         <description>The energy feed per month in Euro</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>  
  
@@ -418,9 +313,6 @@
         <label>Energy feed per day in Euro</label>
         <description>The energy feed per day in Euro</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     
@@ -430,9 +322,6 @@
         <label>Energy feed per day in KWh</label>
         <description>The energy feed per day in KWh</description>
         <category>Energy</category>
-        <tags>
-            <tag>energy</tag>
-        </tags>
         <state readOnly="true"></state>
     </channel-type>
     

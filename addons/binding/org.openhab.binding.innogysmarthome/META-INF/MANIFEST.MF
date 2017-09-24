@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: innogy SmartHome Binding
 Bundle-SymbolicName: org.openhab.binding.innogysmarthome;singleton:=true
 Bundle-Vendor: openHAB
-Bundle-Version: 2.1.0.qualifier
+Bundle-Version: 2.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .,
  lib/google-http-client-1.22.0.jar,
@@ -22,6 +22,7 @@ Import-Package:
  org.apache.commons.io,
  org.apache.commons.lang,
  org.apache.commons.lang.exception,
+ org.eclipse.jdt.annotation;resolution:=optional,
  org.eclipse.jetty.io,
  org.eclipse.jetty.util,
  org.eclipse.jetty.util.component,

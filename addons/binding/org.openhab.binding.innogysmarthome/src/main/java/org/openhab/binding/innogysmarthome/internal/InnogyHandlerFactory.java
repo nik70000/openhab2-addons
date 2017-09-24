@@ -20,10 +20,12 @@ import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
+import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
 import org.openhab.binding.innogysmarthome.discovery.InnogyDeviceDiscoveryService;
 import org.openhab.binding.innogysmarthome.handler.InnogyBridgeHandler;
 import org.openhab.binding.innogysmarthome.handler.InnogyDeviceHandler;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +37,13 @@ import com.google.common.collect.Sets;
  *
  * @author Oliver Kuhl - Initial contribution
  */
-public class InnogyHandlerFactory extends BaseThingHandlerFactory {
+@Component(immediate = true, name = "binding.innogysmarthome")
+public class InnogyHandlerFactory extends BaseThingHandlerFactory implements ThingHandlerFactory {
 
     private final static Set<ThingTypeUID> SUPPORTED_THING_TYPES = Sets.union(InnogyBridgeHandler.SUPPORTED_THING_TYPES,
             InnogyDeviceHandler.SUPPORTED_THING_TYPES);
 
-    private Logger logger = LoggerFactory.getLogger(InnogyHandlerFactory.class);
+    private final Logger logger = LoggerFactory.getLogger(InnogyHandlerFactory.class);
     private Map<ThingUID, ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
 
     @Override
@@ -50,7 +53,6 @@ public class InnogyHandlerFactory extends BaseThingHandlerFactory {
 
     @Override
     protected ThingHandler createHandler(Thing thing) {
-
         if (InnogyBridgeHandler.SUPPORTED_THING_TYPES.contains(thing.getThingTypeUID())) {
             InnogyBridgeHandler handler = new InnogyBridgeHandler((Bridge) thing);
             registerDeviceDiscoveryService(handler);
@@ -66,12 +68,11 @@ public class InnogyHandlerFactory extends BaseThingHandlerFactory {
 
     /**
      * Registers the device discovery service.
-     * 
+     *
      * @param bridgeHandler
      */
     private synchronized void registerDeviceDiscoveryService(InnogyBridgeHandler bridgeHandler) {
         InnogyDeviceDiscoveryService discoveryService = new InnogyDeviceDiscoveryService(bridgeHandler);
-        discoveryService.activate();
         this.discoveryServiceRegs.put(bridgeHandler.getThing().getUID(), bundleContext
                 .registerService(DiscoveryService.class.getName(), discoveryService, new Hashtable<String, Object>()));
     }

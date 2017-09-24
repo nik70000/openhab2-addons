@@ -37,10 +37,10 @@ public class InnogyWebSocket {
     private Logger logger = LoggerFactory.getLogger(InnogyWebSocket.class);
     private final CountDownLatch closeLatch;
     private Session session;
-    private InnogyBridgeHandler bridgeHandler;
+    private org.openhab.binding.innogysmarthome.internal.listener.EventListener eventListener;
     private WebSocketClient client;
-    private URI webSocketURI;
-    private int maxIdleTimeout;
+    private final URI webSocketURI;
+    private final int maxIdleTimeout;
 
     /**
      * Constructs the {@link InnogyWebSocket}.
@@ -50,7 +50,7 @@ public class InnogyWebSocket {
      * @param maxIdleTimeout
      */
     public InnogyWebSocket(InnogyBridgeHandler bridgeHandler, URI webSocketURI, int maxIdleTimeout) {
-        this.bridgeHandler = bridgeHandler;
+        this.eventListener = bridgeHandler;
         this.closeLatch = new CountDownLatch(1);
         this.webSocketURI = webSocketURI;
         this.maxIdleTimeout = maxIdleTimeout;
@@ -63,7 +63,7 @@ public class InnogyWebSocket {
      */
     public synchronized void start() throws Exception {
         SslContextFactory sslContextFactory = new SslContextFactory();
-        sslContextFactory.setTrustAll(true); // The magic
+        // sslContextFactory.setTrustAll(true); // The magic
 
         if (client == null || client.isStopped()) {
             client = new WebSocketClient(sslContextFactory);
@@ -116,7 +116,7 @@ public class InnogyWebSocket {
         } else {
             logger.info("Connection to innogy WebSocket was closed abnormally (code: {}). Reason: {}", statusCode,
                     reason);
-            bridgeHandler.onEventRunnerStoppedAbnormally();
+            eventListener.connectionClosed();
         }
     }
 
@@ -142,6 +142,6 @@ public class InnogyWebSocket {
     @OnWebSocketMessage
     public void onMessage(String msg) {
         logger.debug("innogy WebSocket onMessage() - {}", msg);
-        bridgeHandler.onEvent(msg);
+        eventListener.onEvent(msg);
     }
 }
