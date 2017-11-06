@@ -33,39 +33,39 @@ public abstract class ConfigPropertyList extends PropertyList {
     protected static final String CONFIG_PROPERTY_PROTOCOL_ID = "ProtocolId";
     protected static final String CONFIG_PROPERTY_TIME_OF_ACCEPTANCE = "TimeOfAcceptance";
     protected static final String CONFIG_PROPERTY_TIME_OF_DISCOVERY = "TimeOfDiscovery";
-    protected final static String CONFIG_PROPERTY_HARDWARE_VERSION = "HardwareVersion";
-    protected final static String CONFIG_PROPERTY_SOFTWARE_VERSION = "SoftwareVersion";
-    protected final static String CONFIG_PROPERTY_FIRMWARE_VERSION = "FirmwareVersion";
-    protected final static String CONFIG_PROPERTY_HOSTNAME = "HostName";
-    protected final static String CONFIG_PROPERTY_ACTIVITY_LOG_ENABLED = "ActivityLogEnabled";
-    protected final static String CONFIG_PROPERTY_CONFIGURATION_STATE = "ConfigurationState";
-    protected final static String CONFIG_PROPERTY_GEOLOCATION = "GeoLocation";
-    protected final static String CONFIG_PROPERTY_TIMEZONE = "TimeZone";
-    protected final static String CONFIG_PROPERTY_CURRENT_UTC_OFFSET = "CurrentUTCOffset";
-    protected final static String CONFIG_PROPERTY_IP_ADDRESS = "IPAddress";
-    protected final static String CONFIG_PROPERTY_MAC_ADDRESS = "MACAddress";
-    protected final static String CONFIG_PROPERTY_SHC_TYPE = "ShcType";
-    protected final static String CONFIG_PROPERTY_BACKEND_CONNECTION_MONITORED = "BackendConnectionMonitored";
-    protected final static String CONFIG_PROPERTY_RFCOM_FAILURE_NOTIFICATION = "RFCommFailureNotification";
-    protected final static String CONFIG_PROPERTY_POSTCODE = "PostCode";
-    protected final static String CONFIG_PROPERTY_CITY = "City";
-    protected final static String CONFIG_PROPERTY_STREET = "Street";
-    protected final static String CONFIG_PROPERTY_HOUSENUMBER = "HouseNumber";
-    protected final static String CONFIG_PROPERTY_COUNTRY = "Country";
-    protected final static String CONFIG_PROPERTY_HOUSEHOLD_TYPE = "HouseholdType";
-    protected final static String CONFIG_PROPERTY_NUMBER_OF_PERSONS = "NumberOfPersons";
-    protected final static String CONFIG_PROPERTY_NUMBER_OF_FLOORS = "NumberOfFloors";
-    protected final static String CONFIG_PROPERTY_LIVINGAREA = "LivingArea";
-    protected final static String CONFIG_PROPERTY_REGISTRATION_TIME = "RegistrationTime";
-    protected final static String CONFIG_PROPERTY_DISPLAY_CURRENT_TEMPERATURE = "DisplayCurrentTemperature";
-    protected final static String CONFIG_PROPERTY_UNDERLYING_DEVICE_IDS = "UnderlyingDeviceIds";
-    protected final static String CONFIG_PROPERTY_METER_ID = "MeterId";
-    protected final static String CONFIG_PROPERTY_METER_FIRMWARE_VERSION = "MeterFirmwareVersion";
-    protected final static String CONFIG_PROPERTY_DEVICE_TYPE = "DeviceType";
+    protected static final String CONFIG_PROPERTY_HARDWARE_VERSION = "HardwareVersion";
+    protected static final String CONFIG_PROPERTY_SOFTWARE_VERSION = "SoftwareVersion";
+    protected static final String CONFIG_PROPERTY_FIRMWARE_VERSION = "FirmwareVersion";
+    protected static final String CONFIG_PROPERTY_HOSTNAME = "HostName";
+    protected static final String CONFIG_PROPERTY_ACTIVITY_LOG_ENABLED = "ActivityLogEnabled";
+    protected static final String CONFIG_PROPERTY_CONFIGURATION_STATE = "ConfigurationState";
+    protected static final String CONFIG_PROPERTY_GEOLOCATION = "GeoLocation";
+    protected static final String CONFIG_PROPERTY_TIMEZONE = "TimeZone";
+    protected static final String CONFIG_PROPERTY_CURRENT_UTC_OFFSET = "CurrentUTCOffset";
+    protected static final String CONFIG_PROPERTY_IP_ADDRESS = "IPAddress";
+    protected static final String CONFIG_PROPERTY_MAC_ADDRESS = "MACAddress";
+    protected static final String CONFIG_PROPERTY_SHC_TYPE = "ShcType";
+    protected static final String CONFIG_PROPERTY_BACKEND_CONNECTION_MONITORED = "BackendConnectionMonitored";
+    protected static final String CONFIG_PROPERTY_RFCOM_FAILURE_NOTIFICATION = "RFCommFailureNotification";
+    protected static final String CONFIG_PROPERTY_POSTCODE = "PostCode";
+    protected static final String CONFIG_PROPERTY_CITY = "City";
+    protected static final String CONFIG_PROPERTY_STREET = "Street";
+    protected static final String CONFIG_PROPERTY_HOUSENUMBER = "HouseNumber";
+    protected static final String CONFIG_PROPERTY_COUNTRY = "Country";
+    protected static final String CONFIG_PROPERTY_HOUSEHOLD_TYPE = "HouseholdType";
+    protected static final String CONFIG_PROPERTY_NUMBER_OF_PERSONS = "NumberOfPersons";
+    protected static final String CONFIG_PROPERTY_NUMBER_OF_FLOORS = "NumberOfFloors";
+    protected static final String CONFIG_PROPERTY_LIVINGAREA = "LivingArea";
+    protected static final String CONFIG_PROPERTY_REGISTRATION_TIME = "RegistrationTime";
+    protected static final String CONFIG_PROPERTY_DISPLAY_CURRENT_TEMPERATURE = "DisplayCurrentTemperature";
+    protected static final String CONFIG_PROPERTY_UNDERLYING_DEVICE_IDS = "UnderlyingDeviceIds";
+    protected static final String CONFIG_PROPERTY_METER_ID = "MeterId";
+    protected static final String CONFIG_PROPERTY_METER_FIRMWARE_VERSION = "MeterFirmwareVersion";
+    protected static final String CONFIG_PROPERTY_DEVICE_TYPE = "DeviceType";
 
-    protected final static String PROTOCOL_ID_COSIP = "Cosip";
-    protected final static String PROTOCOL_ID_VIRTUAL = "Virtual";
-    protected final static String PROTOCOL_ID_WMBUS = "wMBus";
+    protected static final String PROTOCOL_ID_COSIP = "Cosip";
+    protected static final String PROTOCOL_ID_VIRTUAL = "Virtual";
+    protected static final String PROTOCOL_ID_WMBUS = "wMBus";
 
     /**
      * This represents a container of all configuration properties.
@@ -156,9 +156,8 @@ public abstract class ConfigPropertyList extends PropertyList {
         String time = getPropertyValueAsString(CONFIG_PROPERTY_TIME_OF_ACCEPTANCE);
         if (time == null) {
             return null;
-        } else {
-            return Util.convertZuluTimeStringToDate(time);
         }
+        return Util.convertZuluTimeStringToDate(time);
     }
 
     /**
@@ -170,9 +169,8 @@ public abstract class ConfigPropertyList extends PropertyList {
         String time = getPropertyValueAsString(CONFIG_PROPERTY_TIME_OF_DISCOVERY);
         if (time == null) {
             return null;
-        } else {
-            return Util.convertZuluTimeStringToDate(time);
         }
+        return Util.convertZuluTimeStringToDate(time);
     }
 
     public String getHardwareVersion() {

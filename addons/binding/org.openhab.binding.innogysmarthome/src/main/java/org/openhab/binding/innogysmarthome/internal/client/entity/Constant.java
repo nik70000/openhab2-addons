@@ -21,12 +21,7 @@ public class Constant {
     @Key("value")
     public Object value;
 
-    public Constant() {
-        super();
-    }
-
     public Constant(Object value) {
-        super();
         this.value = value;
     }
 }

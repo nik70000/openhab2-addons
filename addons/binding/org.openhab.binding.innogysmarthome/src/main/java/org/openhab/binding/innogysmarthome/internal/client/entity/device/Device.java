@@ -29,31 +29,31 @@ import com.google.api.client.util.Key;
  */
 public class Device extends ConfigPropertyList {
 
-    public final static String DEVICE_TYPE_SHC = "SHC";
-    public final static String DEVICE_TYPE_ANALOG_METER = "AnalogMeter";
-    public final static String DEVICE_TYPE_BRC8 = "BRC8";
-    public final static String DEVICE_TYPE_GENERATION_METER = "GenerationMeter";
-    public final static String DEVICE_TYPE_ISC2 = "ISC2";
-    public final static String DEVICE_TYPE_ISD2 = "ISD2";
-    public final static String DEVICE_TYPE_ISR2 = "ISR2";
-    public final static String DEVICE_TYPE_ISS2 = "ISS2";
-    public final static String DEVICE_TYPE_PSD = "PSD";
-    public final static String DEVICE_TYPE_PSS = "PSS";
-    public final static String DEVICE_TYPE_PSSO = "PSSO";
-    public final static String DEVICE_TYPE_RST = "RST";
-    public final static String DEVICE_TYPE_SMARTMETER = "SmartMeter";
-    public final static String DEVICE_TYPE_TWO_WAY_METER = "TwoWayMeter";
-    public final static String DEVICE_TYPE_VARIABLE_ACTUATOR = "VariableActuator";
-    public final static String DEVICE_TYPE_WDS = "WDS";
-    public final static String DEVICE_TYPE_WMD = "WMD";
-    public final static String DEVICE_TYPE_WMDO = "WMDO";
-    public final static String DEVICE_TYPE_WRT = "WRT";
-    public final static String DEVICE_TYPE_WSC2 = "WSC2";
-    public final static String DEVICE_TYPE_WSD = "WSD";
-    public final static String DEVICE_TYPE_WSD2 = "WSD2";
+    public static final String DEVICE_TYPE_SHC = "SHC";
+    public static final String DEVICE_TYPE_ANALOG_METER = "AnalogMeter";
+    public static final String DEVICE_TYPE_BRC8 = "BRC8";
+    public static final String DEVICE_TYPE_GENERATION_METER = "GenerationMeter";
+    public static final String DEVICE_TYPE_ISC2 = "ISC2";
+    public static final String DEVICE_TYPE_ISD2 = "ISD2";
+    public static final String DEVICE_TYPE_ISR2 = "ISR2";
+    public static final String DEVICE_TYPE_ISS2 = "ISS2";
+    public static final String DEVICE_TYPE_PSD = "PSD";
+    public static final String DEVICE_TYPE_PSS = "PSS";
+    public static final String DEVICE_TYPE_PSSO = "PSSO";
+    public static final String DEVICE_TYPE_RST = "RST";
+    public static final String DEVICE_TYPE_SMARTMETER = "SmartMeter";
+    public static final String DEVICE_TYPE_TWO_WAY_METER = "TwoWayMeter";
+    public static final String DEVICE_TYPE_VARIABLE_ACTUATOR = "VariableActuator";
+    public static final String DEVICE_TYPE_WDS = "WDS";
+    public static final String DEVICE_TYPE_WMD = "WMD";
+    public static final String DEVICE_TYPE_WMDO = "WMDO";
+    public static final String DEVICE_TYPE_WRT = "WRT";
+    public static final String DEVICE_TYPE_WSC2 = "WSC2";
+    public static final String DEVICE_TYPE_WSD = "WSD";
+    public static final String DEVICE_TYPE_WSD2 = "WSD2";
 
-    public final static String DEVICE_MANUFACTURER_RWE = "RWE";
-    public final static String DEVICE_MANUFACTURER_INNOGY = "innogy";
+    public static final String DEVICE_MANUFACTURER_RWE = "RWE";
+    public static final String DEVICE_MANUFACTURER_INNOGY = "innogy";
 
     /**
      * Unique id for the device, always available in model.
@@ -148,33 +148,6 @@ public class Device extends ConfigPropertyList {
      * Stores, if the {@link Device} is battery powered.
      */
     private boolean batteryPowered = false;
-
-    // public Device() {
-    // }
-    //
-    // public Device(JsonObject object) {
-    // if (object.get(JSONApiResponseKeysEnum.DEVICE_ID.getKey()) != null) {
-    // this.id = object.get(JSONApiResponseKeysEnum.DEVICE_ID.getKey()).getAsString();
-    // }
-    // if (object.get(JSONApiResponseKeysEnum.DEVICE_MANUFACTURER.getKey()) != null) {
-    // this.manufacturer = object.get(JSONApiResponseKeysEnum.DEVICE_MANUFACTURER.getKey()).getAsString();
-    // }
-    // if (object.get(JSONApiResponseKeysEnum.DEVICE_VERSION.getKey()) != null) {
-    // this.version = object.get(JSONApiResponseKeysEnum.DEVICE_VERSION.getKey()).getAsString();
-    // }
-    // if (object.get(JSONApiResponseKeysEnum.DEVICE_PRODUCT.getKey()) != null) {
-    // this.product = object.get(JSONApiResponseKeysEnum.DEVICE_PRODUCT.getKey()).getAsString();
-    // }
-    // if (object.get(JSONApiResponseKeysEnum.DEVICE_SERIALNUMBER.getKey()) != null) {
-    // this.serialnumber = object.get(JSONApiResponseKeysEnum.DEVICE_SERIALNUMBER.getKey()).getAsString();
-    // }
-    // if (object.get(JSONApiResponseKeysEnum.DEVICE_DESC.getKey()) != null) {
-    // this.desc = object.get(JSONApiResponseKeysEnum.DEVICE_DESC.getKey()).getAsString();
-    // }
-    // if (object.get(JSONApiResponseKeysEnum.DEVICE_TYPE.getKey()) != null) {
-    // this.type = object.get(JSONApiResponseKeysEnum.DEVICE_TYPE.getKey()).getAsString();
-    // }
-    // }
 
     /**
      * @return the id
@@ -342,22 +315,6 @@ public class Device extends ConfigPropertyList {
     }
 
     /**
-     * @return the capabilityMap
-     */
-    // public HashMap<String, Capability> getCapabilityMap() {
-    // if (capabilityLinkList == null) {
-    // return null;
-    // }
-    // if (capabilityMap == null) {
-    // capabilityMap = new HashMap<String, Capability>();
-    // for (Link l : capabilityLinkList) {
-    // // capabilityMap.put(l.getId(), l);
-    // }
-    // }
-    // return capabilityMap;
-    // }
-
-    /**
      * @param capabilityMap the capabilityMap to set
      */
     public void setCapabilityMap(HashMap<String, Capability> capabilityMap) {
@@ -443,7 +400,7 @@ public class Device extends ConfigPropertyList {
 
         for (Message m : messageList) {
             setLowBattery(m.getType().equals(Message.TYPE_DEVICE_LOW_BATTERY));
-            setIsReachable(!m.getType().equals(Message.TYPE_DEVICE_UNREACHABLE));
+            setReachable(!m.getType().equals(Message.TYPE_DEVICE_UNREACHABLE));
         }
     }
 
@@ -452,8 +409,8 @@ public class Device extends ConfigPropertyList {
      *
      * @param isReachable
      */
-    public void setIsReachable(boolean isReachable) {
-        getDeviceState().setIsReachable(isReachable);
+    public void setReachable(boolean isReachable) {
+        getDeviceState().setReachable(isReachable);
     }
 
     /**
@@ -462,7 +419,7 @@ public class Device extends ConfigPropertyList {
      * @return
      */
     public boolean isReachable() {
-        return getDeviceState().getIsReachable();
+        return getDeviceState().isReachable();
     }
 
     /**

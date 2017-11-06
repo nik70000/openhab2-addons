@@ -290,8 +290,8 @@ public class InnogyDeviceHandler extends BaseThingHandler implements DeviceStatu
 
         // DEVICE STATES
         if (device.hasState()) {
-            Boolean reachable = device.getDeviceState().getIsReachable();
-            Boolean included = device.getDeviceState().deviceIsIncluded();
+            Boolean reachable = device.getDeviceState().isReachable();
+            boolean included = device.getDeviceState().deviceIsIncluded();
             if (reachable != null && !reachable) {
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, "Device not reachable.");
                 return;

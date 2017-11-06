@@ -22,11 +22,11 @@ import com.google.api.client.util.Key;
  */
 public class Link {
 
-    public final static String LINK_TYPE_CAPABILITY = "/capability/";
-    public final static String LINK_TYPE_DEVICE = "/device/";
-    public final static String LINK_TYPE_MESSAGE = "/message/";
-    public final static String LINK_TYPE_SHC = "/desc/device/SHC.RWE/";
-    public final static String LINK_TYPE_UNKNOWN = "unknown";
+    public static final String LINK_TYPE_CAPABILITY = "/capability/";
+    public static final String LINK_TYPE_DEVICE = "/device/";
+    public static final String LINK_TYPE_MESSAGE = "/message/";
+    public static final String LINK_TYPE_SHC = "/desc/device/SHC.RWE/";
+    public static final String LINK_TYPE_UNKNOWN = "unknown";
 
     @Key("value")
     private String value;

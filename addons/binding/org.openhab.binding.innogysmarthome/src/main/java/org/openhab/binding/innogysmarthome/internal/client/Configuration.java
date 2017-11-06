@@ -33,10 +33,7 @@ public class Configuration {
      * @param refreshToken
      */
     public Configuration(String clientId, String clientSecret, String redirectUrl, String refreshToken) {
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.redirectUrl = redirectUrl;
-        this.refreshToken = refreshToken;
+        this(clientId, clientSecret, redirectUrl, null, null, refreshToken);
     }
 
     /**
@@ -64,23 +61,6 @@ public class Configuration {
      * Creates an empty {@link Configuration}.
      */
     public Configuration() {
-    }
-
-    /**
-     * Checks, if the {@link Configuration} is complete and all relevant properties for a successful
-     * communication with the innogy SmartHome service are set.
-     *
-     * @return true, if the {@link Configuration} is valid
-     */
-    public boolean check() {
-        if (!checkClientData()) {
-            return false;
-        }
-        if (StringUtils.isEmpty(authCode)) {
-            return checkRefreshToken();
-        } else {
-            return true;
-        }
     }
 
     /**
@@ -222,19 +202,4 @@ public class Configuration {
                 + ", authCode=" + authCode + ", accessToken=" + simplifiedAccessToken + ", refreshToken="
                 + simplifiedRefreshToken + "]";
     }
-
-    /**
-     * Returns a string representation of the object like {@link Configuration#toString()}, but including all secrets.
-     * If you are unsure, simply use {@link Configuration#toString()} instead.
-     *
-     * WARNING: the returned string includes all secret tokens. With a token, the full access to the innogy webservice
-     * for the user concerned. NEVER make them publicly available!
-     *
-     * @return
-     */
-    public String toStringWithSecrets() {
-        return "Config [clientId=" + clientId + ", clientSecret=" + clientSecret + ", redirectUrl=" + redirectUrl
-                + ", authCode=" + authCode + ", accessToken=" + accessToken + ", refreshToken=" + refreshToken + "]";
-    }
-
 }

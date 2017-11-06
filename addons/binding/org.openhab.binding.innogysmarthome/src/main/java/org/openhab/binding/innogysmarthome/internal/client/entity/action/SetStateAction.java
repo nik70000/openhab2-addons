@@ -21,13 +21,13 @@ import org.openhab.binding.innogysmarthome.internal.client.entity.capability.Cap
  */
 public class SetStateAction extends Action {
 
-    public final static String ACTION_PARAMETER_SWITCHACTUATOR_ONSTATE = "OnState";
-    public final static String ACTION_PARAMETER_VARIABLEACTUATOR_VALUE = "Value";
-    public final static String ACTION_PARAMETER_THERMOSTATACTUATOR_POINTTEMPERATURE = "PointTemperature";
-    public final static String ACTION_PARAMETER_THERMOSTATACTUATOR_OPERATIONMODE = "OperationMode";
-    public final static String ACTION_PARAMETER_ALARMACTUATOR_ONSTATE = "OnState";
-    public final static String ACTION_PARAMETER_DIMMERACTUATOR_VALUE = "DimLevel";
-    public final static String ACTION_PARAMETER_ROLLERSHUTTERACTUATOR_VALUE = "ShutterLevel";
+    public static final String ACTION_PARAMETER_SWITCHACTUATOR_ONSTATE = "OnState";
+    public static final String ACTION_PARAMETER_VARIABLEACTUATOR_VALUE = "Value";
+    public static final String ACTION_PARAMETER_THERMOSTATACTUATOR_POINTTEMPERATURE = "PointTemperature";
+    public static final String ACTION_PARAMETER_THERMOSTATACTUATOR_OPERATIONMODE = "OperationMode";
+    public static final String ACTION_PARAMETER_ALARMACTUATOR_ONSTATE = "OnState";
+    public static final String ACTION_PARAMETER_DIMMERACTUATOR_VALUE = "DimLevel";
+    public static final String ACTION_PARAMETER_ROLLERSHUTTERACTUATOR_VALUE = "ShutterLevel";
 
     /**
      * Constructs a new {@link SetStateAction}.

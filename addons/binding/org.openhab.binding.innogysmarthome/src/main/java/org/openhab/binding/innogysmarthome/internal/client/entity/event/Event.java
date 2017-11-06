@@ -33,15 +33,15 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Event extends PropertyList {
 
-    public final static String TYPE_STATE_CHANGED = "device/SHC.RWE/1.0/event/StateChanged";
-    public final static String TYPE_NEW_MESSAGE_RECEIVED = "device/SHC.RWE/1.0/event/NewMessageReceived";
-    public final static String TYPE_MESSAGE_DELETED = "device/SHC.RWE/1.0/event/MessageDeleted";
-    public final static String TYPE_DISCONNECT = "/event/Disconnect";
-    public final static String TYPE_CONFIG_CHANGED = "device/SHC.RWE/1.0/event/ConfigChanged";
-    public final static String TYPE_CONTROLLER_CONNECTIVITY_CHANGED = "device/SHC.RWE/1.0/event/ControllerConnectivityChanged";
+    public static final String TYPE_STATE_CHANGED = "device/SHC.RWE/1.0/event/StateChanged";
+    public static final String TYPE_NEW_MESSAGE_RECEIVED = "device/SHC.RWE/1.0/event/NewMessageReceived";
+    public static final String TYPE_MESSAGE_DELETED = "device/SHC.RWE/1.0/event/MessageDeleted";
+    public static final String TYPE_DISCONNECT = "/event/Disconnect";
+    public static final String TYPE_CONFIG_CHANGED = "device/SHC.RWE/1.0/event/ConfigChanged";
+    public static final String TYPE_CONTROLLER_CONNECTIVITY_CHANGED = "device/SHC.RWE/1.0/event/ControllerConnectivityChanged";
 
-    public final static String EVENT_PROPERTY_CONFIGURATION_VERSION = "ConfigurationVersion";
-    public final static String EVENT_PROPERTY_IS_CONNECTED = "IsConnected";
+    public static final String EVENT_PROPERTY_CONFIGURATION_VERSION = "ConfigurationVersion";
+    public static final String EVENT_PROPERTY_IS_CONNECTED = "IsConnected";
 
     /**
      * Specifies the type of the event. The type must be the full path to uniquely reference the event definition.
@@ -305,11 +305,7 @@ public class Event extends PropertyList {
      * @return
      */
     public Boolean isLinkedtoCapability() {
-        Link link = getLink();
-        if (link != null) {
-            return link.isTypeCapability();
-        }
-        return null;
+        return getLink() == null ? false : getLink().isTypeCapability();
     }
 
     /**
@@ -318,11 +314,7 @@ public class Event extends PropertyList {
      * @return
      */
     public Boolean isLinkedtoDevice() {
-        Link link = getLink();
-        if (link != null) {
-            return link.isTypeDevice();
-        }
-        return null;
+        return getLink() == null ? false : getLink().isTypeDevice();
     }
 
     /**
@@ -331,11 +323,7 @@ public class Event extends PropertyList {
      * @return
      */
     public Boolean isLinkedtoMessage() {
-        Link link = getLink();
-        if (link != null) {
-            return link.isTypeMessage();
-        }
-        return null;
+        return getLink() == null ? false : getLink().isTypeMessage();
     }
 
     /**
@@ -344,11 +332,7 @@ public class Event extends PropertyList {
      * @return
      */
     public Boolean isLinkedtoSHC() {
-        Link link = getLink();
-        if (link != null) {
-            return link.isTypeSHC();
-        }
-        return null;
+        return getLink() == null ? false : getLink().isTypeSHC();
     }
 
     /**
@@ -369,8 +353,7 @@ public class Event extends PropertyList {
     public Boolean getIsConnected() {
         if (!isControllerConnectivityChangedEvent()) {
             return null;
-        } else {
-            return getPropertyValueAsBoolean(EVENT_PROPERTY_IS_CONNECTED);
         }
+        return getPropertyValueAsBoolean(EVENT_PROPERTY_IS_CONNECTED);
     }
 }

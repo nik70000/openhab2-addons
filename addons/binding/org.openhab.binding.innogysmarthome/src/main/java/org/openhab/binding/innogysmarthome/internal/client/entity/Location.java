@@ -18,7 +18,7 @@ import com.google.api.client.util.Key;
  * @author Oliver Kuhl - Initial contribution
  */
 public class Location extends ConfigPropertyList {
-    private final static String CONFIG_PROPERTY_TYPE = "Type";
+    private static final String CONFIG_PROPERTY_TYPE = "Type";
 
     /**
      * Identifier of the location – must be unique.

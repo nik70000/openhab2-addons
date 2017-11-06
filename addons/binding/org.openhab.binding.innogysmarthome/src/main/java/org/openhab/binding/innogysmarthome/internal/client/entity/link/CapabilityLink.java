@@ -16,7 +16,7 @@ import org.openhab.binding.innogysmarthome.internal.client.entity.capability.Cap
  * @author Oliver Kuhl - Initial contribution
  */
 public class CapabilityLink extends Link {
-    public final static String LINK_BASE = "/capability/";
+    public static final String LINK_BASE = "/capability/";
 
     @Override
     public String getId() {

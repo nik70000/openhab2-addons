@@ -204,7 +204,6 @@ public class DeviceStructureManager {
      * @param device
      */
     public void addDeviceToStructure(Device device) {
-
         if (device.getId() != null) {
             getDeviceMap().put(device.getId(), device);
         }

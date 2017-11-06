@@ -81,7 +81,7 @@ public abstract class StatePropertyList extends PropertyList {
     /*
      * (non-Javadoc)
      *
-     * @see in.ollie.innogysmarthome.entity.PropertyList#getPropertyMap()
+     * @see org.openhab.binding.innogysmarthome.internal.client.entity.PropertyList#getPropertyMap()
      */
     @Override
     protected Map<String, Property> getPropertyMap() {
@@ -95,7 +95,7 @@ public abstract class StatePropertyList extends PropertyList {
     /*
      * (non-Javadoc)
      *
-     * @see in.ollie.innogysmarthome.entity.PropertyList#getPropertyList()
+     * @see org.openhab.binding.innogysmarthome.internal.client.entity.PropertyList#getPropertyList()
      */
     @Override
     protected List<Property> getPropertyList() {
@@ -140,9 +140,8 @@ public abstract class StatePropertyList extends PropertyList {
         String time = getPropertyValueAsString(STATE_PROPERTY_KEY_LASTCHANGED);
         if (time == null) {
             return null;
-        } else {
-            return Util.convertZuluTimeStringToDate(time);
         }
+        return Util.convertZuluTimeStringToDate(time);
     }
 
     /**
@@ -163,9 +162,8 @@ public abstract class StatePropertyList extends PropertyList {
         String time = getPropertyValueAsString(STATE_NAME_LASTREBOOT);
         if (time == null) {
             return null;
-        } else {
-            return Util.convertZuluTimeStringToDate(time);
         }
+        return Util.convertZuluTimeStringToDate(time);
     }
 
     /**

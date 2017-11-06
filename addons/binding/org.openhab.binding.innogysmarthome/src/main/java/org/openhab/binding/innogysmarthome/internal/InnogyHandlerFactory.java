@@ -40,7 +40,7 @@ import com.google.common.collect.Sets;
 @Component(immediate = true, name = "binding.innogysmarthome")
 public class InnogyHandlerFactory extends BaseThingHandlerFactory implements ThingHandlerFactory {
 
-    private final static Set<ThingTypeUID> SUPPORTED_THING_TYPES = Sets.union(InnogyBridgeHandler.SUPPORTED_THING_TYPES,
+    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES = Sets.union(InnogyBridgeHandler.SUPPORTED_THING_TYPES,
             InnogyDeviceHandler.SUPPORTED_THING_TYPES);
 
     private final Logger logger = LoggerFactory.getLogger(InnogyHandlerFactory.class);

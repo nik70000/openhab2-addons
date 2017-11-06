@@ -22,55 +22,55 @@ import com.google.api.client.util.Key;
  */
 public class Message {
     /** device related messages */
-    public final static String TYPE_DEVICE_UNREACHABLE = "DeviceUnreachable";
-    public final static String TYPE_DEVICE_ACTIVITY_LOGGING_ENABLED = "DeviceActivityLoggingEnabled";
-    public final static String TYPE_DEVICE_FACTORY_RESET = "DeviceFactoryReset";
-    public final static String TYPE_DEVICE_LOW_BATTERY = "DeviceLowBattery";
-    public final static String TYPE_DEVICE_MOLD = "DeviceMold";
-    public final static String TYPE_DEVICE_LOW_RF_QUALITY = "DeviceLowRfQuality";
-    public final static String TYPE_DEVICE_FREEZE = "DeviceFreeze";
-    public final static String TYPE_SH_DEVICE_UPDATE_AVAILABLE = "ShDeviceUpdateAvailable";
-    public final static String TYPE_SH_DEVICE_UPDATE_FAILED = "ShDeviceUpdateFailed";
+    public static final String TYPE_DEVICE_UNREACHABLE = "DeviceUnreachable";
+    public static final String TYPE_DEVICE_ACTIVITY_LOGGING_ENABLED = "DeviceActivityLoggingEnabled";
+    public static final String TYPE_DEVICE_FACTORY_RESET = "DeviceFactoryReset";
+    public static final String TYPE_DEVICE_LOW_BATTERY = "DeviceLowBattery";
+    public static final String TYPE_DEVICE_MOLD = "DeviceMold";
+    public static final String TYPE_DEVICE_LOW_RF_QUALITY = "DeviceLowRfQuality";
+    public static final String TYPE_DEVICE_FREEZE = "DeviceFreeze";
+    public static final String TYPE_SH_DEVICE_UPDATE_AVAILABLE = "ShDeviceUpdateAvailable";
+    public static final String TYPE_SH_DEVICE_UPDATE_FAILED = "ShDeviceUpdateFailed";
 
     /** user related messages */
-    public final static String TYPE_USER_EMAIL_ADDRESS_NOT_VALIDATED = "UserEmailAddressNotValidated";
-    public final static String TYPE_USER_INVITATION_ACCEPTED = "UserInvitiationAccepted";
-    public final static String TYPE_USER_FOREIGN_DELETION = "UserForeignDeletion";
+    public static final String TYPE_USER_EMAIL_ADDRESS_NOT_VALIDATED = "UserEmailAddressNotValidated";
+    public static final String TYPE_USER_INVITATION_ACCEPTED = "UserInvitiationAccepted";
+    public static final String TYPE_USER_FOREIGN_DELETION = "UserForeignDeletion";
 
     /** SHC related messages */
-    public final static String TYPE_SHC_REMOTE_REBOOTED = "ShcRemoteRebooted";
-    public final static String TYPE_SHC_UPDATE_COMPLETED = "ShcUpdateCompleted";
-    public final static String TYPE_SHC_UPDATE_CANCELED = "ShcUpdateCanceled";
-    public final static String TYPE_SHC_DEFERRABLE_UPDATE = "ShcDeferrableUpdate";
-    public final static String TYPE_SHC_REAL_TIME_CLOCK_LOST = "ShcRealTimeClockLost";
-    public final static String TYPE_SHC_ONLINE_SWITCH_IS_OFF = "ShcOnlineSwitchIsOff";
-    public final static String TYPE_SHC_MANDATORY_UPDATE = "ShcMandatoryUpdate";
-    public final static String TYPE_SHC_NO_CONNECTION_TO_BACKEND = "ShcNoConnectionToBackend";
+    public static final String TYPE_SHC_REMOTE_REBOOTED = "ShcRemoteRebooted";
+    public static final String TYPE_SHC_UPDATE_COMPLETED = "ShcUpdateCompleted";
+    public static final String TYPE_SHC_UPDATE_CANCELED = "ShcUpdateCanceled";
+    public static final String TYPE_SHC_DEFERRABLE_UPDATE = "ShcDeferrableUpdate";
+    public static final String TYPE_SHC_REAL_TIME_CLOCK_LOST = "ShcRealTimeClockLost";
+    public static final String TYPE_SHC_ONLINE_SWITCH_IS_OFF = "ShcOnlineSwitchIsOff";
+    public static final String TYPE_SHC_MANDATORY_UPDATE = "ShcMandatoryUpdate";
+    public static final String TYPE_SHC_NO_CONNECTION_TO_BACKEND = "ShcNoConnectionToBackend";
 
     /** app related messages */
-    public final static String TYPE_APP_ADDED_TO_SHC = "AppAddedToShc";
-    public final static String TYPE_APP_UPDATED_ON_SHC = "AppUpdatedOnShc";
-    public final static String TYPE_APP_TOKEN_SYNC_FAILURE = "AppTokenSyncFailure";
-    public final static String TYPE_APP_DOWNLOAD_FAILED = "AppDownloadFailed";
-    public final static String TYPE_APPLICATION_LOADING_ERROR = "ApplicationLoadingError";
-    public final static String TYPE_APPLICATION_EXPIRED = "ApplicationExpired";
-    public final static String TYPE_INVALID_CUSTOM_APP = "InvalidCustomApp";
-    public final static String TYPE_CUSTOM_APP_WAS_UPGRADED = "CustomAppWasUpgraded";
-    public final static String TYPE_CUSTOM_APP_UPGRADE_FAILED = "CustomAppUpgradeFailed";
+    public static final String TYPE_APP_ADDED_TO_SHC = "AppAddedToShc";
+    public static final String TYPE_APP_UPDATED_ON_SHC = "AppUpdatedOnShc";
+    public static final String TYPE_APP_TOKEN_SYNC_FAILURE = "AppTokenSyncFailure";
+    public static final String TYPE_APP_DOWNLOAD_FAILED = "AppDownloadFailed";
+    public static final String TYPE_APPLICATION_LOADING_ERROR = "ApplicationLoadingError";
+    public static final String TYPE_APPLICATION_EXPIRED = "ApplicationExpired";
+    public static final String TYPE_INVALID_CUSTOM_APP = "InvalidCustomApp";
+    public static final String TYPE_CUSTOM_APP_WAS_UPGRADED = "CustomAppWasUpgraded";
+    public static final String TYPE_CUSTOM_APP_UPGRADE_FAILED = "CustomAppUpgradeFailed";
 
     /** others */
-    public final static String TYPE_BID_COS_INCLUSION_TIMEOUT = "BidCosInclusionTimeout";
-    public final static String TYPE_ADDRESS_COLLISION = "AddressCollision";
-    public final static String TYPE_BACKEND_CONFIG_OUT_OF_SYNC = "BackendConfigOutOfSync";
-    public final static String TYPE_SMOKE_DETECTED = "SmokeDetected";
-    public final static String TYPE_LEMON_BEAT_DONGLE_INITIALIZATION_FAILED = "LemonBeatDongleInitializationFailed";
-    public final static String TYPE_USB_DEVICE_UNPLUGGED = "USBDeviceUnplugged";
-    public final static String TYPE_INVALID_AES_KEY = "InvalidAesKey";
-    public final static String TYPE_MEMORY_SHORTAGE = "MemoryShortage";
-    public final static String TYPE_LOG_LEVEL_CHANGED = "LogLevelChanged";
-    public final static String TYPE_RULE_EXCEPTION_FAILED = "RuleExecutionFailed";
-    public final static String TYPE_SEND_MESSAGE_LIMIT_EXCEEDED = "SendMessageLimitExceeded";
-    public final static String TYPE_CONFIG_FIX_ENTITY_DELETED = "ConfigFixEntityDeleted";
+    public static final String TYPE_BID_COS_INCLUSION_TIMEOUT = "BidCosInclusionTimeout";
+    public static final String TYPE_ADDRESS_COLLISION = "AddressCollision";
+    public static final String TYPE_BACKEND_CONFIG_OUT_OF_SYNC = "BackendConfigOutOfSync";
+    public static final String TYPE_SMOKE_DETECTED = "SmokeDetected";
+    public static final String TYPE_LEMON_BEAT_DONGLE_INITIALIZATION_FAILED = "LemonBeatDongleInitializationFailed";
+    public static final String TYPE_USB_DEVICE_UNPLUGGED = "USBDeviceUnplugged";
+    public static final String TYPE_INVALID_AES_KEY = "InvalidAesKey";
+    public static final String TYPE_MEMORY_SHORTAGE = "MemoryShortage";
+    public static final String TYPE_LOG_LEVEL_CHANGED = "LogLevelChanged";
+    public static final String TYPE_RULE_EXCEPTION_FAILED = "RuleExecutionFailed";
+    public static final String TYPE_SEND_MESSAGE_LIMIT_EXCEEDED = "SendMessageLimitExceeded";
+    public static final String TYPE_CONFIG_FIX_ENTITY_DELETED = "ConfigFixEntityDeleted";
 
     /**
      * Identifier of the message – must be unique.

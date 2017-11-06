@@ -16,58 +16,58 @@ import org.openhab.binding.innogysmarthome.internal.client.entity.capability.Cap
  * @author Oliver Kuhl - Initial contribution
  */
 public class CapabilityState extends EntityState {
-    public final static String STATE_NAME_VARIABLE_ACTUATOR = "Value";
-    public final static String STATE_NAME_SWITCH_ACTUATOR = "OnState";
-    public final static String STATE_NAME_TEMPERATURE_SENSOR_TEMPERATURE = "Temperature";
-    public final static String STATE_NAME_TEMPERATURE_SENSOR_FROST_WARNING = "FrostWarning";
-    public final static String STATE_NAME_THERMOSTAT_ACTUATOR_POINT_TEMPERATURE = "PointTemperature";
-    public final static String STATE_NAME_THERMOSTAT_ACTUATOR_OPERATION_MODE = "OperationMode";
-    public final static String STATE_NAME_THERMOSTAT_ACTUATOR_WINDOW_REDUCTION_ACTIVE = "WindowReductionActive";
-    public final static String STATE_NAME_HUMIDITY_SENSOR_HUMIDITY = "Humidity";
-    public final static String STATE_NAME_HUMIDITY_SENSOR_MOLD_WARNING = "MoldWarning";
-    public final static String STATE_NAME_WINDOW_DOOR_SENSOR = "IsOpen";
-    public final static String STATE_NAME_SMOKE_DETECTOR_SENSOR = "IsSmokeAlarm";
-    public final static String STATE_NAME_ALARM_ACTUATOR = "OnState";
-    public final static String STATE_NAME_MOTION_DETECTION_SENSOR = "MotionDetectedCount";
-    public final static String STATE_NAME_LUMINANCE_SENSOR = "Luminance";
-    public final static String STATE_NAME_PUSH_BUTTON_SENSOR_COUNTER = "LastKeyPressCounter";
-    public final static String STATE_NAME_PUSH_BUTTON_SENSOR_BUTTON_INDEX = "LastPressedButtonIndex";
-    public final static String STATE_NAME_DIMMER_ACTUATOR = "DimLevel";
-    public final static String STATE_NAME_ROLLERSHUTTER_ACTUATOR = "ShutterLevel";
+    public static final String STATE_NAME_VARIABLE_ACTUATOR = "Value";
+    public static final String STATE_NAME_SWITCH_ACTUATOR = "OnState";
+    public static final String STATE_NAME_TEMPERATURE_SENSOR_TEMPERATURE = "Temperature";
+    public static final String STATE_NAME_TEMPERATURE_SENSOR_FROST_WARNING = "FrostWarning";
+    public static final String STATE_NAME_THERMOSTAT_ACTUATOR_POINT_TEMPERATURE = "PointTemperature";
+    public static final String STATE_NAME_THERMOSTAT_ACTUATOR_OPERATION_MODE = "OperationMode";
+    public static final String STATE_NAME_THERMOSTAT_ACTUATOR_WINDOW_REDUCTION_ACTIVE = "WindowReductionActive";
+    public static final String STATE_NAME_HUMIDITY_SENSOR_HUMIDITY = "Humidity";
+    public static final String STATE_NAME_HUMIDITY_SENSOR_MOLD_WARNING = "MoldWarning";
+    public static final String STATE_NAME_WINDOW_DOOR_SENSOR = "IsOpen";
+    public static final String STATE_NAME_SMOKE_DETECTOR_SENSOR = "IsSmokeAlarm";
+    public static final String STATE_NAME_ALARM_ACTUATOR = "OnState";
+    public static final String STATE_NAME_MOTION_DETECTION_SENSOR = "MotionDetectedCount";
+    public static final String STATE_NAME_LUMINANCE_SENSOR = "Luminance";
+    public static final String STATE_NAME_PUSH_BUTTON_SENSOR_COUNTER = "LastKeyPressCounter";
+    public static final String STATE_NAME_PUSH_BUTTON_SENSOR_BUTTON_INDEX = "LastPressedButtonIndex";
+    public static final String STATE_NAME_DIMMER_ACTUATOR = "DimLevel";
+    public static final String STATE_NAME_ROLLERSHUTTER_ACTUATOR = "ShutterLevel";
 
     // ENERGY CONSUMPTION SENSOR
-    public final static String STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_MONTH_KWH = "EnergyConsumptionMonthKWh";
-    public final static String STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ABSOLUTE_ENERGY_CONSUMPTION = "AbsoluteEnergyConsumption";
-    public final static String STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_MONTH_EURO = "EnergyConsumptionMonthEuro";
-    public final static String STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_DAY_EURO = "EnergyConsumptionDayEuro";
-    public final static String STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_DAY_KWH = "EnergyConsumptionDayKWh";
+    public static final String STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_MONTH_KWH = "EnergyConsumptionMonthKWh";
+    public static final String STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ABSOLUTE_ENERGY_CONSUMPTION = "AbsoluteEnergyConsumption";
+    public static final String STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_MONTH_EURO = "EnergyConsumptionMonthEuro";
+    public static final String STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_DAY_EURO = "EnergyConsumptionDayEuro";
+    public static final String STATE_NAME_ENERGY_CONSUMPTION_SENSOR_ENERGY_CONSUMPTION_DAY_KWH = "EnergyConsumptionDayKWh";
     // POWER CONSUMPTION SENSOR
-    public final static String STATE_NAME_POWER_CONSUMPTION_SENSOR_POWER_CONSUMPTION_WATT = "PowerConsumptionWatt";
+    public static final String STATE_NAME_POWER_CONSUMPTION_SENSOR_POWER_CONSUMPTION_WATT = "PowerConsumptionWatt";
     // GENERATION METER ENERGY SENSOR
-    public final static String STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_MONTH_IN_KWH = "EnergyPerMonthInKWh";
-    public final static String STATE_NAME_GENERATION_METER_ENERGY_SENSOR_TOTAL_ENERGY = "TotalEnergy";
-    public final static String STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_MONTH_IN_EURO = "EnergyPerMonthInEuro";
-    public final static String STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_DAY_IN_EURO = "EnergyPerDayInEuro";
-    public final static String STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_DAY_IN_KWH = "EnergyPerDayInKWh";
+    public static final String STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_MONTH_IN_KWH = "EnergyPerMonthInKWh";
+    public static final String STATE_NAME_GENERATION_METER_ENERGY_SENSOR_TOTAL_ENERGY = "TotalEnergy";
+    public static final String STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_MONTH_IN_EURO = "EnergyPerMonthInEuro";
+    public static final String STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_DAY_IN_EURO = "EnergyPerDayInEuro";
+    public static final String STATE_NAME_GENERATION_METER_ENERGY_SENSOR_ENERGY_PER_DAY_IN_KWH = "EnergyPerDayInKWh";
     // GENERATION METER POWER CONSUMPTION SENSOR
-    public final static String STATE_NAME_GENERATION_METER_POWER_CONSUMPTION_SENSOR_POWER_IN_WATT = "PowerInWatt";
+    public static final String STATE_NAME_GENERATION_METER_POWER_CONSUMPTION_SENSOR_POWER_IN_WATT = "PowerInWatt";
     // TWO WAY METER ENERGY CONSUMPTION SENSOR
-    public final static String STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_MONTH_IN_KWH = "EnergyPerMonthInKWh";
-    public final static String STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_TOTAL_ENERGY = "TotalEnergy";
-    public final static String STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_MONTH_IN_EURO = "EnergyPerMonthInEuro";
-    public final static String STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_DAY_IN_EURO = "EnergyPerDayInEuro";
-    public final static String STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_DAY_IN_KWH = "EnergyPerDayInKWh";
+    public static final String STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_MONTH_IN_KWH = "EnergyPerMonthInKWh";
+    public static final String STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_TOTAL_ENERGY = "TotalEnergy";
+    public static final String STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_MONTH_IN_EURO = "EnergyPerMonthInEuro";
+    public static final String STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_DAY_IN_EURO = "EnergyPerDayInEuro";
+    public static final String STATE_NAME_TWO_WAY_METER_ENERGY_CONSUMPTION_SENSOR_ENERGY_PER_DAY_IN_KWH = "EnergyPerDayInKWh";
     // TWO WAY METER ENERGY FEED SENSOR
-    public final static String STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_MONTH_IN_KWH = "EnergyPerMonthInKWh";
-    public final static String STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_TOTAL_ENERGY = "TotalEnergy";
-    public final static String STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_MONTH_IN_EURO = "EnergyPerMonthInEuro";
-    public final static String STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_DAY_IN_EURO = "EnergyPerDayInEuro";
-    public final static String STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_DAY_IN_KWH = "EnergyPerDayInKWh";
+    public static final String STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_MONTH_IN_KWH = "EnergyPerMonthInKWh";
+    public static final String STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_TOTAL_ENERGY = "TotalEnergy";
+    public static final String STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_MONTH_IN_EURO = "EnergyPerMonthInEuro";
+    public static final String STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_DAY_IN_EURO = "EnergyPerDayInEuro";
+    public static final String STATE_NAME_TWO_WAY_METER_ENERGY_FEED_SENSOR_ENERGY_PER_DAY_IN_KWH = "EnergyPerDayInKWh";
     // TWO WAY METER POWER CONSUMPTION SENSOR
-    public final static String STATE_NAME_TWO_WAY_METER_POWER_CONSUMPTION_SENSOR_POWER_IN_WATT = "PowerInWatt";
+    public static final String STATE_NAME_TWO_WAY_METER_POWER_CONSUMPTION_SENSOR_POWER_IN_WATT = "PowerInWatt";
 
-    public final static String STATE_VALUE_OPERATION_MODE_AUTO = "Auto";
-    public final static String STATE_VALUE_OPERATION_MODE_MANUAL = "Manu";
+    public static final String STATE_VALUE_OPERATION_MODE_AUTO = "Auto";
+    public static final String STATE_VALUE_OPERATION_MODE_MANUAL = "Manu";
 
     public Boolean getVariableActuatorState() {
         return getPropertyValueAsBoolean(STATE_NAME_VARIABLE_ACTUATOR);

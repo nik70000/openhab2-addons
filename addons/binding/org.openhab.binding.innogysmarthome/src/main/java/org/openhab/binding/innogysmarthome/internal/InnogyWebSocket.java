@@ -89,7 +89,8 @@ public class InnogyWebSocket {
             session = null;
             logger.info("innogy WebSocket stopped.");
         } else {
-            logger.debug("Stopping websocket ignored - was not running.");
+            session = null;
+            logger.trace("Stopping websocket ignored - was not running.");
         }
     }
 
@@ -136,7 +137,6 @@ public class InnogyWebSocket {
     @OnWebSocketError
     public void onError(Throwable cause) {
         logger.error("innogy WebSocket onError() - {}", cause.getMessage());
-        // bridgeHandler.onEventRunnerStopped(60);
     }
 
     @OnWebSocketMessage

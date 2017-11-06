@@ -76,14 +76,14 @@ import com.google.gson.JsonSyntaxException;
  *
  */
 public class InnogyClient {
-    private Logger logger = LoggerFactory.getLogger(InnogyClient.class);
+    private final Logger logger = LoggerFactory.getLogger(InnogyClient.class);
     private Configuration config;
 
     /**
      * date format as used in json in API. Example: 2016-07-11T10:55:52.3863424Z
      */
-    private final static String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    private Gson gson = new GsonBuilder().setDateFormat(DATE_FORMAT).create();
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    private final Gson gson = new GsonBuilder().setDateFormat(DATE_FORMAT).create();
 
     private HttpTransport httpTransport;
     private JsonFactory jsonFactory;
@@ -118,7 +118,6 @@ public class InnogyClient {
      * @throws ConfigurationException
      */
     public void initialize() throws IOException, ApiException, ConfigurationException {
-
         initializeHttpClient();
 
         if (!config.checkClientData()) {
@@ -372,10 +371,10 @@ public class InnogyClient {
             case HttpStatusCodes.STATUS_CODE_SERVICE_UNAVAILABLE:
                 logger.debug("innogy service is unavailabe (503).");
                 throw new ServiceUnavailableException("innogy service is unavailabe (503).");
-            case HttpStatusCodes.STATUS_CODE_NOT_FOUND:
-                logger.debug("HTTP Error 404. The requested resource is not found. Message: {}",
-                        org.apache.commons.io.IOUtils.toString(response.getContent()));
-                throw new ApiException("HTTP Error 404. The requested resource is not found.");
+                // case HttpStatusCodes.STATUS_CODE_NOT_FOUND:
+                // logger.debug("HTTP Error 404. The requested resource is not found. Message: {}",
+                // org.apache.commons.io.IOUtils.toString(response.getContent()));
+                // throw new ApiException("HTTP Error 404. The requested resource is not found.");
             default:
                 logger.debug("[{}] Statuscode is NOT OK: {}", apiCallCounter, response.getStatusCode());
                 try {
@@ -384,7 +383,9 @@ public class InnogyClient {
                     ErrorResponse error = gson.fromJson(content, ErrorResponse.class);
 
                     if (error == null) {
-                        return;
+                        logger.debug("Error without JSON message, code: {} / message: {}", response.getStatusCode(),
+                                response.getStatusMessage());
+                        throw new ApiException("Error code: " + response.getStatusCode());
                     }
 
                     switch (error.getCode()) {
@@ -425,10 +426,9 @@ public class InnogyClient {
      * @throws ApiException
      */
     public void setSwitchActuatorState(String capabilityId, boolean state) throws IOException, ApiException {
-
         Action action = new SetStateAction(capabilityId, Capability.TYPE_SWITCHACTUATOR, state);
 
-        String json = new Gson().toJson(action);
+        String json = gson.toJson(action);
         logger.debug("Action toggle JSON: {}", json);
 
         HttpResponse response = executePost(API_URL_ACTION, action);
@@ -447,7 +447,7 @@ public class InnogyClient {
     public void setDimmerActuatorState(String capabilityId, int dimLevel) throws IOException, ApiException {
         Action action = new SetStateAction(capabilityId, Capability.TYPE_DIMMERACTUATOR, dimLevel);
 
-        String json = new Gson().toJson(action);
+        String json = gson.toJson(action);
         logger.debug("Action dimm JSON: {}", json);
 
         HttpResponse response = executePost(API_URL_ACTION, action);
@@ -467,7 +467,7 @@ public class InnogyClient {
             throws IOException, ApiException {
         Action action = new SetStateAction(capabilityId, Capability.TYPE_ROLLERSHUTTERACTUATOR, rollerShutterLevel);
 
-        String json = new Gson().toJson(action);
+        String json = gson.toJson(action);
         logger.debug("Action rollershutter JSON: {}", json);
 
         HttpResponse response = executePost(API_URL_ACTION, action);
@@ -484,10 +484,9 @@ public class InnogyClient {
      * @throws ApiException
      */
     public void setVariableActuatorState(String capabilityId, boolean state) throws IOException, ApiException {
-
         Action action = new SetStateAction(capabilityId, Capability.TYPE_VARIABLEACTUATOR, state);
 
-        String json = new Gson().toJson(action);
+        String json = gson.toJson(action);
         logger.debug("Action toggle JSON: {}", json);
 
         HttpResponse response = executePost(API_URL_ACTION, action);
@@ -507,7 +506,7 @@ public class InnogyClient {
             throws IOException, ApiException {
         Action action = new SetStateAction(capabilityId, Capability.TYPE_THERMOSTATACTUATOR, pointTemperature);
 
-        String json = new Gson().toJson(action);
+        String json = gson.toJson(action);
         logger.debug("Action toggle JSON: {}", json);
 
         HttpResponse response = executePost(API_URL_ACTION, action);
@@ -527,7 +526,7 @@ public class InnogyClient {
         Action action = new SetStateAction(capabilityId, Capability.TYPE_THERMOSTATACTUATOR,
                 autoMode ? "Auto" : "Manu");
 
-        String json = new Gson().toJson(action);
+        String json = gson.toJson(action);
         logger.debug("Action toggle JSON: {}", json);
 
         HttpResponse response = executePost(API_URL_ACTION, action);
@@ -546,7 +545,7 @@ public class InnogyClient {
     public void setAlarmActuatorState(String capabilityId, boolean alarmState) throws IOException, ApiException {
         Action action = new SetStateAction(capabilityId, Capability.TYPE_ALARMACTUATOR, alarmState);
 
-        String json = new Gson().toJson(action);
+        String json = gson.toJson(action);
         logger.debug("Action toggle JSON: {}", json);
 
         HttpResponse response = executePost(API_URL_ACTION, action);
@@ -569,9 +568,7 @@ public class InnogyClient {
             credentialBuilder = null;
         } catch (IOException | ApiException e) {
             logger.debug("Error disposing resources", e.getMessage());
-            if (logger.isTraceEnabled()) {
-                logger.trace("Trace:", e);
-            }
+            logger.trace("Trace:", e);
         }
 
     }
@@ -584,17 +581,13 @@ public class InnogyClient {
      * @throws ApiException
      */
     public List<Device> getDevices() throws IOException, ApiException {
-
-        // loading devices
         logger.debug("Loading innogy devices...");
         HttpResponse response = executeGet(API_URL_DEVICE);
 
         handleResponseErrors(response);
 
         Device[] deviceList = response.parseAs(Device[].class);
-        List<Device> devices = Arrays.asList(deviceList);
-
-        return devices;
+        return Arrays.asList(deviceList);
     }
 
     /**
@@ -611,9 +604,7 @@ public class InnogyClient {
 
         handleResponseErrors(response);
 
-        Device device = response.parseAs(Device.class);
-
-        return device;
+        return response.parseAs(Device.class);
     }
 
     /**
@@ -814,9 +805,7 @@ public class InnogyClient {
         handleResponseErrors(response);
 
         DeviceState[] deviceStateArray = response.parseAs(DeviceState[].class);
-        List<DeviceState> deviceStateList = Arrays.asList(deviceStateArray);
-
-        return deviceStateList;
+        return Arrays.asList(deviceStateArray);
     }
 
     /**
@@ -838,7 +827,6 @@ public class InnogyClient {
         List<Property> propertyList = Arrays.asList(propertyArray);
 
         return propertyList;
-
     }
 
     /**
@@ -859,7 +847,6 @@ public class InnogyClient {
         List<Location> locationList = Arrays.asList(locationArray);
 
         return locationList;
-
     }
 
     /**
@@ -946,31 +933,6 @@ public class InnogyClient {
      */
     public Configuration getConfig() {
         return config;
-    }
-
-    /**
-     * Returns the number of API calls since the {@link InnogyClient} was instantiated.
-     *
-     * @return long number of API calls
-     */
-    public long getApiCallCount() {
-        return apiCallCounter;
-    }
-
-    /**
-     * Sets the {@link Configuration}.
-     *
-     * @param bridgeConfig the bridgeConfig to set
-     */
-    public void setBridgeConfig(Configuration bridgeConfig) {
-        this.config = bridgeConfig;
-    }
-
-    /**
-     * @return the credentialRefreshListener
-     */
-    public CredentialRefreshListener getCredentialRefreshListener() {
-        return credentialRefreshListener;
     }
 
     /**

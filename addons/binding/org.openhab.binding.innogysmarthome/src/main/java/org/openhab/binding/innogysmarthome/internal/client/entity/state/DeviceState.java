@@ -19,22 +19,27 @@ import org.openhab.binding.innogysmarthome.internal.client.entity.device.Device;
 public class DeviceState extends EntityState {
 
     /**
-     * Returns, if the value of the state "IsReachable" is true.
+     * Returns true if the device is reachable, false otherwise.
      *
      * @return true or false for "reachable" {@link Device}s, else null.
      */
-    public Boolean getIsReachable() {
+    public Boolean isReachable() {
         return getPropertyValueAsBoolean(STATE_NAME_ISREACHABLE);
     }
 
-    public void setIsReachable(boolean isReachable) {
+    /**
+     * Sets if the {@link Device} is reachable.
+     *
+     * @param isReachable
+     */
+    public void setReachable(boolean isReachable) {
         setPropertyValueAsBoolean(STATE_NAME_ISREACHABLE, isReachable);
     }
 
     /**
      * Returns the configuration state of the device.
      *
-     * @return
+     * @return the configuration state
      */
     public String getDeviceConfigurationState() {
         return getPropertyValueAsString(STATE_NAME_DEVICECONFIGURATIONSTATE);
@@ -43,7 +48,7 @@ public class DeviceState extends EntityState {
     /**
      * Returns the device inclusion state.
      *
-     * @return
+     * @return the device inclusion state
      */
     public String getDeviceInclusionState() {
         return getPropertyValueAsString(STATE_NAME_DEVICEINCLUSIONSTATE);
@@ -52,16 +57,16 @@ public class DeviceState extends EntityState {
     /**
      * Returns true, if the device is included.
      *
-     * @return
+     * @return true, if the {@link Device} is "Included"
      */
-    public Boolean deviceIsIncluded() {
+    public boolean deviceIsIncluded() {
         return Util.equalsIfPresent(getDeviceInclusionState(), DEVICE_INCLUSION_STATE_INCLUDED);
     }
 
     /**
-     * Returns true, if the device inclusion state is "pending".
+     * Returns true, if the device inclusion state is "InclusionPending".
      *
-     * @return
+     * @return true, if the inclusion state is "InclusionPending"
      */
     public Boolean deviceInclusionIsPending() {
         return Util.equalsIfPresent(getDeviceInclusionState(), DEVICE_INCLUSION_STATE_PENDING);
@@ -70,7 +75,7 @@ public class DeviceState extends EntityState {
     /**
      * Return the update state of the {@link Device}.
      *
-     * @return
+     * @return the update state
      */
     public String getDeviceUpdateState() {
         return getPropertyValueAsString(STATE_NAME_UPDATESTATE);
@@ -79,7 +84,7 @@ public class DeviceState extends EntityState {
     /**
      * Returns true if the {@link Device} is up to date.
      *
-     * @return
+     * @return true, if the deviceUpdateState is "UpToDate"
      */
     public Boolean deviceIsUpToDate() {
         return Util.equalsIfPresent(getDeviceUpdateState(), DEVICE_UPDATE_STATE_UPTODATE);
@@ -88,7 +93,7 @@ public class DeviceState extends EntityState {
     /**
      * Returns the firmware version of the {@link Device}.
      *
-     * @return
+     * @return the firmware version
      */
     public String getFirmwareVersion() {
         return getPropertyValueAsString(STATE_NAME_FIRMWAREVERSION);

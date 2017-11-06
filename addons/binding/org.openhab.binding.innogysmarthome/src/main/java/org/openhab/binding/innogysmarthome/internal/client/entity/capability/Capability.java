@@ -24,30 +24,30 @@ import com.google.api.client.util.Key;
  */
 public class Capability extends ConfigPropertyList {
 
-    private final static String CONFIG_PROPERTY_ACTIVITY_LOG_ACTIVE = "ActivityLogActive";
-    private final static String CONFIG_PROPERTY_PUSH_BUTTONS = "PushButtons";
+    private static final String CONFIG_PROPERTY_ACTIVITY_LOG_ACTIVE = "ActivityLogActive";
+    private static final String CONFIG_PROPERTY_PUSH_BUTTONS = "PushButtons";
 
     /** capability types */
-    public final static String TYPE_SWITCHACTUATOR = "SwitchActuator";
-    public final static String TYPE_VARIABLEACTUATOR = "BooleanStateActuator";
-    public final static String TYPE_THERMOSTATACTUATOR = "ThermostatActuator";
-    public final static String TYPE_TEMPERATURESENSOR = "TemperatureSensor";
-    public final static String TYPE_HUMIDITYSENSOR = "HumiditySensor";
-    public final static String TYPE_WINDOWDOORSENSOR = "WindowDoorSensor";
-    public final static String TYPE_SMOKEDETECTORSENSOR = "SmokeDetectorSensor";
-    public final static String TYPE_ALARMACTUATOR = "AlarmActuator";
-    public final static String TYPE_MOTIONDETECTIONSENSOR = "MotionDetectionSensor";
-    public final static String TYPE_LUMINANCESENSOR = "LuminanceSensor";
-    public final static String TYPE_PUSHBUTTONSENSOR = "PushButtonSensor";
-    public final static String TYPE_DIMMERACTUATOR = "DimmerActuator";
-    public final static String TYPE_ROLLERSHUTTERACTUATOR = "RollerShutterActuator";
-    public final static String TYPE_ENERGYCONSUMPTIONSENSOR = "EnergyConsumptionSensor";
-    public final static String TYPE_POWERCONSUMPTIONSENSOR = "PowerConsumptionSensor";
-    public final static String TYPE_GENERATIONMETERENERGYSENSOR = "GenerationMeterEnergySensor";
-    public final static String TYPE_GENERATIONMETERPOWERCONSUMPTIONSENSOR = "GenerationMeterPowerConsumptionSensor";
-    public final static String TYPE_TWOWAYMETERENERGYCONSUMPTIONSENSOR = "TwoWayMeterEnergyConsumptionSensor";
-    public final static String TYPE_TWOWAYMETERENERGYFEEDSENSOR = "TwoWayMeterEnergyFeedSensor";
-    public final static String TYPE_TWOWAYMETERPOWERCONSUMPTIONSENSOR = "TwoWayMeterPowerConsumptionSensor";
+    public static final String TYPE_SWITCHACTUATOR = "SwitchActuator";
+    public static final String TYPE_VARIABLEACTUATOR = "BooleanStateActuator";
+    public static final String TYPE_THERMOSTATACTUATOR = "ThermostatActuator";
+    public static final String TYPE_TEMPERATURESENSOR = "TemperatureSensor";
+    public static final String TYPE_HUMIDITYSENSOR = "HumiditySensor";
+    public static final String TYPE_WINDOWDOORSENSOR = "WindowDoorSensor";
+    public static final String TYPE_SMOKEDETECTORSENSOR = "SmokeDetectorSensor";
+    public static final String TYPE_ALARMACTUATOR = "AlarmActuator";
+    public static final String TYPE_MOTIONDETECTIONSENSOR = "MotionDetectionSensor";
+    public static final String TYPE_LUMINANCESENSOR = "LuminanceSensor";
+    public static final String TYPE_PUSHBUTTONSENSOR = "PushButtonSensor";
+    public static final String TYPE_DIMMERACTUATOR = "DimmerActuator";
+    public static final String TYPE_ROLLERSHUTTERACTUATOR = "RollerShutterActuator";
+    public static final String TYPE_ENERGYCONSUMPTIONSENSOR = "EnergyConsumptionSensor";
+    public static final String TYPE_POWERCONSUMPTIONSENSOR = "PowerConsumptionSensor";
+    public static final String TYPE_GENERATIONMETERENERGYSENSOR = "GenerationMeterEnergySensor";
+    public static final String TYPE_GENERATIONMETERPOWERCONSUMPTIONSENSOR = "GenerationMeterPowerConsumptionSensor";
+    public static final String TYPE_TWOWAYMETERENERGYCONSUMPTIONSENSOR = "TwoWayMeterEnergyConsumptionSensor";
+    public static final String TYPE_TWOWAYMETERENERGYFEEDSENSOR = "TwoWayMeterEnergyFeedSensor";
+    public static final String TYPE_TWOWAYMETERPOWERCONSUMPTIONSENSOR = "TwoWayMeterPowerConsumptionSensor";
 
     /**
      * Unique id for the Capability.

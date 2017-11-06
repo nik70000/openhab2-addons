@@ -26,19 +26,13 @@ public class Util {
     }
 
     /**
-     * Compares two strings, but returns null, if one of the strings is null.
+     * Compares two strings.
      *
      * @param string1
      * @param string2
-     * @return
+     * @return true, if both strings are equal and not null
      */
-    public static Boolean equalsIfPresent(String string1, String string2) {
-        if (string1 == null || string2 == null) {
-            return null;
-        } else if (string2.equals(string1)) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean equalsIfPresent(String string1, String string2) {
+        return string1 == null ? false : string1.equals(string2);
     }
 }

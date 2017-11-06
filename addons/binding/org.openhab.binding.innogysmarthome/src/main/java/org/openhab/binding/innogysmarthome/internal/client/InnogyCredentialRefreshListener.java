@@ -27,7 +27,7 @@ import com.google.api.client.auth.oauth2.TokenResponse;
  */
 public class InnogyCredentialRefreshListener implements CredentialRefreshListener {
 
-    private Logger logger = LoggerFactory.getLogger(InnogyCredentialRefreshListener.class);
+    private final Logger logger = LoggerFactory.getLogger(InnogyCredentialRefreshListener.class);
     private Configuration config;
 
     public InnogyCredentialRefreshListener(Configuration config) {

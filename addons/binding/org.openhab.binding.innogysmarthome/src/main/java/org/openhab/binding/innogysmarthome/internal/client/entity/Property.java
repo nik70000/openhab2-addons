@@ -27,7 +27,7 @@ public class Property {
     private String lastchanged;
 
     public Property() {
-
+        // used for serialization
     }
 
     /**

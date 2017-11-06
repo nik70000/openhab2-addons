@@ -23,7 +23,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Action {
 
-    public final static String ACTION_TYPE_SETSTATE = "device/SHC.RWE/1.0/action/SetState";
+    public static final String ACTION_TYPE_SETSTATE = "device/SHC.RWE/1.0/action/SetState";
 
     @Key("type")
     private String type;
@@ -37,6 +37,7 @@ public class Action {
     private List<ActionParameter> parameterList;
 
     public Action() {
+        // used by serialization
     }
 
     public Action(String type) {
